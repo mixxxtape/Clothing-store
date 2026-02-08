@@ -1,0 +1,5 @@
+<Solution>
+  <Folder Name="/MVC/">
+    <Project Path="ClothingStore.Domain/ClothingStoreMVC.Domain.csproj" Id="18e9ecaf-dae0-4dd5-a5f8-21b2737c96df" />
+  </Folder>
+</Solution>
