@@ -3,6 +3,18 @@
   "WorkspaceRootPath": "E:\\ClothingStore\\src\\Solution\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{289559CA-FFB8-45FC-8B90-1A8D01151996}|ClothingStoreMVC.Infastracture\\ClothingStoreMVC.Infastracture.csproj|e:\\clothingstore\\src\\solution\\clothingstoremvc.infastracture\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{289559CA-FFB8-45FC-8B90-1A8D01151996}|ClothingStoreMVC.Infastracture\\ClothingStoreMVC.Infastracture.csproj|solutionrelative:clothingstoremvc.infastracture\\class1.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|e:\\clothingstore\\src\\solution\\clothingstore.domain\\entities\\quizaggregates\\useranswer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|solutionrelative:clothingstore.domain\\entities\\quizaggregates\\useranswer.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|e:\\clothingstore\\src\\solution\\clothingstore.domain\\entities\\useraggregates\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|solutionrelative:clothingstore.domain\\entities\\useraggregates\\payment.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|e:\\clothingstore\\src\\solution\\clothingstore.domain\\entities\\useraggregates\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{18E9ECAF-DAE0-4DD5-A5F8-21B2737C96DF}|ClothingStore.Domain\\ClothingStoreMVC.Domain.csproj|solutionrelative:clothingstore.domain\\entities\\useraggregates\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -86,11 +98,50 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 15,
+          "SelectedChildIndex": 0,
           "Children": [
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Class1.cs",
+              "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStoreMVC.Infastracture\\Class1.cs",
+              "RelativeDocumentMoniker": "ClothingStoreMVC.Infastracture\\Class1.cs",
+              "ToolTip": "E:\\ClothingStore\\src\\Solution\\ClothingStoreMVC.Infastracture\\Class1.cs",
+              "RelativeToolTip": "ClothingStoreMVC.Infastracture\\Class1.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-09T16:18:48.615Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "UserAnswer.cs",
+              "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\UserAnswer.cs",
+              "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\QuizAggregates\\UserAnswer.cs",
+              "ToolTip": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\UserAnswer.cs",
+              "RelativeToolTip": "ClothingStore.Domain\\Entities\\QuizAggregates\\UserAnswer.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAArAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-09T16:08:30.332Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "Payment.cs",
+              "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\Payment.cs",
+              "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\Payment.cs",
+              "ToolTip": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\Payment.cs",
+              "RelativeToolTip": "ClothingStore.Domain\\Entities\\UserAggregates\\Payment.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-02-09T13:36:49.509Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "OrderStatus.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\OrderStatus.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\OrderStatus.cs",
@@ -103,7 +154,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 9,
               "Title": "AnswerStyle.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\AnswerStyle.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\QuizAggregates\\AnswerStyle.cs",
@@ -116,7 +167,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 18,
               "Title": "ProductSize.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\ProductSize.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\ProductSize.cs",
@@ -129,7 +180,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 4,
               "Title": "OrderItem.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\OrderItem.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\OrderItem.cs",
@@ -142,7 +193,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 20,
               "Title": "Entity.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\Entity.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\Entity.cs",
@@ -155,7 +206,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 16,
               "Title": "Size.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\Size.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\Size.cs",
@@ -168,7 +219,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 14,
+              "DocumentIndex": 17,
               "Title": "Review.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\Review.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\Review.cs",
@@ -181,7 +232,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 7,
               "Title": "CartItem.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\CartItem.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\CartItem.cs",
@@ -194,7 +245,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 19,
               "Title": "Category.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\Category.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\Category.cs",
@@ -207,7 +258,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 8,
               "Title": "Answer.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\Answer.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\QuizAggregates\\Answer.cs",
@@ -220,7 +271,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 14,
               "Title": "Question.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\Question.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\QuizAggregates\\Question.cs",
@@ -233,7 +284,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 11,
               "Title": "Wishlist.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\Wishlist.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\Wishlist.cs",
@@ -246,7 +297,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 12,
               "Title": "Cart.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\Cart.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\Cart.cs",
@@ -259,7 +310,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 6,
               "Title": "Order.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\Order.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\Order.cs",
@@ -272,7 +323,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 15,
               "Title": "Style.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\Style.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\Style.cs",
@@ -285,7 +336,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 3,
               "Title": "User.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\UserAggregates\\User.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\UserAggregates\\User.cs",
@@ -298,7 +349,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 13,
               "Title": "Quiz.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\QuizAggregates\\Quiz.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\QuizAggregates\\Quiz.cs",
@@ -311,7 +362,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 7,
+              "DocumentIndex": 10,
               "Title": "Product.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\ProductAggregates\\Product.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\ProductAggregates\\Product.cs",
@@ -324,7 +375,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 21,
               "Title": "IAggregateRoot.cs",
               "DocumentMoniker": "E:\\ClothingStore\\src\\Solution\\ClothingStore.Domain\\Entities\\IAggregateRoot.cs",
               "RelativeDocumentMoniker": "ClothingStore.Domain\\Entities\\IAggregateRoot.cs",
