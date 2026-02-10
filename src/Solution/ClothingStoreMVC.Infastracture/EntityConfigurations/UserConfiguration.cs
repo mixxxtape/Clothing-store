@@ -26,6 +26,12 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
             builder.HasMany(u => u.Orders)
                    .WithOne(o => o.User)
                    .HasForeignKey(o => o.UserId);
+
+            // 🔹 Додаємо зв'язок з Role
+            builder.HasOne(u => u.Role)
+                   .WithMany(r => r.Users)
+                   .HasForeignKey(u => u.RoleId)
+                   .IsRequired();
         }
     }
 }

@@ -32,6 +32,7 @@ namespace ClothingStoreMVC.Infrastructure
         public DbSet<AnswerStyle> AnswerStyles { get; set; } = null!;
         public DbSet<UserAnswer> UserAnswers { get; set; } = null!;
         public DbSet<Payment> Payments { get; set; } = null!;
+        public DbSet<Role> Roles { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
