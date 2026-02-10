@@ -7,7 +7,7 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
     public class Cart : Entity
     {
         public int UserId { get; set; }
-        User User { get; set; }
+        public User User { get; set; }
         public ICollection<CartItem> Items { get; set; } = new List<CartItem>();
 
     }

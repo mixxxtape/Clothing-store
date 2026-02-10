@@ -18,18 +18,6 @@ app.Run();
 
 using var context = new ClothingStoreContext(
     new DbContextOptionsBuilder<ClothingStoreContext>()
-        .UseNpgsql("Host=localhost;Database=ClothingStoreDb;Username=postgres;Password=твій_пароль")
+        .UseNpgsql("Host=localhost;Database=StoreDb;Username=postgres;Password=dasha2007")
         .Options
 );
-
-try
-{
-    if (context.Database.CanConnect())
-        Console.WriteLine("Підключення успішне!");
-    else
-        Console.WriteLine("Підключення не вдалося!");
-}
-catch (Exception ex)
-{
-    Console.WriteLine("Помилка підключення: " + ex.Message);
-}

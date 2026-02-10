@@ -2,25 +2,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class ProductConfiguration : IEntityTypeConfiguration<Product>
+namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
 {
-    public void Configure(EntityTypeBuilder<Product> builder)
+    public class ProductConfiguration : IEntityTypeConfiguration<Product>
     {
-        builder.HasKey(p => p.Id);
+        public void Configure(EntityTypeBuilder<Product> builder)
+        {
+            builder.HasKey(p => p.Id);
 
-        builder.Property(p => p.Name)
-               .IsRequired()
-               .HasMaxLength(100);
+            builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
+            builder.Property(p => p.Description).HasMaxLength(500);
+            builder.Property(p => p.Price).IsRequired();
 
-        builder.Property(p => p.Price)
-               .IsRequired()
-               .HasPrecision(10, 2);
+            builder.HasOne(p => p.Category)
+                   .WithMany(c => c.Products)
+                   .HasForeignKey(p => p.CategoryId);
 
-        builder.Property(p => p.Description)
-               .HasMaxLength(500);
+            builder.HasOne(p => p.Style)
+                   .WithMany(s => s.Products)
+                   .HasForeignKey(p => p.StyleId);
 
-        builder.HasOne(p => p.Category)
-               .WithMany(c => c.Products)
-               .HasForeignKey(p => p.CategoryId);
+            builder.HasMany(p => p.Reviews)
+                   .WithOne(r => r.Product)
+                   .HasForeignKey(r => r.ProductId);
+
+            builder.HasMany(p => p.Sizes)
+                   .WithOne()
+                   .HasForeignKey(ps => ps.ProductId);
+        }
     }
 }
