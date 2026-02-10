@@ -4,7 +4,7 @@
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <BaseOutputPath>E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin</BaseOutputPath>
+    <BaseOutputPath>E:\ClothingStore\src\Solution\ClothingStoreMVC.Infrastructure\bin</BaseOutputPath>
   </PropertyGroup>
 
   <ItemGroup>

@@ -5,7 +5,6 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
-// підключення до PostgreSQL
 builder.Services.AddDbContext<ClothingStoreContext>(options =>
     options.UseNpgsql(
         builder.Configuration.GetConnectionString("ClothingStoreContext")

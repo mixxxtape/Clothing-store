@@ -3,6 +3,7 @@ using System;
 using ClothingStoreMVC.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 {
     [DbContext(typeof(ClothingStoreContext))]
-    partial class ClothingStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20260210145415_AddAllEntities")]
+    partial class AddAllEntities
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,7 +151,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Sizes");
+                    b.ToTable("Size");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.Style", b =>
@@ -170,123 +173,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Style");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("QuestionId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.ToTable("Answers");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.AnswerStyle", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnswerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("StyleId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
-
-                    b.ToTable("AnswerStyles");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Question", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("QuizId")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Text")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuizId");
-
-                    b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Quizzes");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.UserAnswer", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AnserId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("AnswerId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("QuestionId")
-                        .HasColumnType("integer");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserAnswers");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Cart", b =>
@@ -424,38 +310,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.ToTable("OrderStatus");
                 });
 
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Payment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
-
-                    b.Property<double>("Amount")
-                        .HasColumnType("double precision");
-
-                    b.Property<int>("OrderId")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime>("PaidAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<string>("PaymentMethod")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("PaymentStatus")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("OrderId");
-
-                    b.ToTable("Payments");
-                });
-
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.User", b =>
                 {
                     b.Property<int>("Id")
@@ -563,56 +417,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer", b =>
-                {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.QuizAggregates.Question", null)
-                        .WithMany("Answers")
-                        .HasForeignKey("QuestionId");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.AnswerStyle", b =>
-                {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer", null)
-                        .WithMany("Styles")
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Question", b =>
-                {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz", null)
-                        .WithMany("Questions")
-                        .HasForeignKey("QuizId");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.UserAnswer", b =>
-                {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer", "Answer")
-                        .WithMany()
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.QuizAggregates.Question", "Question")
-                        .WithMany()
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.UserAggregates.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
-
-                    b.Navigation("Question");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Cart", b =>
                 {
                     b.HasOne("ClothingStoreMVC.Domain.Entities.UserAggregates.User", null)
@@ -690,17 +494,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Payment", b =>
-                {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.UserAggregates.Order", "Order")
-                        .WithMany()
-                        .HasForeignKey("OrderId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-                });
-
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Wishlist", b =>
                 {
                     b.HasOne("ClothingStoreMVC.Domain.Entities.UserAggregates.User", "User")
@@ -722,21 +515,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.Style", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer", b =>
-                {
-                    b.Navigation("Styles");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Question", b =>
-                {
-                    b.Navigation("Answers");
-                });
-
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz", b =>
-                {
-                    b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Cart", b =>
