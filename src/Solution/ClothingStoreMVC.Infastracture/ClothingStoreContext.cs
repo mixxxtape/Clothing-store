@@ -36,6 +36,7 @@ namespace ClothingStoreMVC.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("Store");
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ClothingStoreContext).Assembly);
         }
     }
