@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 {
-    internal class Product : Entity, IAggregateRoot
+     public class Product : Entity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -16,4 +16,5 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<ProductSize> Sizes { get; set; } = new List<ProductSize>();
     }
+
 }

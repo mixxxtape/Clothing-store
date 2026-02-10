@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
 {
-    internal class AnswerStyle : Entity
+    public class AnswerStyle : Entity
     {
         public int AnswerId { get; set; }
         public int StyleId { get; set; }

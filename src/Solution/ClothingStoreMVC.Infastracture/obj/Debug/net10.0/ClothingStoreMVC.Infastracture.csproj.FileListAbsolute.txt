@@ -1,0 +1,17 @@
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infastracture.deps.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infastracture.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infastracture.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.csproj.AssemblyReference.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.GeneratedMSBuildEditorConfig.editorconfig
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.AssemblyInfoInputs.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.AssemblyInfo.cs
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.csproj.CoreCompileInputs.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\refint\ClothingStoreMVC.Infastracture.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ref\ClothingStoreMVC.Infastracture.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Domain.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Domain.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\Clothing.8C706529.Up2Date
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infastracture.runtimeconfig.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infastracture.genruntimeconfig.cache

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
 {
-    internal class Quiz : Entity, IAggregateRoot
+    public class Quiz : Entity, IAggregateRoot
     {
         public string Name { get; set; }
         public string Description { get; set; }

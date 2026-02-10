@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 {
-    internal class Style : Entity
+    public class Style : Entity
     {
           public string Name { get; set; }
           public string Description { get; set; }

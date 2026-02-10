@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
-    internal class Payment : Entity
+    public class Payment : Entity
     {
         public double Amount { get; set; }
         public DateTime PaidAt { get; set; }

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
-    internal class Wishlist : Entity
+    public class Wishlist : Entity
     {
         public int UserId { get; set; }
         public User User { get; set; }

@@ -1,0 +1,17 @@
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infrastructure.deps.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infrastructure.runtimeconfig.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infrastructure.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Infrastructure.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Domain.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\bin\Debug\net10.0\ClothingStoreMVC.Domain.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.csproj.AssemblyReference.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.AssemblyInfoInputs.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.AssemblyInfo.cs
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.csproj.CoreCompileInputs.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\Clothing.EF8B06EC.Up2Date
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\refint\ClothingStoreMVC.Infrastructure.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.pdb
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ClothingStoreMVC.Infrastructure.genruntimeconfig.cache
+E:\ClothingStore\src\Solution\ClothingStoreMVC.Infastracture\obj\Debug\net10.0\ref\ClothingStoreMVC.Infrastructure.dll

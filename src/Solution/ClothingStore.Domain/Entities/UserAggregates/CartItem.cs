@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
-    internal class CartItem : Entity
+    public class CartItem : Entity
     {
         public int ProductId { get; set; }
         public ProductAggregates.Product Product { get; set; }

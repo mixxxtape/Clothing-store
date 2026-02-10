@@ -1,0 +1,13 @@
+E:\ClothingStore\src\Solution\ClothingStore.Domain\bin\Debug\net10.0\ClothingStoreMVC.Domain.deps.json
+E:\ClothingStore\src\Solution\ClothingStore.Domain\bin\Debug\net10.0\ClothingStoreMVC.Domain.runtimeconfig.json
+E:\ClothingStore\src\Solution\ClothingStore.Domain\bin\Debug\net10.0\ClothingStoreMVC.Domain.dll
+E:\ClothingStore\src\Solution\ClothingStore.Domain\bin\Debug\net10.0\ClothingStoreMVC.Domain.pdb
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.GeneratedMSBuildEditorConfig.editorconfig
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.AssemblyInfoInputs.cache
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.AssemblyInfo.cs
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.csproj.CoreCompileInputs.cache
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.dll
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\refint\ClothingStoreMVC.Domain.dll
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.pdb
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.genruntimeconfig.cache
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ref\ClothingStoreMVC.Domain.dll

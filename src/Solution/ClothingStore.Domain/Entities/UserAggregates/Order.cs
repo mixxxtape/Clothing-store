@@ -4,7 +4,7 @@ using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
-    internal class Order : Entity, IAggregateRoot
+    public class Order : Entity, IAggregateRoot
     {
         public int UserId { get; set; }
         public User User { get; set; }
