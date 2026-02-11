@@ -1,6 +1,8 @@
 ﻿using ClothingStoreMVC.Domain.Entities.ProductAggregates;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.Extensions.Options;
+using System;
 
 namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
 {
@@ -13,6 +15,8 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
             builder.Property(p => p.Name).IsRequired().HasMaxLength(100);
             builder.Property(p => p.Description).HasMaxLength(500);
             builder.Property(p => p.Price).IsRequired();
+
+            builder.HasQueryFilter(p => !p.IsDeleted);
 
             builder.HasOne(p => p.Category)
                    .WithMany(c => c.Products)
@@ -30,5 +34,6 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
                    .WithOne()
                    .HasForeignKey(ps => ps.ProductId);
         }
+
     }
 }

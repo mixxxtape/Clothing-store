@@ -10,13 +10,16 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(ci => ci.Id);
 
-            builder.HasOne(ci => ci.Product)
-                   .WithMany()
-                   .HasForeignKey(ci => ci.ProductId);
+            builder.HasOne(ci => ci.ProductSize)
+                   .WithMany() 
+                   .HasForeignKey(ci => ci.ProductSizeId)
+                   .IsRequired();
 
-            builder.HasOne(ci => ci.Size)
-                   .WithMany()
-                   .HasForeignKey(ci => ci.SizeId);
+            builder.HasOne(ci => ci.Cart)
+                   .WithMany(c => c.Items)
+                   .HasForeignKey(ci => ci.CartId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 }

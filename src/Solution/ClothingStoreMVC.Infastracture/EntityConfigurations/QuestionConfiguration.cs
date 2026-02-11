@@ -9,11 +9,10 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         public void Configure(EntityTypeBuilder<Question> builder)
         {
             builder.HasKey(q => q.Id);
-            builder.Property(q => q.Text).IsRequired().HasMaxLength(500);
-
-            builder.HasMany(q => q.Answers)
-                   .WithOne()
-                   .HasForeignKey("QuestionId");
+            builder.Property(q => q.Text)
+                   .IsRequired()
+                   .HasMaxLength(500);
         }
+
     }
 }

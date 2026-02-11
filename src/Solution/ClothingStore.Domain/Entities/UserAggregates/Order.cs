@@ -12,5 +12,6 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
         public DateTime OrderDate { get; set; }
         public ICollection<OrderStatus> StatusHistory { get; set; } = new List<OrderStatus>();
         public string DeliveryAddress { get; set; }
+        public Payment Payment { get; set; }
     }
 }

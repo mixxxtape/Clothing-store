@@ -3,6 +3,7 @@ using System;
 using ClothingStoreMVC.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 {
     [DbContext(typeof(ClothingStoreContext))]
-    partial class ClothingStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20260211124238_FixAnswerRelation")]
+    partial class FixAnswerRelation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -100,8 +103,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("SizeId");
 
                     b.ToTable("ProductSizes", "Store");
                 });
@@ -361,10 +362,10 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductSizeId")
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("SizeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -373,7 +374,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductSizeId");
+                    b.HasIndex("SizeId");
 
                     b.ToTable("CartItems", "Store");
                 });
@@ -418,10 +419,10 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.Property<int>("ProductId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ProductSizeId")
+                    b.Property<int>("Quantity")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
+                    b.Property<int>("SizeId")
                         .HasColumnType("integer");
 
                     b.HasKey("Id");
@@ -430,7 +431,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("ProductSizeId");
+                    b.HasIndex("SizeId");
 
                     b.ToTable("OrderItems", "Store");
                 });
@@ -484,18 +485,15 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.Property<string>("PaymentStatus")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderId")
-                        .IsUnique();
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Payments", "Store");
                 });
@@ -614,21 +612,11 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.ProductSize", b =>
                 {
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Product", "Product")
+                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Product", null)
                         .WithMany("Sizes")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Size", "Size")
-                        .WithMany("ProductSizes")
-                        .HasForeignKey("SizeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.Review", b =>
@@ -770,9 +758,9 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.ProductSize", "ProductSize")
+                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Size", "Size")
                         .WithMany()
-                        .HasForeignKey("ProductSizeId")
+                        .HasForeignKey("SizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -780,7 +768,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.Navigation("Product");
 
-                    b.Navigation("ProductSize");
+                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Order", b =>
@@ -805,12 +793,12 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.ProductSize", "ProductSize")
+                    b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Size", "Size")
                         .WithMany()
-                        .HasForeignKey("ProductSizeId")
+                        .HasForeignKey("SizeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -818,7 +806,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 
                     b.Navigation("Product");
 
-                    b.Navigation("ProductSize");
+                    b.Navigation("Size");
                 });
 
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.OrderStatus", b =>
@@ -835,8 +823,8 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Payment", b =>
                 {
                     b.HasOne("ClothingStoreMVC.Domain.Entities.UserAggregates.Order", "Order")
-                        .WithOne("Payment")
-                        .HasForeignKey("ClothingStoreMVC.Domain.Entities.UserAggregates.Payment", "OrderId")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -892,11 +880,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.Navigation("Sizes");
                 });
 
-            modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.Size", b =>
-                {
-                    b.Navigation("ProductSizes");
-                });
-
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.ProductAggregates.Style", b =>
                 {
                     b.Navigation("Products");
@@ -927,9 +910,6 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
             modelBuilder.Entity("ClothingStoreMVC.Domain.Entities.UserAggregates.Order", b =>
                 {
                     b.Navigation("Items");
-
-                    b.Navigation("Payment")
-                        .IsRequired();
 
                     b.Navigation("StatusHistory");
                 });

@@ -13,6 +13,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public Style Style { get; set; }
         public int CategoryId { get; set; }
         public Category Category { get; set; } = null!;
+        public bool IsDeleted { get; set; } = false;
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<ProductSize> Sizes { get; set; } = new List<ProductSize>();
     }

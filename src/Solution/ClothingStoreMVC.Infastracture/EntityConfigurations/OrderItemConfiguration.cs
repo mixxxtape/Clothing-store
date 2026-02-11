@@ -10,20 +10,19 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(oi => oi.Id);
 
-            builder.Property(oi => oi.Quantity)
+            builder.Property(oi => oi.Quantity).IsRequired();
+
+            builder.HasOne(oi => oi.ProductSize)
+                   .WithMany()
+                   .HasForeignKey(oi => oi.ProductSizeId)
                    .IsRequired();
 
-            // Зв'язок із Product
-            builder.HasOne(oi => oi.Product)
-                   .WithMany()
-                   .HasForeignKey(oi => oi.ProductId)
-                   .IsRequired();
-
-            // Зв'язок із Size
-            builder.HasOne(oi => oi.Size)
-                   .WithMany()
-                   .HasForeignKey(oi => oi.SizeId)
-                   .IsRequired();
+            builder.HasOne(oi => oi.Order)
+                   .WithMany(o => o.Items)
+                   .HasForeignKey(oi => oi.OrderId)
+                   .OnDelete(DeleteBehavior.Cascade);
         }
     }
+
 }
+
