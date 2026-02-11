@@ -9,5 +9,6 @@ namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
         public string Name { get; set; }
         public string Description { get; set; }
         public ICollection<Question> Questions { get; set; } = new List<Question>();
+        public ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

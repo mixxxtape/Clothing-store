@@ -8,11 +8,11 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<Cart> builder)
         {
-            builder.HasKey(c => c.Id);
-
             builder.HasMany(c => c.Items)
-                   .WithOne()
-                   .HasForeignKey(ci => ci.Id);
+                   .WithOne(ci => ci.Cart)
+                   .HasForeignKey(ci => ci.CartId)
+                   .IsRequired();
+
         }
     }
 }

@@ -11,7 +11,7 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
             builder.HasKey(ua => ua.Id);
 
             builder.HasOne(ua => ua.User)
-                   .WithMany()
+                   .WithMany(u => u.UserAnswers)
                    .HasForeignKey(ua => ua.UserId);
 
             builder.HasOne(ua => ua.Question)
@@ -20,7 +20,7 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
 
             builder.HasOne(ua => ua.Answer)
                    .WithMany()
-                   .HasForeignKey(ua => ua.AnserId);
+                   .HasForeignKey(ua => ua.AnswerId);
         }
     }
 }

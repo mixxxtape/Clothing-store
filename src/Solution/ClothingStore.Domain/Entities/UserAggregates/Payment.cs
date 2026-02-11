@@ -6,7 +6,7 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
     public class Payment : Entity
     {
-        public double Amount { get; set; }
+        public decimal Amount { get; set; }
         public DateTime PaidAt { get; set; }
         public string PaymentMethod { get; set; }
         public string PaymentStatus { get; set; }

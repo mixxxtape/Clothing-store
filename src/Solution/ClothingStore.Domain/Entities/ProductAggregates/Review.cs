@@ -11,6 +11,6 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public int ProductId { get; set; }
         public ProductAggregates.Product Product { get; set; }
         public int Rating { get; set; } 
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
     }
 }

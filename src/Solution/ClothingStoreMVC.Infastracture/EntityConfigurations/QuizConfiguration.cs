@@ -13,8 +13,9 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
             builder.Property(q => q.Description).HasMaxLength(500);
 
             builder.HasMany(q => q.Questions)
-                   .WithOne()
-                   .HasForeignKey("QuizId");
+                   .WithOne(q => q.Quiz) 
+                   .HasForeignKey(q => q.QuizId);
+
         }
     }
 }

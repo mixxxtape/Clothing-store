@@ -9,7 +9,7 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
         public int OrderId { get; set; }
         public Order Order { get; set; }
         public string Status { get; set; }
-        public string ChangeReason { get; set; }
+        public string? ChangeReason { get; set; }
         public DateTime ChangedAt { get; set; }
     }
 }

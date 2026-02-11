@@ -11,5 +11,7 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
         public int Quantity { get; set; }
         public int SizeId { get; set; }
         public ProductAggregates.Size Size { get; set; }
+        public int CartId { get; set; }
+        public Cart Cart { get; set; }
     }
 }

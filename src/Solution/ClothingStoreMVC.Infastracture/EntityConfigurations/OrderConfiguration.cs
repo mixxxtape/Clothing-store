@@ -10,13 +10,27 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(o => o.Id);
 
+            builder.Property(o => o.OrderDate)
+                   .IsRequired();
+
+            builder.Property(o => o.DeliveryAddress)
+                   .IsRequired()
+                   .HasMaxLength(200);
+
+            builder.HasOne(o => o.User)
+                   .WithMany(u => u.Orders)
+                   .HasForeignKey(o => o.UserId)
+                   .IsRequired();
+
             builder.HasMany(o => o.Items)
                    .WithOne()
-                   .HasForeignKey(oi => oi.Id);
+                   .HasForeignKey(oi => oi.OrderId)
+                   .IsRequired();
 
             builder.HasMany(o => o.StatusHistory)
                    .WithOne(os => os.Order)
-                   .HasForeignKey(os => os.OrderId);
+                   .HasForeignKey(os => os.OrderId)
+                   .IsRequired();
         }
     }
 }
