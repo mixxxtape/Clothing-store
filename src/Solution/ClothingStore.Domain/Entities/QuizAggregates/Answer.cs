@@ -9,7 +9,7 @@ namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
         public string Text { get; set; } = null!;
         public ICollection<AnswerStyle> Styles { get; set; } = new List<AnswerStyle>();
         public int QuestionId { get; set; }
-        public Question Question { get; set; } = null!; = null!;
+        public Question Question { get; set; } = null!;
 
     }
 }

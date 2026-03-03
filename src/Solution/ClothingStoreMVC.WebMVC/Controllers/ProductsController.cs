@@ -22,9 +22,13 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         // GET: Products
         public async Task<IActionResult> Index()
         {
-            var clothingStoreContext = _context.Products.Include(p => p.Category).Include(p => p.Style);
+            var clothingStoreContext = _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Style);
+
             return View(await clothingStoreContext.ToListAsync());
         }
+
 
         // GET: Products/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -50,7 +54,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         public IActionResult Create()
         {
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Description");
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name");
             return View();
         }
 
@@ -68,7 +72,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Description", product.StyleId);
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
             return View(product);
         }
 
@@ -86,7 +90,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return NotFound();
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Description", product.StyleId);
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
             return View(product);
         }
 
@@ -123,7 +127,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Description", product.StyleId);
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
             return View(product);
         }
 
@@ -155,10 +159,10 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product);
+                _context.Products.Remove(product); 
+                await _context.SaveChangesAsync();
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

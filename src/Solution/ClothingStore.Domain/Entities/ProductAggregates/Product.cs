@@ -19,20 +19,19 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 
         [Required(ErrorMessage = "Ціна обов'язкова")]
         [Range(0.01, 100000, ErrorMessage = "Ціна повинна бути додатньою")]
+        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
         [Display(Name = "Ціна")]
         public decimal Price { get; set; }
         
         [Required(ErrorMessage = "Стиль обов'язковий")]
         [Display(Name = "Стиль")]
         public int StyleId { get; set; } 
-        [Display(Name = "Стиль")]
-        public Style Style { get; set; } = null!;
+        public Style? Style { get; set; } = null!;
 
         [Required(ErrorMessage = "Категорія обов'язкова")]
         [Display(Name = "Категорія")]
         public int CategoryId { get; set; }
-        [Display(Name = "Категорія")]
-        public Category Category { get; set; } = null!;
+        public Category? Category { get; set; } = null!;
        
         [Display(Name = "Видалено")]
         public bool IsDeleted { get; set; } = false;
