@@ -8,10 +8,10 @@ namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
     {
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public int UserId { get; set; }
-        public UserAggregates.User User { get; set; }
+        public UserAggregates.User User { get; set; } = null!;
         public int QuizId { get; set; }
         public Quiz Quiz { get; set; }
         public int StyleId { get; set; }
-        public ProductAggregates.Style Style { get; set; }
+        public ProductAggregates.Style Style { get; set; } = null!;
     }
 }

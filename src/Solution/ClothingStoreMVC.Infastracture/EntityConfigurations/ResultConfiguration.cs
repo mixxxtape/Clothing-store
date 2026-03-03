@@ -2,22 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-public class ResultConfiguration : IEntityTypeConfiguration<Result>
+
+namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
 {
-    public void Configure(EntityTypeBuilder<Result> builder)
+    public class ResultConfiguration : IEntityTypeConfiguration<Result>
     {
-        builder.HasKey(r => r.Id);
+        public void Configure(EntityTypeBuilder<Result> builder)
+        {
+            builder.HasKey(r => r.Id);
 
-        builder.HasOne(r => r.User)
-               .WithMany(u => u.Results)
-               .HasForeignKey(r => r.UserId);
+            builder.HasOne(r => r.User)
+                   .WithMany(u => u.Results)
+                   .HasForeignKey(r => r.UserId);
 
-        builder.HasOne(r => r.Quiz)
-               .WithMany(q => q.Results)
-               .HasForeignKey(r => r.QuizId);
+            builder.HasOne(r => r.Quiz)
+                   .WithMany(q => q.Results)
+                   .HasForeignKey(r => r.QuizId);
 
-        builder.HasOne(r => r.Style)
-               .WithMany()
-               .HasForeignKey(r => r.StyleId);
+            builder.HasOne(r => r.Style)
+                   .WithMany()
+                   .HasForeignKey(r => r.StyleId);
+        }
     }
 }

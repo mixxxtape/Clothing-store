@@ -6,10 +6,10 @@ namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
 {
     public class Question : Entity
     {
-        public string Text { get; set; }
+        public string Text { get; set; } = null!;
         public ICollection<Answer> Answers { get; set; } = new List<Answer>();
         public int QuizId { get; set; }
-        public Quiz Quiz { get; set; }
+        public Quiz Quiz { get; set; } = null!;
 
     }
 }
