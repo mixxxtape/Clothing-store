@@ -23,6 +23,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var clothingStoreContext = _context.Products
+                .IgnoreQueryFilters()
                 .Include(p => p.Category)
                 .Include(p => p.Style);
 
@@ -151,7 +152,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             return View(product);
         }
 
-        // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -159,7 +159,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             var product = await _context.Products.FindAsync(id);
             if (product != null)
             {
-                _context.Products.Remove(product); 
+                _context.Products.Remove(product);
                 await _context.SaveChangesAsync();
             }
 
