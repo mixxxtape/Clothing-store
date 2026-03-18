@@ -12,6 +12,7 @@ builder.Services.AddDbContext<ClothingStoreContext>(options =>
 );
 
 var app = builder.Build();
+app.UseStaticFiles();
 app.UseRouting();
 app.MapControllerRoute(
     name: "default",

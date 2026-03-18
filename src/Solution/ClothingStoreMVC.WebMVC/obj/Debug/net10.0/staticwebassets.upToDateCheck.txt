@@ -28,6 +28,7 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap.rtl.min.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.css
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\css\app.min.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.rtl.min.css.map
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\favicon.ico
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\css\site.css
@@ -60,6 +61,7 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\css\bootstrap-utilities.rtl.min.css.map
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist\js\bootstrap.esm.min.js
+wwwroot\css\app.min.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\js\site.js

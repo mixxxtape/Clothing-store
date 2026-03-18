@@ -115,7 +115,6 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\rjsmcsht
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\scopedcss\bundle\ClothingStoreMVC.WebMVC.styles.css
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\scopedcss\projectbundle\ClothingStoreMVC.WebMVC.bundle.scp.css
-E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\han6ubsu62-{0}-b9sayid5wm-b9sayid5wm.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\hai8wjdfxt-{0}-61n19gt1b8-61n19gt1b8.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\2nbuojrl9d-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\1ksjwiu0su-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -307,3 +306,8 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\ru\Micro
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\ClothingStoreMVC.WebMVC.sourcelink.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\package-lock.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\package.json
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\h8wrl1ybaj-{0}-g24wuq4fdg-g24wuq4fdg.gz
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\han6ubsu62-{0}-7nttppwa9a-7nttppwa9a.gz
