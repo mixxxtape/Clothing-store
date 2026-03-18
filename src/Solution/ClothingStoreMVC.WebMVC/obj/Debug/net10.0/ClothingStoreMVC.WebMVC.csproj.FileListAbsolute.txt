@@ -309,5 +309,5 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\zh-Hant\
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\ClothingStoreMVC.WebMVC.sourcelink.json
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\package-lock.json
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\bin\Debug\net10.0\package.json
-E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\h8wrl1ybaj-{0}-g24wuq4fdg-g24wuq4fdg.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\han6ubsu62-{0}-7nttppwa9a-7nttppwa9a.gz
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\h8wrl1ybaj-{0}-g3knsue85i-g3knsue85i.gz
