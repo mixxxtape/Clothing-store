@@ -12,3 +12,4 @@ E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingSto
 E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.genruntimeconfig.cache
 E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ref\ClothingStoreMVC.Domain.dll
 E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.sourcelink.json
+E:\ClothingStore\src\Solution\ClothingStore.Domain\obj\Debug\net10.0\ClothingStoreMVC.Domain.csproj.AssemblyReference.cache

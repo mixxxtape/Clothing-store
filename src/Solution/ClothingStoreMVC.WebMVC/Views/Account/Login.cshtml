@@ -1,0 +1,20 @@
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.LoginViewModel
+<h2 class="text-2xl font-bold mb-4">Вхід</h2>
+<form method="post" asp-controller="Account" asp-action="Login"
+      asp-route-returnUrl="@Model.ReturnUrl" class="max-w-md">
+    <div asp-validation-summary="ModelOnly" class="text-error mb-2"></div>
+    <div class="mb-3">
+        <label asp-for="Email" class="label"></label>
+        <input asp-for="Email" class="input w-full" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password" class="label"></label>
+        <input asp-for="Password" class="input w-full" />
+    </div>
+    <div class="mb-3 flex items-center gap-2">
+        <input asp-for="RememberMe" type="checkbox" class="checkbox" />
+        <label asp-for="RememberMe"></label>
+    </div>
+    <button type="submit" class="btn btn-primary">Увійти</button>
+    <a asp-action="Register" class="btn btn-ghost">Немає акаунту?</a>
+</form>

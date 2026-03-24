@@ -1,20 +1,53 @@
+using ClothingStoreMVC.Domain.Entities.UserAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.Infrastructure.Initializers;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddDbContext<ClothingStoreContext>(options =>
-    options.UseNpgsql(
-        builder.Configuration.GetConnectionString("ClothingStoreContext")
-    )
-);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("ClothingStoreContext")));
+
+builder.Services.AddDbContext<IdentityContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("IdentityConnection")));
+
+builder.Services.AddIdentity<AppUser, IdentityRole>()
+    .AddEntityFrameworkStores<IdentityContext>();
 
 var app = builder.Build();
-app.UseStaticFiles();
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var userManager = services.GetRequiredService<UserManager<AppUser>>();
+        var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        await RoleInitializer.InitializeAsync(userManager, rolesManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Помилка ініціалізації БД"+DateTime.Now.ToString());
+    }
+}
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/ Home / Error");
+    app.UseHsts();
+}
+
+    app.UseStaticFiles();
+app.UseAuthentication();
 app.UseRouting();
+app.UseAuthorization();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Products}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.Run();

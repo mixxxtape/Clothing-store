@@ -1,0 +1,14 @@
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.ChangeRoleViewModel
+<h2 class="text-2xl font-bold mb-4">Ролі для @Model.UserEmail</h2>
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="userId" value="@Model.UserId" />
+    @foreach (var role in Model.AllRoles)
+    {
+        <div class="flex items-center gap-2 mb-2">
+            <input type="checkbox" name="roles" value="@role.Name" class="checkbox"
+            @(Model.UserRoles.Contains(role.Name) ? "checked" : "") />
+            <span>@role.Name</span>
+        </div>
+    }
+    <button type="submit" class="btn btn-primary mt-4">Зберегти</button>
+</form>
