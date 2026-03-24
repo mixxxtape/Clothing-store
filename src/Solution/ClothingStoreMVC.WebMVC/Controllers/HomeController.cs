@@ -1,25 +1,28 @@
-using ClothingStoreMVC.WebMVC.Models;
+using ClothingStoreMVC.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
-using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ClothingStoreContext _context;
+
+        public HomeController(ClothingStoreContext context)
         {
-            return View();
+            _context = context;
         }
 
-        public IActionResult Privacy()
+        public async Task<IActionResult> Index()
         {
-            return View();
-        }
+            var newArrivals = await _context.Products
+                .Include(p => p.Category)
+                .Include(p => p.Style)
+                .OrderByDescending(p => p.Id)
+                .Take(3)
+                .ToListAsync();
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(newArrivals);
         }
     }
 }

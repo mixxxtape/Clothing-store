@@ -64,6 +64,9 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\wwwroot\lib\bootstrap\dist
 wwwroot\css\app.min.css
 wwwroot\css\site.css
 wwwroot\favicon.ico
+wwwroot\images\account.jpg
+wwwroot\images\cart.jpg
+wwwroot\images\wishlist.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\LICENSE
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

@@ -1,20 +1,111 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.ProductAggregates.Product>
+@{
+    ViewData["Title"] = "Home";
 }
-@if (User.Identity.IsAuthenticated)
-{
-    <p>@User.Identity.Name</p>
-    <form method="post" asp-controller="Account" asp-action="Logout">
-        <input type="submit" value="Вихід"/>
-    </form>            
-}
-else
-{
-    <a asp-controller="Account" asp-action="Login">Вхід</a>
-    <a asp-controller="Account" asp-action="Register">Реєстрація</a>                
-} 
-<div class="text-center">
-    <h1 class="display-4">Вітаю в моєму магазині ^_^</h1>
+
+<div style="display:flex; gap:2rem; align-items:flex-start;">
+
+    <div style="width:280px; flex-shrink:0;">
+        <div style="position:sticky; top:80px;">
+
+            <div style="padding:1rem 1.25rem; background:#F9DFDF;
+                border:1px solid #000000; border-radius:8px 8px 0 0;
+                border-bottom:2px solid #8062D6;">
+                <p style="font-size:0.65rem; letter-spacing:0.3em; color:#000000;
+                text-transform:uppercase; margin:0;">Our ner offer</p>
+            </div>
+
+            <div style="background:#F9DFDF; border:1px solid #000000;
+                border-top:none; border-radius:0 0 8px 8px; overflow:hidden;">
+
+                @if (!Model.Any())
+                {
+                    <div style="padding:2rem; text-align:center; color:#6b6b8a;
+                        font-size:0.8rem;">
+                        No products yet
+                    </div>
+                }
+
+                @foreach (var item in Model)
+                {
+                    <a asp-controller="Products" asp-action="Details"
+                           asp-route-id="@item.Id"
+                           style="display:flex; gap:0.75rem; padding:0.9rem 1rem;
+                        border-bottom:1px solid #000000; text-decoration:none;
+                        transition:background 0.2s;"
+                           onmouseover="this.style.background='#1a1a24'"
+                           onmouseout="this.style.background='transparent'">
+                        <div style="width:60px; height:60px; flex-shrink:0;
+                            background:#1a1a24; border:1px solid #2d2d40;
+                            border-radius:4px; display:flex; align-items:center;
+                            justify-content:center; overflow:hidden;">
+                        </div>
+
+                        <div style="flex:1; min-width:0;">
+                            <p style="font-size:0.8rem; font-weight:600; color:#000000;
+                                white-space:nowrap; overflow:hidden;
+                                text-overflow:ellipsis; margin:0 0 0.2rem 0;">
+                                @item.Name
+                            </p>
+                            <p style="font-size:0.7rem; color:#000000;">
+                                @(item.Style?.Name ?? "—")
+                            </p>
+                            <p style="font-size:0.85rem; font-weight:700; color:#000000;">
+                                @item.Price ₴
+                            </p>
+                        </div>
+                    </a>
+                }
+
+                <div style="padding:0.75rem 1rem;">
+                    <a asp-controller="Products" asp-action="Index"
+                           style="display:block; text-align:center; font-size:0.7rem;
+                        letter-spacing:0.2em; text-transform:uppercase;
+                        color:#000000; text-decoration:none; transition:color 0.2s;"
+                           onmouseover="this.style.color='#db2777'"
+                           onmouseout="this.style.color='#7c3aed'">
+                        View All →
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div style="flex:1; min-width:0; padding:2rem 0;">
+
+        <div style="width:500px; height:2px;
+        background:linear-gradient(135deg,#8062D6,#E8A9A9);
+        margin-bottom:1.5rem;"></div>
+
+        <p style="font-size:0.65rem; letter-spacing:0.4em; color:#000000;
+            text-transform:uppercase; margin-bottom:1rem;">
+            Alternative Fashion Store
+        </p>
+
+        <h1 style="font-size:clamp(2rem,4vw,3.5rem); font-weight:900;
+            line-height:1.1; margin-bottom:1.5rem;">
+            <span style="color:#0C0950;">Dress to</span><br>
+            <span style="background:linear-gradient(135deg,#8062D6,#121481);
+                -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
+                Impress
+            </span><br>
+        </h1>
+
+        <p style="color:#6b6b8a; font-size:1rem; line-height:1.8;
+            max-width:500px; margin-bottom:2.5rem;">
+            Visual Kei is the name of an artistic movement among Japanese music artists as well as a umbrella 
+            term for the styles worn by the bands as well as the fans emulating them.
+        </p>
+
+        <div style="display:flex; gap:1rem; flex-wrap:wrap;">
+            <a asp-controller="Products" asp-action="Index"
+                   style="padding:0.75rem 2rem; background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                color:white; text-decoration:none; border-radius:4px;
+                font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;
+                transition:opacity 0.2s;"
+                   onmouseover="this.style.opacity='0.85'"
+                   onmouseout="this.style.opacity='1'">
+                View more our items ->
+            </a>
+    </div>
 </div>
-
-

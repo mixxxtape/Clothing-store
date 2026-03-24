@@ -3,61 +3,251 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - ClothingStoreMVC.WebMVC</title>
+    <title>@ViewData["Title"] - Ravel</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/css/app.min.css" asp-append-version="true" />
+    <style>
+        body { background: #EEEEEE; color: #000000; font-family: Georgia, serif; margin: 0; }
+
+        .nav-bar {
+            background: #000000;
+            border-bottom: 1px solid #1a1a1a;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .nav-inner {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            gap: 1rem;
+        }
+
+        .nav-logo {
+            font-size: 1.3rem;
+            font-weight: 900;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            text-decoration: none;
+            background: linear-gradient(135deg, #6367FF, #FE81D4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            flex-shrink: 0;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.1rem;
+            flex: 1;
+            justify-content: center;
+        }
+
+        .nav-link {
+            color: #eeeeee;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.4rem 0.65rem;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .nav-link:hover { color: #eeeeee; background: #1a1a24; }
+
+        .nav-icons {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            flex-shrink: 0;
+        }
+
+        .nav-icon-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 6px;
+            background: transparent;
+            color: #9999bb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.2s;
+            position: relative;
+            font-size: 1rem;
+        }
+        .nav-icon-btn:hover {
+            border-color: #F57799;
+            color: #e2e2f0;
+            background: #1a1a24;
+        }
+
+        .btn-ghost {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s;
+            border: 1px solid #2d2d40;
+            color: #9999bb;
+            background: transparent;
+        }
+        .btn-ghost:hover { border-color: #F57799; color: #e2e2f0; }
+
+        .btn-primary {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: all 0.2s;
+            background: linear-gradient(135deg, #F57799, #EEEEEE);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-primary:hover { opacity: 0.85; }
+
+        .btn-danger {
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            transition: all 0.2s;
+            border: 1px solid #2d2d40;
+            color: #9999bb;
+            background: transparent;
+            cursor: pointer;
+        }
+        .btn-danger:hover { border-color: #F57799; color: #F57799; }
+
+        .nav-divider {
+            width: 1px;
+            height: 20px;
+            background: #2d2d40;
+            margin: 0 0.25rem;
+        }
+
+        .dark-card {
+            background: #13131a;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            transition: border-color 0.2s, transform 0.2s;
+        }
+        .dark-card:hover {
+            border-color: #E491C9;
+            transform: translateY(-2px);
+        }
+
+        footer {
+            background: #0d0d14;
+            border-top: 1px solid #2d2d40;
+            color: #6b6b8a;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-align: center;
+            padding: 2rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: #0a0a0f; }
+        ::-webkit-scrollbar-thumb { background: #2d2d40; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #4D2FB2; }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 8px);
+            right: 0;
+            background: #13131a;
+            border: 1px solid #2d2d40;
+            border-radius: 8px;
+            min-width: 160px;
+            padding: 0.5rem;
+            z-index: 100;
+        }
+        .dropdown-wrap:hover .dropdown-menu { display: block; }
+
+        .dropdown-item {
+            display: block;
+            padding: 0.5rem 0.75rem;
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: #9999bb;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        .dropdown-item:hover { background: #1a1a24; color: #e2e2f0; }
+        .dropdown-item.danger:hover { color: #F39EB6; }
+    </style>
 </head>
 <body>
-    <header>
-        <div class="navbar bg-base-100 shadow-md">
-            <div class="flex-1">
-                <a class="btn btn-ghost text-xl" asp-controller="Home" asp-action="Index">
-                    ClothingStore
-                </a>
-            </div>
-            <div class="flex-none">
-                <ul class="menu menu-horizontal px-1">
-                    <li><a asp-controller="Home" asp-action="Index">Головна</a></li>
-                    <li><a asp-controller="Products" asp-action="Index">Товари</a></li>
-                    <li><a asp-controller="Categories" asp-action="Index">Категорії</a></li>
-                    <li><a asp-controller="Styles" asp-action="Index">Стилі</a></li>
-                    <li><a asp-controller="Sizes" asp-action="Index">Розміри</a></li>
-                    <li><a asp-controller="Reviews" asp-action="Index">Відгуки</a></li>
-                    <li><a asp-controller="Quizs" asp-action="Index">Квіз</a></li>
-                </ul>
-            </div>
-            <div class="flex items-center gap-2">
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <span class="text-sm">@User.Identity.Name</span>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <a asp-controller="Roles" asp-action="UserList" class="btn btn-sm">Адмін</a>
-                    }
-                    <form method="post" asp-controller="Account" asp-action="Logout">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="btn btn-sm btn-error">Вихід</button>
-                    </form>
-                }
-                else
-                {
-                    <a asp-controller="Account" asp-action="Login" class="btn btn-sm">Вхід</a>
-                    <a asp-controller="Account" asp-action="Register" class="btn btn-sm btn-primary">Реєстрація</a>
-                }
-            </div>
-        </div>
-    </header>
-    <div class="max-w-7xl mx-auto px-4">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
 
-    <footer class="border-t mt-10 py-4 text-center text-sm text-gray-500">
-        &copy; 2026 - ClothingStoreMVC.WebMVC
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
-    @await RenderSectionAsync("Scripts", required: false)
+<header class="nav-bar">
+    <div class="nav-inner">
+
+        <a asp-controller="Home" asp-action="Index" class="nav-logo">RAVEL</a>
+
+        <nav class="nav-links">
+            <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
+            <a asp-controller="Products" asp-action="Index" class="nav-link">Catalogue</a>
+            <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
+        </nav>
+
+        <div class="nav-icons">
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a asp-controller="Home" asp-action="Index"
+                   class="nav-icon-btn" title="Wishlist">
+                   <img src="@Url.Content("~/images/wishlist.jpg")" />
+                </a>
+                
+                <a asp-controller="Home" asp-action="Index"
+                   class="nav-icon-btn" title="Cart">
+                   <img src="@Url.Content("~/images/cart.jpg")" />
+                </a>
+
+                <form method="post" asp-controller="Account" asp-action="Logout" style="margin:0;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="nav-icon-btn" title="Logout">
+                            <img src="@Url.Content("~/images/account.jpg")" />
+                        </button>
+                </form>
+            }
+            else
+            {
+                <a asp-controller="Account" asp-action="Login" class="btn-ghost">Sign In</a>
+                <a asp-controller="Account" asp-action="Register" class="btn-primary">Join</a>
+            }
+        </div>
+    </div>
+</header>
+
+<main style="max-width:1280px; margin:0 auto; padding:2rem 1.5rem;">
+    @RenderBody()
+</main>
+
+<footer>
+    <p style="text-transform:uppercase;">Ravel</p>
+    <p style="margin-top:0.4rem; opacity:0.5;">Lets go put on a mask</p>
+</footer>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
