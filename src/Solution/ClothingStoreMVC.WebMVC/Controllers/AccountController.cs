@@ -10,7 +10,8 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
 
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager)
+        public AccountController(UserManager<AppUser> userManager,
+                                 SignInManager<AppUser> signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -24,10 +25,19 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                AppUser user = new AppUser { Email = model.Email, UserName = model.Email };
+                AppUser user = new AppUser
+                {
+                    Email = model.Email,
+                    UserName = model.Email,
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    PhoneNumber = model.PhoneNumber
+                };
+
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }
@@ -56,7 +66,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                         return Redirect(model.ReturnUrl);
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError("", "Неправильний логін або пароль");
+                ModelState.AddModelError("", "Invalid email or password");
             }
             return View(model);
         }

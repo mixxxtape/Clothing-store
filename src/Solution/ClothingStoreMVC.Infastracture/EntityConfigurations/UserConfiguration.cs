@@ -10,10 +10,12 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(u => u.Id);
 
-            builder.Property(u => u.Name).IsRequired().HasMaxLength(50);
-            builder.Property(u => u.Surname).IsRequired().HasMaxLength(50);
-            builder.Property(u => u.Email).IsRequired().HasMaxLength(100);
-            builder.Property(u => u.Password).IsRequired().HasMaxLength(100);
+            builder.Property(u => u.IdentityUserId)
+                   .IsRequired()
+                   .HasMaxLength(450);
+
+            builder.HasIndex(u => u.IdentityUserId)
+                   .IsUnique();
 
             builder.HasOne(u => u.Cart)
                    .WithOne(c => c.User)

@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "ZupUbTsy+58=",
+  "dgSpecHash": "h53dNWLJoSE=",
   "success": true,
   "projectFilePath": "E:\\ClothingStore\\src\\Solution\\ClothingStoreMVC.WebMVC\\ClothingStoreMVC.WebMVC.csproj",
   "expectedPackageFiles": [
@@ -77,7 +77,6 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.design\\10.0.5\\microsoft.entityframeworkcore.design.10.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.relational\\10.0.5\\microsoft.entityframeworkcore.relational.10.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.entityframeworkcore.tools\\10.0.5\\microsoft.entityframeworkcore.tools.10.0.5.nupkg.sha512",
-    "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.configuration.json\\10.0.5\\microsoft.extensions.configuration.json.10.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.extensions.dependencymodel\\10.0.5\\microsoft.extensions.dependencymodel.10.0.5.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.net.stringtools\\17.11.48\\microsoft.net.stringtools.17.11.48.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\microsoft.visualstudio.solutionpersistence\\1.0.52\\microsoft.visualstudio.solutionpersistence.1.0.52.nupkg.sha512",
@@ -114,18 +113,5 @@
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.security.cryptography.pkcs\\6.0.4\\system.security.cryptography.pkcs.6.0.4.nupkg.sha512",
     "C:\\Users\\Lenovo\\.nuget\\packages\\system.security.cryptography.protecteddata\\9.0.6\\system.security.cryptography.protecteddata.9.0.6.nupkg.sha512"
   ],
-  "logs": [
-    {
-      "code": "NU1510",
-      "level": "Warning",
-      "message": "PackageReference Microsoft.Extensions.Configuration.Json will not be pruned. Consider removing this package from your dependencies, as it is likely unnecessary.",
-      "projectPath": "E:\\ClothingStore\\src\\Solution\\ClothingStoreMVC.WebMVC\\ClothingStoreMVC.WebMVC.csproj",
-      "warningLevel": 1,
-      "filePath": "E:\\ClothingStore\\src\\Solution\\ClothingStoreMVC.WebMVC\\ClothingStoreMVC.WebMVC.csproj",
-      "libraryId": "Microsoft.Extensions.Configuration.Json",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  "logs": []
 }

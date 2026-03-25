@@ -1,20 +1,77 @@
 ﻿@model ClothingStoreMVC.WebMVC.ViewModels.LoginViewModel
-<h2 class="text-2xl font-bold mb-4">Вхід</h2>
-<form method="post" asp-controller="Account" asp-action="Login"
-      asp-route-returnUrl="@Model.ReturnUrl" class="max-w-md">
-    <div asp-validation-summary="ModelOnly" class="text-error mb-2"></div>
-    <div class="mb-3">
-        <label asp-for="Email" class="label"></label>
-        <input asp-for="Email" class="input w-full" />
+
+<style>
+    .field-input {
+        width: 100%;
+        box-sizing: border-box;
+        background: #0d0d14;
+        border: 1px solid #2d2d40;
+        border-radius: 4px;
+        padding: 0.6rem 0.9rem;
+        color: #e2e2f0;
+        font-size: 0.85rem;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+    .field-input:focus { border-color: #6367FF; }
+    .field-label {
+        display: block;
+        font-size: 0.7rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin-bottom: 0.4rem;
+    }
+    .field-wrap { margin-bottom: 1.2rem; }
+    .field-error { color: #F57799; font-size: 0.75rem; }
+</style>
+
+<div style="max-width: 480px; margin: 3rem auto;">
+    <div class="dark-card" style="padding: 2.5rem;">
+
+        <h2 style="color: #e2e2f0; font-size: 1.1rem; letter-spacing: 0.2em; text-transform: uppercase; margin: 0 0 2rem 0; text-align: center;">
+            Sign In
+        </h2>
+
+        <form method="post" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">
+            <div asp-validation-summary="ModelOnly" class="field-error" style="margin-bottom: 1rem;"></div>
+
+            <div class="field-wrap">
+                <label asp-for="Email" class="field-label"></label>
+                <input asp-for="Email" class="field-input" />
+                <span asp-validation-for="Email" class="field-error"></span>
+            </div>
+
+            <div class="field-wrap">
+                <label asp-for="Password" class="field-label"></label>
+                <input asp-for="Password" class="field-input" />
+                <span asp-validation-for="Password" class="field-error"></span>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 0.6rem; margin-bottom: 1.5rem;">
+                <input asp-for="RememberMe" type="checkbox"
+                       style="width: 16px; height: 16px; accent-color: #6367FF; cursor: pointer;" />
+                <label asp-for="RememberMe"
+                       style="font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6b8a; cursor: pointer;"></label>
+            </div>
+
+            <button type="submit"
+                    style="width:100%; padding:0.7rem; border-radius:4px; border:none; cursor:pointer; font-size:0.75rem; letter-spacing:0.15em; text-transform:uppercase; background:linear-gradient(135deg,#6367FF,#FE81D4); color:white; margin-top:0.5rem; transition:opacity 0.2s;"
+                    onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+                Sign In
+            </button>
+
+            <p style="text-align:center; margin-top:1.2rem; font-size:0.75rem; color:#6b6b8a; letter-spacing:0.08em;">
+                Don't have an account?
+                <a asp-action="Register" style="color:#FE81D4; text-decoration:none;">Join</a>
+            </p>
+        </form>
+
     </div>
-    <div class="mb-3">
-        <label asp-for="Password" class="label"></label>
-        <input asp-for="Password" class="input w-full" />
-    </div>
-    <div class="mb-3 flex items-center gap-2">
-        <input asp-for="RememberMe" type="checkbox" class="checkbox" />
-        <label asp-for="RememberMe"></label>
-    </div>
-    <button type="submit" class="btn btn-primary">Увійти</button>
-    <a asp-action="Register" class="btn btn-ghost">Немає акаунту?</a>
-</form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
