@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
 
 namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
 {
     public class Quiz : Entity, IAggregateRoot
     {
-        [Required(ErrorMessage = "Назва квізу має бути обов'язковою")]
-        [StringLength(100, ErrorMessage = "Назва квізу не може бути довше 100 символів")]
-        [Display(Name = "Квіз")]
+        [Required(ErrorMessage = "Quiz name is required")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Quiz name must be between 2 and 100 characters")]
+        [Display(Name = "Quiz Name")]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = "Опис квізу є обов'язковим")]
-        [StringLength(500, ErrorMessage = "Опис квізу не може бути довше 500 символів")]
-        [Display(Name = "Опис квіза")]
+        [Required(ErrorMessage = "Description is required")]
+        [StringLength(500, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 500 characters")]
+        [Display(Name = "Description")]
         public string Description { get; set; } = null!;
 
-        [Display(Name = "Перелік питань")]
+        [Display(Name = "Questions")]
         public ICollection<Question> Questions { get; set; } = new List<Question>();
-        [Display(Name = "Перелік результатів")]
+
+        [Display(Name = "Results")]
         public ICollection<Result> Results { get; set; } = new List<Result>();
     }
 }

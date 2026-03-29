@@ -8,22 +8,18 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
     public class Review : Entity
     {
         [Required]
-        [Display(Name = "Користувач")]
         public int UserId { get; set; }
         public UserAggregates.User User { get; set; } = null!;
 
         [Required]
-        [Display(Name = "Товар")]
         public int ProductId { get; set; }
         public ProductAggregates.Product Product { get; set; } = null!;
 
         [Required]
-        [Range(1, 5, ErrorMessage = "Рейтинг повинен бути від 1 до 5")]
-        [Display(Name = "Рейтинг")]
+        [Range(1, 5, ErrorMessage = "Rating should be on a scale of 1 to 5")]
         public int Rating { get; set; }
 
-        [StringLength(500, ErrorMessage = "Коментар не може бути довше 500 символів")]
-        [Display(Name = "Коментар")]
+        [StringLength(500, ErrorMessage = "Comment cannot be longer than 500 characters")]
         public string? Comment { get; set; }
     }
 }

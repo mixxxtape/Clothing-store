@@ -1,12 +1,17 @@
 ﻿using ClothingStoreMVC.Domain.Entities.QuizAggregates;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace ClothingStoreMVC.Domain.Entities.UserAggregates
 {
     public class User : Entity, IAggregateRoot
     {
+        [Required(ErrorMessage = "Identity user reference is required")]
+        [StringLength(450, ErrorMessage = "Identity user ID cannot exceed 450 characters")]
         public string IdentityUserId { get; set; }
 
+        [Required(ErrorMessage = "Role is required")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select a valid role")]
         public int RoleId { get; set; }
         public Role Role { get; set; }
 

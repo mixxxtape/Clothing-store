@@ -7,10 +7,10 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 {
     public class Size : Entity
     {
-        [Required(ErrorMessage = "Назва розміру обов'язкова")]
-        [StringLength(10, ErrorMessage = "Назва розміру не може бути довше 10 символів")]
-        [Display(Name = "Розмір")]
+        [Required(ErrorMessage = "Size is required")]
+        [StringLength(10, ErrorMessage = "The size cannot be longer than 10 characters")]
         public string Name { get; set; } = null!;
+
         public ICollection<ProductSize> ProductSizes { get; set; } = new List<ProductSize>();
     }
 }

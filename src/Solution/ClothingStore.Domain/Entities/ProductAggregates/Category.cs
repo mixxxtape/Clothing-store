@@ -7,9 +7,8 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 {
     public class Category : Entity
     {
-        [Required(ErrorMessage = "Назва категорії є обов'язковою")]
-        [StringLength(50, ErrorMessage = "Назва категорії не може бути довше 50 символів")]
-        [Display(Name = "Категорія")]
+        [Required(ErrorMessage = "Category name is required")]
+        [StringLength(50, ErrorMessage = "Category name cannot be longer than 50 characters")]
         public string Name { get; set; } = null!;
 
         public ICollection<Product> Products { get; set; } = new List<Product>();

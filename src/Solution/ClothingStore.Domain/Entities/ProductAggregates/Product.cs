@@ -7,39 +7,28 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
 {
      public class Product : Entity, IAggregateRoot
     {
-        [Required(ErrorMessage = "Назва продукту є обов'язковою")]
-        [StringLength(100, ErrorMessage = "Назва продукту не може бути довше 100 символів")]
-        [Display(Name = "Назва продукту")]
+        [Required(ErrorMessage = "Product name is required")]
+        [StringLength(100, MinimumLength = 2, ErrorMessage = "Product name cannot be longer than 100 characters")]
         public string Name { get; set; } = null!;
 
-        [Required(ErrorMessage = "Опис продукту є обов'язковим")]
-        [StringLength(500, ErrorMessage = "Опис продукту не може бути довше 500 символів")]
-        [Display(Name = "Опис продукту")]
+        [Required(ErrorMessage = "Product description is required")]
+        [StringLength(500, ErrorMessage = "Product description cannot be longer than 500 characters")]
         public string Description { get; set; } = null!;
 
-        [Required(ErrorMessage = "Ціна обов'язкова")]
-        [Range(0.01, 100000, ErrorMessage = "Ціна повинна бути додатньою")]
-        [DisplayFormat(DataFormatString = "{0:C}", ApplyFormatInEditMode = true)]
-        [Display(Name = "Ціна")]
+        [Required(ErrorMessage = "Price is required")]
+        [Range(0.01, 100000.00, ErrorMessage = "Price must be between 0.01 and 100,000")]
+        [DataType(DataType.Currency)]
         public decimal Price { get; set; }
         
-        [Required(ErrorMessage = "Стиль обов'язковий")]
-        [Display(Name = "Стиль")]
+        [Required(ErrorMessage = "Please select a style")]
         public int StyleId { get; set; } 
-        public Style? Style { get; set; } = null!;
+        public Style Style { get; set; } = null!;
 
-        [Required(ErrorMessage = "Категорія обов'язкова")]
-        [Display(Name = "Категорія")]
+        [Required(ErrorMessage = "Category is required")]
         public int CategoryId { get; set; }
-        public Category? Category { get; set; } = null!;
-       
-        [Display(Name = "Видалено")]
+        public Category Category { get; set; } = null!;
         public bool IsDeleted { get; set; } = false;
-
-        [Display(Name = "Відгуки")]
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
-
-        [Display(Name = "Розміри")]
         public ICollection<ProductSize> Sizes { get; set; } = new List<ProductSize>();
     }
 

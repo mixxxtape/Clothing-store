@@ -20,7 +20,15 @@ namespace ClothingStoreMVC.Infrastructure.Initializers
 
             if (await userManager.FindByNameAsync(adminEmail) == null)
             {
-                AppUser admin = new AppUser { Email = adminEmail, UserName = adminEmail };
+                AppUser admin = new AppUser
+                {
+                    Email = adminEmail,
+                    UserName = adminEmail,
+                    FirstName = "Admin",
+                    LastName = "Admin",
+                    PhoneNumber = "+38011037080"
+                };
+
                 IdentityResult result = await userManager.CreateAsync(admin, password);
                 if (result.Succeeded)
                     await userManager.AddToRoleAsync(admin, "admin");
