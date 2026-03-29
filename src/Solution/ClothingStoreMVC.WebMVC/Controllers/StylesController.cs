@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using ClothingStoreMVC.Domain.Entities.ProductAggregates;
+using ClothingStoreMVC.Infrastructure;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStoreMVC.Domain.Entities.ProductAggregates;
-using ClothingStoreMVC.Infrastructure;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
+    [Authorize]
     public class StylesController : Controller
     {
         private readonly ClothingStoreContext _context;
@@ -20,12 +22,14 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         }
 
         // GET: Styles
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Styles.ToListAsync());
         }
 
         // GET: Styles/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +48,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         }
 
         // GET: Styles/Create
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +59,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("Name,Description,Id")] Style style)
         {
             if (ModelState.IsValid)
@@ -66,6 +72,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         }
 
         // GET: Styles/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +93,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Id")] Style style)
         {
             if (id != style.Id)
@@ -117,6 +125,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         }
 
         // GET: Styles/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +146,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         // POST: Styles/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var style = await _context.Styles.FindAsync(id);

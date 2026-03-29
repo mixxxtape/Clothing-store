@@ -16,7 +16,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public Size Size { get; set; } = null!;
 
         [Required(ErrorMessage = "Quantity is required")]
-        [Range(1, int.MaxValue, ErrorMessage = "Quantity must be a positive integer")]
+        [Range(0, int.MaxValue, ErrorMessage = "Quantity must be a positive integer")]
         public int Quantity { get; set; }
     }
 }

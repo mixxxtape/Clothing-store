@@ -28,6 +28,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.Category)
             </th>
+            <th>Sizes</th>
             <th>
                 @Html.DisplayNameFor(model => model.IsDeleted)
             </th>
@@ -37,7 +38,7 @@
     <tbody>
         @foreach (var item in Model)
         {
-            <tr>
+            <tr style="@(item.IsDeleted ? "background-color:#f8d7da;" : "")">
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -53,6 +54,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Category.Name)
                 </td>
+                <td>@string.Join(", ", item.Sizes.Select(s => s.Size.Name))</td>
                 <td>
                     @Html.DisplayFor(modelItem => item.IsDeleted)
                 </td>

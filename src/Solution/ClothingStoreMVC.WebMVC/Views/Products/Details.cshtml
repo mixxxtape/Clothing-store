@@ -31,14 +31,18 @@
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Style)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Style.Description)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Style.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Category)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Category.Name)
+        </dd>
+        <dt class="col-sm-2">Sizes</dt>
+        <dd class="col-sm-10">
+            @string.Join(", ", Model.Sizes.Select(s => s.Size.Name))
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsDeleted)

@@ -1,0 +1,35 @@
+﻿@model IEnumerable<ClothingStoreMVC.WebMVC.ViewModels.ProductListViewModel>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Category</th>
+            <th>Style</th>
+            <th>Sizes</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Price</td>
+                <td>@item.CategoryName</td>
+                <td>@item.StyleName</td>
+                <td>@item.Sizes</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+
+                    @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+                    {
+                        <a asp-action="AddToCart" asp-route-id="@item.Id">To cart</a>
+                        <a asp-action="AddToFavorites" asp-route-id="@item.Id">To wishlist</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,14 @@
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.ProductDetailsViewModel
+
+<h2>@Model.Name</h2>
+<p>@Model.Description</p>
+<p>Price: @Model.Price</p>
+<p>Category: @Model.CategoryName</p>
+<p>Style: @Model.StyleName</p>
+<p>Size: @Model.Sizes</p>
+
+@if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+{
+    <a asp-action="AddToCart" asp-route-id="@Model.Id">To cart</a>
+    <a asp-action="AddToFavorites" asp-route-id="@Model.Id">To wishlist</a>
+}

@@ -16,7 +16,6 @@
             top: 0;
             z-index: 50;
         }
-
         .nav-inner {
             max-width: 1280px;
             margin: 0 auto;
@@ -27,7 +26,6 @@
             height: 64px;
             gap: 1rem;
         }
-
         .nav-logo {
             font-size: 1.3rem;
             font-weight: 900;
@@ -39,7 +37,6 @@
             -webkit-text-fill-color: transparent;
             flex-shrink: 0;
         }
-
         .nav-links {
             display: flex;
             align-items: center;
@@ -47,7 +44,6 @@
             flex: 1;
             justify-content: center;
         }
-
         .nav-link {
             color: #eeeeee;
             font-size: 0.75rem;
@@ -59,14 +55,12 @@
             transition: all 0.2s;
         }
         .nav-link:hover { color: #eeeeee; background: #1a1a24; }
-
         .nav-icons {
             display: flex;
             align-items: center;
             gap: 0.5rem;
             flex-shrink: 0;
         }
-
         .nav-icon-btn {
             width: 38px;
             height: 38px;
@@ -81,13 +75,9 @@
             transition: all 0.2s;
             position: relative;
             font-size: 1rem;
+            border: none;
         }
-        .nav-icon-btn:hover {
-            border-color: #F57799;
-            color: #e2e2f0;
-            background: #1a1a24;
-        }
-
+        .nav-icon-btn:hover { border-color: #F57799; color: #e2e2f0; background: #1a1a24; }
         .btn-ghost {
             padding: 0.4rem 1rem;
             border-radius: 4px;
@@ -101,7 +91,6 @@
             background: transparent;
         }
         .btn-ghost:hover { border-color: #F57799; color: #e2e2f0; }
-
         .btn-primary {
             padding: 0.4rem 1rem;
             border-radius: 4px;
@@ -116,7 +105,6 @@
             cursor: pointer;
         }
         .btn-primary:hover { opacity: 0.85; }
-
         .btn-danger {
             padding: 0.4rem 1rem;
             border-radius: 4px;
@@ -130,25 +118,14 @@
             cursor: pointer;
         }
         .btn-danger:hover { border-color: #F57799; color: #F57799; }
-
-        .nav-divider {
-            width: 1px;
-            height: 20px;
-            background: #2d2d40;
-            margin: 0 0.25rem;
-        }
-
+        .nav-divider { width: 1px; height: 20px; background: #2d2d40; margin: 0 0.25rem; }
         .dark-card {
             background: #13131a;
             border: 1px solid #2d2d40;
             border-radius: 8px;
             transition: border-color 0.2s, transform 0.2s;
         }
-        .dark-card:hover {
-            border-color: #E491C9;
-            transform: translateY(-2px);
-        }
-
+        .dark-card:hover { border-color: #E491C9; transform: translateY(-2px); }
         footer {
             background: #0d0d14;
             border-top: 1px solid #2d2d40;
@@ -159,26 +136,40 @@
             padding: 2rem 1.5rem;
             margin-top: 4rem;
         }
-
         ::-webkit-scrollbar { width: 5px; }
         ::-webkit-scrollbar-track { background: #0a0a0f; }
         ::-webkit-scrollbar-thumb { background: #2d2d40; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #4D2FB2; }
 
-        .dropdown-menu {
+        /* Admin dropdown */
+        .admin-wrap {
+            position: relative;
+        }
+        .admin-toggle {
+            color: #eeeeee;
+            font-size: 0.75rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 0.4rem 0.65rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        .admin-toggle:hover { background: #1a1a24; }
+        .admin-menu {
             display: none;
             position: absolute;
             top: calc(100% + 8px);
-            right: 0;
+            left: 0;
             background: #13131a;
             border: 1px solid #2d2d40;
             border-radius: 8px;
             min-width: 160px;
             padding: 0.5rem;
-            z-index: 100;
+            z-index: 999;
         }
-        .dropdown-wrap:hover .dropdown-menu { display: block; }
-
+        .admin-menu.is-open { display: block; }
         .dropdown-item {
             display: block;
             padding: 0.5rem 0.75rem;
@@ -191,7 +182,6 @@
             transition: all 0.2s;
         }
         .dropdown-item:hover { background: #1a1a24; color: #e2e2f0; }
-        .dropdown-item.danger:hover { color: #F39EB6; }
     </style>
 </head>
 <body>
@@ -203,29 +193,37 @@
 
         <nav class="nav-links">
             <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
-            <a asp-controller="Products" asp-action="Index" class="nav-link">Catalogue</a>
+            <a asp-controller="Catalog" asp-action="Index" class="nav-link">Catalogue</a>
             <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
+
+            @if (User.IsInRole("admin"))
+            {
+                <div class="admin-wrap" id="adminWrap">
+                    <span class="admin-toggle" id="adminToggle">Admin ▾</span>
+                    <div class="admin-menu" id="adminMenu">
+                        <a asp-controller="Products" asp-action="Index" class="dropdown-item">Products</a>
+                        <a asp-controller="Categories" asp-action="Index" class="dropdown-item">Categories</a>
+                        <a asp-controller="Sizes" asp-action="Index" class="dropdown-item">Sizes</a>
+                        <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
+                    </div>
+                </div>
+            }
         </nav>
 
         <div class="nav-icons">
-
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Home" asp-action="Index"
-                   class="nav-icon-btn" title="Wishlist">
-                   <img src="@Url.Content("~/images/wishlist.jpg")" />
+                <a asp-controller="Home" asp-action="Index" class="nav-icon-btn" title="Wishlist">
+                    <img src="@Url.Content("~/images/wishlist.jpg")" />
                 </a>
-                
-                <a asp-controller="Home" asp-action="Index"
-                   class="nav-icon-btn" title="Cart">
-                   <img src="@Url.Content("~/images/cart.jpg")" />
+                <a asp-controller="Home" asp-action="Index" class="nav-icon-btn" title="Cart">
+                    <img src="@Url.Content("~/images/cart.jpg")" />
                 </a>
-
                 <form method="post" asp-controller="Account" asp-action="Logout" style="margin:0;">
-                        @Html.AntiForgeryToken()
-                        <button type="submit" class="nav-icon-btn" title="Logout">
-                            <img src="@Url.Content("~/images/account.jpg")" />
-                        </button>
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="nav-icon-btn" title="Logout">
+                        <img src="@Url.Content("~/images/account.jpg")" />
+                    </button>
                 </form>
             }
             else
@@ -234,6 +232,7 @@
                 <a asp-controller="Account" asp-action="Register" class="btn-primary">Join</a>
             }
         </div>
+
     </div>
 </header>
 
@@ -249,5 +248,26 @@
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/js/site.js" asp-append-version="true"></script>
 @await RenderSectionAsync("Scripts", required: false)
+
+<script>
+    (function () {
+        var toggle = document.getElementById('adminToggle');
+        var menu = document.getElementById('adminMenu');
+        var wrap = document.getElementById('adminWrap');
+        if (!toggle || !menu || !wrap) return;
+
+        toggle.addEventListener('click', function (e) {
+            e.stopPropagation();
+            menu.classList.toggle('is-open');
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!wrap.contains(e.target)) {
+                menu.classList.remove('is-open');
+            }
+        });
+    })();
+</script>
+
 </body>
 </html>
