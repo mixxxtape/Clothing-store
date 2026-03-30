@@ -141,7 +141,6 @@
         ::-webkit-scrollbar-thumb { background: #2d2d40; border-radius: 3px; }
         ::-webkit-scrollbar-thumb:hover { background: #4D2FB2; }
 
-        /* Admin dropdown */
         .admin-wrap {
             position: relative;
         }
@@ -191,24 +190,30 @@
 
         <a asp-controller="Home" asp-action="Index" class="nav-logo">RAVEL</a>
 
-        <nav class="nav-links">
-            <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
-            <a asp-controller="Catalog" asp-action="Index" class="nav-link">Catalogue</a>
-            <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
+       <nav class="nav-links">
+    <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
+    <a asp-controller="Catalog" asp-action="Index" class="nav-link">Catalogue</a>
+    <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
 
-            @if (User.IsInRole("admin"))
-            {
-                <div class="admin-wrap" id="adminWrap">
-                    <span class="admin-toggle" id="adminToggle">Admin ▾</span>
-                    <div class="admin-menu" id="adminMenu">
-                        <a asp-controller="Products" asp-action="Index" class="dropdown-item">Products</a>
-                        <a asp-controller="Categories" asp-action="Index" class="dropdown-item">Categories</a>
-                        <a asp-controller="Sizes" asp-action="Index" class="dropdown-item">Sizes</a>
-                        <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
-                    </div>
-                </div>
-            }
-        </nav>
+    @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+    {
+        <a asp-controller="Quiz" asp-action="Index" class="nav-link">Style Quiz</a>
+    }
+
+    @if (User.IsInRole("admin"))
+    {
+        <div class="admin-wrap" id="adminWrap">
+            <span class="admin-toggle" id="adminToggle">Admin ▾</span>
+            <div class="admin-menu" id="adminMenu">
+                <a asp-controller="Products" asp-action="Index" class="dropdown-item">Products</a>
+                <a asp-controller="Categories" asp-action="Index" class="dropdown-item">Categories</a>
+                <a asp-controller="Sizes" asp-action="Index" class="dropdown-item">Sizes</a>
+                <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
+                <a asp-controller="Quiz" asp-action="Manage" class="dropdown-item">Quiz</a>
+            </div>
+        </div>
+    }
+</nav>
 
         <div class="nav-icons">
             @if (User.Identity.IsAuthenticated)

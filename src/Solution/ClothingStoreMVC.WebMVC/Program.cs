@@ -39,7 +39,8 @@ using (var scope = app.Services.CreateScope())
     {
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var rolesManager = services.GetRequiredService<RoleManager<IdentityRole>>();
-        await RoleInitializer.InitializeAsync(userManager, rolesManager);
+        var context = services.GetRequiredService<ClothingStoreContext>();
+        await RoleInitializer.InitializeAsync(userManager, rolesManager, context);
     }
     catch (Exception ex)
     {

@@ -1,0 +1,36 @@
+﻿<h1>Add answer</h1>
+<div class="row">
+    <div class="col-md-5">
+        <form asp-action="CreateAnswer" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="questionId" value="@ViewBag.QuestionId" />
+
+            <div asp-validation-summary="All" class="text-danger"></div>
+
+            <div class="form-group">
+                <label>Answer text</label>
+                <input name="text" class="form-control" required />
+            </div>
+
+            <div class="form-group mt-2">
+                <label>Style</label>
+                <div>
+                    @foreach (var style in ViewBag.Styles)
+                    {
+                        <div>
+                            <label>
+                                <input type="checkbox" name="selectedStyles" value="@style.Id" />
+                                @style.Name
+                            </label>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group mt-2">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+<a asp-action="Manage">Back</a>

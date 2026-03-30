@@ -1,0 +1,66 @@
+﻿@model ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz?
+
+<h1>Quiz management</h1>
+
+@if (Model == null)
+{
+    <p>The quiz has not been created yet.</p>
+    <a asp-action="CreateQuiz" class="btn btn-primary">Create a quiz</a>
+}
+else
+{
+    <div style="margin-bottom:1.5rem;">
+        <h3>@Model.Name</h3>
+        <p>@Model.Description</p>
+        <a asp-action="EditQuiz" asp-route-id="@Model.Id">Edit quiz</a>
+    </div>
+
+    <div style="margin-bottom:1rem;">
+        <a asp-action="CreateQuestion" asp-route-quizId="@Model.Id" class="btn btn-primary">
+            Add question
+        </a>
+    </div>
+
+    @foreach (var question in Model.Questions)
+    {
+        <div style="border:1px solid #ccc; padding:1rem; margin-bottom:1rem; border-radius:8px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h5>@question.Text</h5>
+                <div>
+                    <a asp-action="EditQuestion" asp-route-id="@question.Id">Edit</a> |
+                    <form asp-action="DeleteQuestion" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@question.Id" />
+                        <button type="submit" style="background:none;border:none;color:red;cursor:pointer;">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <ul>
+                @foreach (var answer in question.Answers)
+                {
+                    <li>
+                        @answer.Text
+                        <span style="color:#888; font-size:0.85rem;">
+                            (@string.Join(", ", answer.Styles.Select(s => s.Style.Name)))
+                        </span>
+                        <a asp-action="EditAnswer" asp-route-id="@answer.Id">Edit</a> |
+                        <form asp-action="DeleteAnswer" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@answer.Id" />
+                            <button type="submit" style="background:none;border:none;color:red;cursor:pointer;">
+                                Delete
+                            </button>
+                        </form>
+                    </li>
+                }
+            </ul>
+
+            <a asp-action="CreateAnswer" asp-route-questionId="@question.Id">
+                Add answer
+            </a>
+        </div>
+    }
+}

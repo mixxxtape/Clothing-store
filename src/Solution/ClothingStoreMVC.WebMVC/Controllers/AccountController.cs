@@ -1,8 +1,10 @@
 ﻿using ClothingStoreMVC.Domain.Entities.UserAggregates;
+using ClothingStoreMVC.Infrastructure;
 using ClothingStoreMVC.WebMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
@@ -10,12 +12,15 @@ namespace ClothingStoreMVC.WebMVC.Controllers
     {
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
+        private readonly ClothingStoreContext _context;
 
         public AccountController(UserManager<AppUser> userManager,
-                                 SignInManager<AppUser> signInManager)
+                                 SignInManager<AppUser> signInManager,
+                                 ClothingStoreContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _context = context; 
         }
 
         [HttpGet]
@@ -39,6 +44,17 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 if (result.Succeeded)
                 {
                     await _userManager.AddToRoleAsync(user, "user");
+
+                    var userRole = await _context.Roles.FirstOrDefaultAsync(r => r.Name == "user");
+
+                    var domainUser = new ClothingStoreMVC.Domain.Entities.UserAggregates.User
+                    {
+                        IdentityUserId = user.Id,
+                        RoleId = userRole!.Id
+                    };
+                    _context.Users.Add(domainUser);
+                    await _context.SaveChangesAsync();
+
                     await _signInManager.SignInAsync(user, false);
                     return RedirectToAction("Index", "Home");
                 }

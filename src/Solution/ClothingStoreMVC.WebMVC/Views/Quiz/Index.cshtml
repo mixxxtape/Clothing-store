@@ -1,0 +1,42 @@
+﻿@model ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz
+
+<div id="quizIntro">
+    <h2>@Model.Name</h2>
+    <p>@Model.Description</p>
+    <button onclick="startQuiz()" class="btn btn-primary">Take the test</button>
+</div>
+
+<div id="quizForm" style="display:none;">
+    <form asp-action="Submit" method="post" id="quizFormEl">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="quizId" value="@Model.Id" />
+
+        @foreach (var question in Model.Questions)
+        {
+            <div style="margin-bottom:2rem;">
+                <h4>@question.Text</h4>
+                @foreach (var answer in question.Answers)
+                {
+                    <div>
+                        <label>
+                            <input type="radio"
+                                   name="answers[@question.Id]"
+                                   value="@answer.Id"
+                                   required />
+                            @answer.Text
+                        </label>
+                    </div>
+                }
+            </div>
+        }
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+</div>
+
+<script>
+    function startQuiz() {
+        document.getElementById('quizIntro').style.display = 'none';
+        document.getElementById('quizForm').style.display = 'block';
+    }
+</script>

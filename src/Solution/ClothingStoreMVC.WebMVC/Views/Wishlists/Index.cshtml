@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.QuizAggregates.Answer>
+﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.UserAggregates.Wishlist>
 
 @{
     ViewData["Title"] = "Index";
@@ -13,10 +13,7 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Text)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Question)
+                @Html.DisplayNameFor(model => model.User)
             </th>
             <th></th>
         </tr>
@@ -25,10 +22,7 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Question.Text)
+                @Html.DisplayFor(modelItem => item.User.IdentityUserId)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

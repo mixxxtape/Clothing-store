@@ -5,27 +5,28 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using ClothingStoreMVC.Domain.Entities.QuizAggregates;
+using ClothingStoreMVC.Domain.Entities.UserAggregates;
 using ClothingStoreMVC.Infrastructure;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
-    public class QuizsController : Controller
+    public class OrdersController : Controller
     {
         private readonly ClothingStoreContext _context;
 
-        public QuizsController(ClothingStoreContext context)
+        public OrdersController(ClothingStoreContext context)
         {
             _context = context;
         }
 
-        // GET: Quizs
+        // GET: Orders
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Quizzes.ToListAsync());
+            var clothingStoreContext = _context.Orders.Include(o => o.User);
+            return View(await clothingStoreContext.ToListAsync());
         }
 
-        // GET: Quizs/Details/5
+        // GET: Orders/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +34,42 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return NotFound();
             }
 
-            var quiz = await _context.Quizzes
+            var order = await _context.Orders
+                .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (quiz == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(quiz);
+            return View(order);
         }
 
-        // GET: Quizs/Create
+        // GET: Orders/Create
         public IActionResult Create()
         {
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId");
             return View();
         }
 
-        // POST: Quizs/Create
+        // POST: Orders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Id")] Quiz quiz)
+        public async Task<IActionResult> Create([Bind("UserId,OrderDate,DeliveryAddress,Id")] Order order)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(quiz);
+                _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(quiz);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
+            return View(order);
         }
 
-        // GET: Quizs/Edit/5
+        // GET: Orders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +77,23 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return NotFound();
             }
 
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz == null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order == null)
             {
                 return NotFound();
             }
-            return View(quiz);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
+            return View(order);
         }
 
-        // POST: Quizs/Edit/5
+        // POST: Orders/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Id")] Quiz quiz)
+        public async Task<IActionResult> Edit(int id, [Bind("UserId,OrderDate,DeliveryAddress,Id")] Order order)
         {
-            if (id != quiz.Id)
+            if (id != order.Id)
             {
                 return NotFound();
             }
@@ -97,12 +102,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             {
                 try
                 {
-                    _context.Update(quiz);
+                    _context.Update(order);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!QuizExists(quiz.Id))
+                    if (!OrderExists(order.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +118,11 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(quiz);
+            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
+            return View(order);
         }
 
-        // GET: Quizs/Delete/5
+        // GET: Orders/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,34 +130,35 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return NotFound();
             }
 
-            var quiz = await _context.Quizzes
+            var order = await _context.Orders
+                .Include(o => o.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (quiz == null)
+            if (order == null)
             {
                 return NotFound();
             }
 
-            return View(quiz);
+            return View(order);
         }
 
-        // POST: Quizs/Delete/5
+        // POST: Orders/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var quiz = await _context.Quizzes.FindAsync(id);
-            if (quiz != null)
+            var order = await _context.Orders.FindAsync(id);
+            if (order != null)
             {
-                _context.Quizzes.Remove(quiz);
+                _context.Orders.Remove(order);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool QuizExists(int id)
+        private bool OrderExists(int id)
         {
-            return _context.Quizzes.Any(e => e.Id == id);
+            return _context.Orders.Any(e => e.Id == id);
         }
     }
 }
