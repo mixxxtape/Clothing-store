@@ -1,48 +1,217 @@
 ﻿@model IEnumerable<ClothingStoreMVC.WebMVC.ViewModels.ProductListViewModel>
+@{
+    ViewData["Title"] = "Catalogue";
+}
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Price</th>
-            <th>Category</th>
-            <th>Style</th>
-            <th>Sizes</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Price</td>
-                <td>@item.CategoryName</td>
-                <td>@item.StyleName</td>
-                <td>@item.Sizes</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
+<style>
+    .cat-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #8062D6;
+    }
+    .cat-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.3rem 0;
+    }
+    .cat-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0C0950;
+        margin: 0;
+        font-family: Georgia, serif;
+    }
+    .cat-count {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+    }
 
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
-                               style="font-size:0.75rem; color:#8062D6; text-decoration:none; margin-right:0.5rem;">
+    .cat-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1.5rem;
+    }
+
+    .product-card {
+        background: #F9DFDF;
+        border: 1px solid #000000;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(128, 98, 214, 0.15);
+    }
+
+    .card-image {
+        height: 200px;
+        background: #e8d5d5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        position: relative;
+        overflow: hidden;
+    }
+    .card-image-icon {
+        font-size: 3rem;
+        opacity: 0.15;
+        color: #8062D6;
+    }
+    .card-badge {
+        position: absolute;
+        top: 0.6rem;
+        left: 0.6rem;
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: rgba(12, 9, 80, 0.78);
+        color: #E8A9A9;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+    }
+
+    .card-body {
+        padding: 1rem;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+    .card-name {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #0C0950;
+        margin: 0 0 0.2rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .card-style {
+        font-size: 0.7rem;
+        color: #6b6b8a;
+        margin: 0 0 0.3rem 0;
+    }
+    .card-sizes {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #9a8aaa;
+        margin: 0 0 0.75rem 0;
+    }
+    .card-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .card-price {
+        font-size: 1rem;
+        font-weight: 800;
+        color: #8062D6;
+    }
+    .card-actions { display: flex; gap: 0.4rem; align-items: center; }
+    .btn-view {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #0C0950;
+        text-decoration: none;
+        padding: 0.3rem 0.7rem;
+        border: 1px solid #0C0950;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .btn-view:hover { background: #0C0950; color: #E8A9A9; }
+    .btn-wish {
+        background: transparent;
+        border: 1px solid #c4b0c4;
+        color: #F57799;
+        font-size: 0.9rem;
+        cursor: pointer;
+        padding: 0.28rem 0.55rem;
+        border-radius: 4px;
+        transition: all 0.2s;
+        line-height: 1;
+    }
+    .btn-wish:hover { border-color: #F57799; background: rgba(245, 119, 153, 0.08); }
+
+    .cat-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 5rem 2rem;
+        color: #6b6b8a;
+        font-size: 0.8rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+    }
+</style>
+
+<div class="cat-header">
+    <div>
+        <p class="cat-eyebrow">Ravel &mdash; Alternative Fashion</p>
+        <h1 class="cat-title">Catalogue</h1>
+    </div>
+    <span class="cat-count">@Model.Count() items</span>
+</div>
+
+<div class="cat-grid">
+    @if (!Model.Any())
+    {
+        <div class="cat-empty"><p>No items yet</p></div>
+    }
+
+    @foreach (var item in Model)
+    {
+        <div class="product-card">
+            <div class="card-image">
+                <span class="card-badge">@item.CategoryName</span>
+                <span class="card-image-icon">✦</span>
+            </div>
+            <div class="card-body">
+                <p class="card-name">@item.Name</p>
+                <p class="card-style">@item.StyleName</p>
+                <p class="card-sizes">@item.Sizes</p>
+                <div class="card-footer">
+                    <span class="card-price">@item.Price ₴</span>
+                    <div class="card-actions">
+                      <a asp-action="Details" asp-route-id="@item.Id" class="btn-view">View</a>
+                      @if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+{
+                        <a asp-controller="Catalog" asp-action="Details" asp-route-id="@item.Id"
+                           style="font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase;
+                           color:#8062D6; text-decoration:none; padding:0.28rem 0.6rem;
+                           border:1px solid #8062D6; border-radius:4px; transition:all 0.2s;"
+                           onmouseover="this.style.background='#8062D6';this.style.color='white'"
+                           onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
                             + Cart
                         </a>
-
                         <form asp-controller="Wishlists" asp-action="Toggle" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="productId" value="@item.Id" />
                             <input type="hidden" name="returnUrl" value="/Catalog" />
-                            <button type="submit"
-                                    style="background:transparent; border:none; color:#F57799;
-                                font-size:0.85rem; cursor:pointer; padding:0; cursor:pointer;">
-                                ♡
-                            </button>
+                            <button type="submit" class="btn-wish">♡</button>
                         </form>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+
+}
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

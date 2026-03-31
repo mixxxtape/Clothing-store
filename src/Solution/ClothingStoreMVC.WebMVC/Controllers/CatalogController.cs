@@ -42,28 +42,37 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var product = await _context.Products
-    .Where(p => !p.IsDeleted)
-    .Include(p => p.Category)
-    .Include(p => p.Style)
-    .Include(p => p.Sizes)
-        .ThenInclude(ps => ps.Size)
-    .Select(p => new ProductDetailsViewModel
-    {
-        Id = p.Id,
-        Name = p.Name,
-        Description = p.Description,
-        Price = p.Price,
-        CategoryName = p.Category.Name,
-        StyleName = p.Style.Name,
-        Sizes = string.Join(", ", p.Sizes.Select(s => s.Size.Name))
-    })
-    .FirstOrDefaultAsync(p => p.Id == id);
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.Category)
+                .Include(p => p.Style)
+                .Include(p => p.Sizes)
+                    .ThenInclude(ps => ps.Size)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
-            return View(product);
+            var vm = new ProductDetailsViewModel
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                CategoryName = product.Category.Name,
+                StyleName = product.Style.Name,
+                Sizes = string.Join(", ", product.Sizes.Select(s => s.Size.Name)),
+                SizeOptions = product.Sizes
+                    .Where(ps => ps.Quantity > 0)
+                    .Select(ps => new SizeOptionViewModel
+                    {
+                        ProductSizeId = ps.Id,
+                        SizeName = ps.Size.Name,
+                        Quantity = ps.Quantity
+                    }).ToList()
+            };
+
+            return View(vm);
         }
 
-       
+
     }
 }

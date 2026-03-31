@@ -168,7 +168,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return View(vm);
             }
 
-            // Перевірити наявність товарів
             foreach (var item in cart.Items)
             {
                 if (item.ProductSize.Quantity < item.Quantity)
@@ -178,7 +177,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 }
             }
 
-            // Створити замовлення
             var order = new Order
             {
                 UserId = user.Id,
@@ -200,7 +198,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 }
             };
 
-            // Списати зі складу
             foreach (var item in cart.Items)
             {
                 item.ProductSize.Quantity -= item.Quantity;
@@ -240,7 +237,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return RedirectToAction(nameof(Details), new { id });
             }
 
-            // Повернути товар на склад
             foreach (var item in order.Items)
             {
                 item.ProductSize.Quantity += item.Quantity;
@@ -257,5 +253,84 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             TempData["Success"] = "Order cancelled";
             return RedirectToAction(nameof(Index));
         }
+
+        public async Task<IActionResult> Manage()
+        {
+            if (!User.IsInRole("admin"))
+                return RedirectToAction("Index", "Home");
+
+            var orders = await _context.Orders
+                .Include(o => o.User)
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.ProductSize)
+                        .ThenInclude(ps => ps.Size)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            var vms = orders.Select(o => new AdminOrderViewModel
+            {
+                OrderId = o.Id,
+                OrderDate = o.OrderDate,
+                DeliveryAddress = o.DeliveryAddress,
+                UserName = o.User.IdentityUserId,
+                CurrentStatus = o.StatusHistory
+                    .OrderByDescending(s => s.ChangedAt)
+                    .FirstOrDefault()?.Status ?? "Pending",
+                Items = o.Items.Select(i => new OrderItemViewModel
+                {
+                    ProductName = i.Product.Name,
+                    SizeName = i.ProductSize?.Size?.Name ?? "—",
+                    Quantity = i.Quantity,
+                    Price = i.Product.Price
+                }).ToList()
+            }).ToList();
+
+            return View(vms);
+        }
+
+        // POST: /Orders/UpdateStatus
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateStatus(int orderId, string status, string? reason)
+        {
+            if (!User.IsInRole("admin"))
+                return RedirectToAction("Index", "Home");
+
+            var order = await _context.Orders
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.ProductSize)
+                .FirstOrDefaultAsync(o => o.Id == orderId);
+
+            if (order == null) return NotFound();
+
+            if (status == "Cancelled")
+            {
+                var currentStatus = order.StatusHistory
+                    .OrderByDescending(s => s.ChangedAt)
+                    .FirstOrDefault()?.Status;
+
+                if (currentStatus != "Cancelled")
+                {
+                    foreach (var item in order.Items)
+                        item.ProductSize.Quantity += item.Quantity;
+                }
+            }
+
+            order.StatusHistory.Add(new OrderStatus
+            {
+                Status = status,
+                ChangedAt = DateTime.UtcNow,
+                ChangeReason = reason
+            });
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = $"Status updated to {status}";
+            return RedirectToAction(nameof(Manage));
+        }
     }
+
 }

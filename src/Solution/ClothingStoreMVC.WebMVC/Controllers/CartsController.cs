@@ -18,14 +18,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             _context = context;
         }
 
-        // Отримати User по Identity
         private async Task<User?> GetCurrentUserAsync()
         {
             var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId);
         }
 
-        // Отримати або створити Cart для юзера
         private async Task<Cart> GetOrCreateCartAsync(int userId)
         {
             var cart = await _context.Carts

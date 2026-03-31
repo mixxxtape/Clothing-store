@@ -1,60 +1,153 @@
-﻿@model ClothingStoreMVC.Domain.Entities.ProductAggregates.Product
-
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.ProductCreateViewModel
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Create Product";
 }
 
-<h1>Create</h1>
+<h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:1.5rem; color:#0C0950;">
+    Create Product
+</h2>
 
-<h4>Product</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+<div style="max-width:600px;">
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" style="color:#F57799; font-size:0.8rem; margin-bottom:1rem;"></div>
+
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+            padding:1.5rem; margin-bottom:1rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+            color:#eeeeee; margin:0 0 1rem 0;">Basic Info</p>
+
+            <div style="margin-bottom:1rem;">
+                <label asp-for="Name" style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+                color:#0C0950; display:block; margin-bottom:0.4rem;"></label>
+                <input asp-for="Name" style="padding:0.6rem 0.75rem; border-radius:6px;
+                border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                font-size:0.9rem; width:100%; box-sizing:border-box;" />
+                <span asp-validation-for="Name" style="color:#F57799; font-size:0.75rem;"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+
+            <div style="margin-bottom:1rem;">
+                <label asp-for="Description" style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+                color:#0C0950; display:block; margin-bottom:0.4rem;"></label>
+                <input asp-for="Description" style="padding:0.6rem 0.75rem; border-radius:6px;
+                border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                font-size:0.9rem; width:100%; box-sizing:border-box;" />
+                <span asp-validation-for="Description" style="color:#F57799; font-size:0.75rem;"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+
+            <div style="margin-bottom:1rem;">
+                <label asp-for="Price" style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+                color:#0C0950; display:block; margin-bottom:0.4rem;"></label>
+                <input asp-for="Price" style="padding:0.6rem 0.75rem; border-radius:6px;
+                border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                font-size:0.9rem; width:100%; box-sizing:border-box;" />
+                <span asp-validation-for="Price" style="color:#F57799; font-size:0.75rem;"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="StyleId" class="control-label"></label>
-                <select asp-for="StyleId" class ="form-control" asp-items="ViewBag.StyleId"></select>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div>
+                    <label asp-for="StyleId" style="font-size:0.75rem; letter-spacing:0.1em;
+                    text-transform:uppercase; color:#0C0950; display:block; margin-bottom:0.4rem;"></label>
+                    <select asp-for="StyleId" asp-items="ViewBag.StyleId"
+                            style="padding:0.6rem 0.75rem; border-radius:6px; border:1px solid #2d2d40;
+                    background:#fff; color:#0C0950; font-size:0.9rem; width:100%;"></select>
+                </div>
+                <div>
+                    <label asp-for="CategoryId" style="font-size:0.75rem; letter-spacing:0.1em;
+                    text-transform:uppercase; color:#0C0950; display:block; margin-bottom:0.4rem;"></label>
+                    <select asp-for="CategoryId" asp-items="ViewBag.CategoryId"
+                            style="padding:0.6rem 0.75rem; border-radius:6px; border:1px solid #2d2d40;
+                    background:#fff; color:#0C0950; font-size:0.9rem; width:100%;"></select>
+                </div>
             </div>
-            <div class="form-group">
-                <label asp-for="CategoryId" class="control-label"></label>
-                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
-            </div>
-            <div class="form-group">
-                <label>Sizes</label>
-                <select name="selectedSizes" class="form-control" multiple asp-items="ViewBag.Sizes"></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsDeleted" /> @Html.DisplayNameFor(model => model.IsDeleted)
+
+            <div style="margin-top:1rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem;
+                    font-size:0.8rem; color:#0C0950; cursor:pointer;">
+                    <input asp-for="IsDeleted" type="checkbox" />
+                    Mark as deleted
                 </label>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
+        </div>
+
+        <!-- Sizes -->
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+            padding:1.5rem; margin-bottom:1rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+            color:#6b6b8a; margin:0 0 1rem 0;">Sizes & Stock</p>
+
+            @for (int i = 0; i < Model.Sizes.Count; i++)
+            {
+                <input type="hidden" asp-for="Sizes[i].SizeId" />
+                <input type="hidden" asp-for="Sizes[i].SizeName" />
+
+                <div style="display:flex; align-items:center; gap:1rem;
+                    padding:0.6rem 0; border-bottom:1px solid #e0c8c8;">
+                    <label style="display:flex; align-items:center; gap:0.5rem;
+                        min-width:120px; font-size:0.85rem; color:#0C0950; cursor:pointer;">
+                        <input asp-for="Sizes[i].IsSelected" type="checkbox"
+                               onchange="toggleQty(this)" />
+                        @Model.Sizes[i].SizeName
+                    </label>
+                    <input asp-for="Sizes[i].Quantity" type="number" min="0"
+                           id="qty_@i"
+                           style="width:80px; padding:0.4rem 0.5rem; border-radius:4px;
+                    border:1px solid #2d2d40; font-size:0.85rem; text-align:center;
+                    background:@(Model.Sizes[i].IsSelected ? "#fff" : "#e8e8e8");
+                    color:@(Model.Sizes[i].IsSelected ? "#0C0950" : "#aaa");
+                    pointer-events:@(Model.Sizes[i].IsSelected ? "auto" : "none");" />
+                    <span style="font-size:0.75rem; color:#6b6b8a;">pcs</span>
+                </div>
+            }
+        </div>
+
+        <button type="submit"
+                style="padding:0.75rem 2rem; border:none;
+            background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            color:white; border-radius:4px; font-size:0.8rem;
+            letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
+            Create Product
+        </button>
+        <a asp-action="Index" style="margin-left:1rem; font-size:0.75rem; color:#6b6b8a;">
+            Cancel
+        </a>
+    </form>
+    @if (ViewContext.ViewData.ModelState.ErrorCount > 0)
+    {
+        <div style="background:#2d0a0a; border:1px solid #F57799; color:#F57799;
+            padding:1rem; border-radius:6px; margin-bottom:1rem;">
+            <p style="font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; margin:0 0 0.5rem 0;">
+                Validation errors (@ViewContext.ViewData.ModelState.ErrorCount):
+            </p>
+            @foreach (var key in ViewContext.ViewData.ModelState.Keys)
+            {
+                var state = ViewContext.ViewData.ModelState[key];
+                @foreach (var error in state.Errors)
+                {
+                    <p style="margin:0.2rem 0; font-size:0.8rem;">
+                        <strong>@key:</strong> @error.ErrorMessage
+                    </p>
+                }
+            }
+        </div>
+    }
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+<script>
+        function toggleQty(checkbox) {
+        var row = checkbox.closest('div');
+        var qty = row.querySelector('input[type="number"]');
+        if (checkbox.checked) {
+            qty.style.background = '#fff';
+            qty.style.color = '#0C0950';
+            qty.style.pointerEvents = 'auto';
+            qty.focus();
+        } else {
+            qty.style.background = '#e8e8e8';
+            qty.style.color = '#aaa';
+            qty.style.pointerEvents = 'none';
+            qty.value = 0;
+        }
+    }
+</script>

@@ -6,7 +6,7 @@
 <a asp-action="Index"
        style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
     color:#6b6b8a; text-decoration:none; display:inline-block; margin-bottom:1.5rem;">
-    ← Back to Orders
+    Back to Orders
 </a>
 
 <h2 style="font-size:1.4rem; font-weight:900; letter-spacing:0.1em;
@@ -57,7 +57,7 @@
                 <form asp-action="Cancel" asp-route-id="@Model.OrderId" method="post"
                       style="margin-top:1rem;">
                     @Html.AntiForgeryToken()
-                    <button type="submit"
+                    <button type="submit" onclick="return confirm('Cancel this order?')"
                             style="width:100%; padding:0.6rem; background:transparent;
                         border:1px solid #F57799; color:#F57799; border-radius:4px;
                         font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;

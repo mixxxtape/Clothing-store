@@ -66,6 +66,7 @@ wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\account.jpg
 wwwroot\images\cart.jpg
+wwwroot\images\orders.png
 wwwroot\images\wishlist.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\LICENSE

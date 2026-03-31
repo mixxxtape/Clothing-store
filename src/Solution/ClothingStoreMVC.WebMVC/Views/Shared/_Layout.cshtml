@@ -191,26 +191,31 @@
         <a asp-controller="Home" asp-action="Index" class="nav-logo">RAVEL</a>
 
        <nav class="nav-links">
-    <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
-    <a asp-controller="Catalog" asp-action="Index" class="nav-link">Catalogue</a>
-    <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
+            <a asp-controller="Home" asp-action="Index" class="nav-link">Main</a>
+            <a asp-controller="Catalog" asp-action="Index" class="nav-link">Catalogue</a>
 
-    @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
-    {
-        <a asp-controller="Quiz" asp-action="Index" class="nav-link">Style Quiz</a>
-    }
+            @if (!User.IsInRole("admin"))
+            {
+                <a asp-controller="Styles" asp-action="Index" class="nav-link">Styles</a>
+            }
 
-    @if (User.IsInRole("admin"))
-    {
-        <div class="admin-wrap" id="adminWrap">
-            <span class="admin-toggle" id="adminToggle">Admin ▾</span>
-            <div class="admin-menu" id="adminMenu">
-                <a asp-controller="Products" asp-action="Index" class="dropdown-item">Products</a>
-                <a asp-controller="Categories" asp-action="Index" class="dropdown-item">Categories</a>
-                <a asp-controller="Sizes" asp-action="Index" class="dropdown-item">Sizes</a>
-                <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
-                <a asp-controller="Quiz" asp-action="Manage" class="dropdown-item">Quiz</a>
-            </div>
+            @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+            {
+                <a asp-controller="Quiz" asp-action="Index" class="nav-link">Style Quiz</a>
+            }
+
+            @if (User.IsInRole("admin"))
+            {
+                <div class="admin-wrap" id="adminWrap">
+                    <span class="admin-toggle" id="adminToggle">Admin ▾</span>
+                    <div class="admin-menu" id="adminMenu">
+                        <a asp-controller="Products" asp-action="Index" class="dropdown-item">Products</a>
+                        <a asp-controller="Categories" asp-action="Index" class="dropdown-item">Categories</a>
+                        <a asp-controller="Sizes" asp-action="Index" class="dropdown-item">Sizes</a>
+                        <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
+                        <a asp-controller="Quiz" asp-action="Manage" class="dropdown-item">Quiz</a>
+                        <a asp-controller="Orders" asp-action="Manage" class="dropdown-item">Orders</a>
+                    </div>
         </div>
     }
 </nav>
@@ -218,16 +223,24 @@
         <div class="nav-icons">
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Wishlists" asp-action="Index" class="nav-icon-btn" title="Wishlist">
-                    <img src="@Url.Content("~/images/wishlist.jpg")" />
-                </a>
-                <a asp-controller="Carts" asp-action="Index" class="nav-icon-btn" title="Cart"> 
-                    <img src="@Url.Content("~/images/cart.jpg")" />
-                </a>
+                @if (!User.IsInRole("admin"))
+                {
+                    <a asp-controller="Wishlists" asp-action="Index" class="nav-icon-btn" title="Wishlist">
+                        <img src="@Url.Content("~/images/wishlist.jpg")" />
+                    </a>
+                    <a asp-controller="Carts" asp-action="Index" class="nav-icon-btn" title="Cart">
+                        <img src="@Url.Content("~/images/cart.jpg")" />
+                    </a>
+                    <a asp-controller="Orders" asp-action="Index" class="nav-icon-btn" title="My Orders">
+                        <img src="@Url.Content("~/images/orders.png")" />
+                    </a>
+                }
                 <form method="post" asp-controller="Account" asp-action="Logout" style="margin:0;">
                     @Html.AntiForgeryToken()
-                    <button type="submit" class="nav-icon-btn" title="Logout">
-                        <img src="@Url.Content("~/images/account.jpg")" />
+                    <button type="submit" class="nav-icon-btn" title="Logout"
+                            onclick="return confirm('Are you sure you want to logout?')"
+                            style="font-size:1rem; color:#9999bb;">
+                         <img src="@Url.Content("~/images/account.jpg")" />
                     </button>
                 </form>
             }

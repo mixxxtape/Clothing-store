@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("ClothingStoreMVC.Infrastructure")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+199528d5dd8bd6c3238dcba1b09dff1fe9749b55")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f59653fc0a451614b5f89eacff778d6603d05ec9")]
 [assembly: System.Reflection.AssemblyProductAttribute("ClothingStoreMVC.Infrastructure")]
 [assembly: System.Reflection.AssemblyTitleAttribute("ClothingStoreMVC.Infrastructure")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -1,26 +1,34 @@
 ﻿@model ClothingStoreMVC.Domain.Entities.QuizAggregates.Question
-<h1>Edit question</h1>
-<div class="row">
-    <div class="col-md-5">
-        <form asp-action="EditQuestion">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="QuizId" />
-            <div class="form-group">
-                <label asp-for="Text" class="control-label"></label>
-                <input asp-for="Text" class="form-control" />
-                <span asp-validation-for="Text" class="text-danger"></span>
-            </div>
-            <div class="form-group mt-2">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-<a asp-action="Manage">Back</a>
-@section Scripts {
-    @{
-        await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    }
-
+@{
+    ViewData["Title"] = "Edit Question";
 }
+
+<h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:1.5rem; color:#0C0950;">
+    Edit Question
+</h2>
+
+<div style="max-width:500px;">
+    <form asp-action="EditQuestion" asp-route-id="@Model.Id" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px; padding:1.5rem; margin-bottom:1rem;">
+            <label style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+            color:#0C0950; display:block; margin-bottom:0.5rem;">Question Text</label>
+            <input name="text" value="@Model.Text"
+                   style="width:100%; padding:0.6rem 0.75rem; border-radius:6px;
+            border:1px solid #2d2d40; background:#fff; color:#0C0950;
+            font-size:0.9rem; box-sizing:border-box;" />
+        </div>
+
+        <button type="submit"
+                style="padding:0.75rem 2rem; border:none;
+            background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            color:white; border-radius:4px; font-size:0.8rem;
+            letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
+            Save
+        </button>
+        <a asp-action="Manage" style="margin-left:1rem; font-size:0.75rem; color:#6b6b8a;">Cancel</a>
+    </form>
+</div>

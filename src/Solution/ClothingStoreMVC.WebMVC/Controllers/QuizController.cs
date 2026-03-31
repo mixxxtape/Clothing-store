@@ -187,16 +187,20 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         }
 
         [HttpPost, Authorize(Roles = "admin"), ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditQuestion(int id, [Bind("Id,Text,QuizId")] Question question)
+        public async Task<IActionResult> EditQuestion(int id, string text)
         {
-            if (id != question.Id) return NotFound();
-            if (ModelState.IsValid)
+            var question = await _context.Questions.FindAsync(id);
+            if (question == null) return NotFound();
+
+            if (string.IsNullOrWhiteSpace(text))
             {
-                _context.Update(question);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Manage));
+                ModelState.AddModelError("", "Text is required");
+                return View(question);
             }
-            return View(question);
+
+            question.Text = text;
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Manage));
         }
 
         [HttpPost, Authorize(Roles = "admin"), ValidateAntiForgeryToken]

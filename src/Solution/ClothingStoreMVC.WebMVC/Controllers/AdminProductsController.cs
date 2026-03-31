@@ -1,5 +1,6 @@
 ﻿using ClothingStoreMVC.Domain.Entities.ProductAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.WebMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,6 +35,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
+                .IgnoreQueryFilters()
                 .Include(p => p.Category)
                 .Include(p => p.Style)
                 .Include(p => p.Sizes)
@@ -44,23 +46,48 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             return View(product);
         }
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            var sizes = await _context.Sizes.ToListAsync();
+            var vm = new ProductCreateViewModel
+            {
+                Sizes = sizes.Select(s => new ProductSizeInputViewModel
+                {
+                    SizeId = s.Id,
+                    SizeName = s.Name,
+                    IsSelected = false,
+                    Quantity = 0
+                }).ToList()
+            };
+
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name");
             ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name");
-            ViewData["Sizes"] = new MultiSelectList(_context.Sizes, "Id", "Name");
-            return View();
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price,CategoryId,StyleId,IsDeleted")] Product product, int[] selectedSizes)
+        public async Task<IActionResult> Create(ProductCreateViewModel vm)
         {
             if (ModelState.IsValid)
             {
-                foreach (var sizeId in selectedSizes)
+                var product = new Product
                 {
-                    product.Sizes.Add(new ProductSize { SizeId = sizeId, Quantity = 0 });
+                    Name = vm.Name,
+                    Description = vm.Description,
+                    Price = vm.Price,
+                    StyleId = vm.StyleId,
+                    CategoryId = vm.CategoryId,
+                    IsDeleted = vm.IsDeleted
+                };
+
+                foreach (var size in vm.Sizes.Where(s => s.IsSelected))
+                {
+                    product.Sizes.Add(new ProductSize
+                    {
+                        SizeId = size.SizeId,
+                        Quantity = size.Quantity
+                    });
                 }
 
                 _context.Add(product);
@@ -68,10 +95,13 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
-            ViewData["Sizes"] = new MultiSelectList(_context.Sizes, "Id", "Name", selectedSizes);
-            return View(product);
+            var sizes = await _context.Sizes.ToListAsync();
+            foreach (var s in vm.Sizes)
+                s.SizeName = sizes.FirstOrDefault(x => x.Id == s.SizeId)?.Name ?? "";
+
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", vm.CategoryId);
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", vm.StyleId);
+            return View(vm);
         }
 
         public async Task<IActionResult> Edit(int? id)
@@ -79,61 +109,83 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
+                .IgnoreQueryFilters()
                 .Include(p => p.Sizes)
                 .FirstOrDefaultAsync(p => p.Id == id);
+
             if (product == null) return NotFound();
 
+            var allSizes = await _context.Sizes.ToListAsync();
+            var vm = new ProductCreateViewModel
+            {
+                Name = product.Name,
+                Description = product.Description,
+                Price = product.Price,
+                StyleId = product.StyleId,
+                CategoryId = product.CategoryId,
+                IsDeleted = product.IsDeleted,
+                Sizes = allSizes.Select(s =>
+                {
+                    var existing = product.Sizes.FirstOrDefault(ps => ps.SizeId == s.Id);
+                    return new ProductSizeInputViewModel
+                    {
+                        SizeId = s.Id,
+                        SizeName = s.Name,
+                        IsSelected = existing != null,
+                        Quantity = existing?.Quantity ?? 0
+                    };
+                }).ToList()
+            };
+
+            ViewData["ProductId"] = id;
             ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
             ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
-            ViewData["Sizes"] = new MultiSelectList(_context.Sizes, "Id", "Name", product.Sizes.Select(s => s.SizeId));
-            return View(product);
+            return View(vm);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Price,CategoryId,StyleId,IsDeleted")] Product product, int[] selectedSizes)
+        public async Task<IActionResult> Edit(int id, ProductCreateViewModel vm)
         {
-            if (id != product.Id) return NotFound();
-
             if (ModelState.IsValid)
             {
-                var productToUpdate = await _context.Products
+                var product = await _context.Products
+                    .IgnoreQueryFilters()
                     .Include(p => p.Sizes)
                     .FirstOrDefaultAsync(p => p.Id == id);
 
-                if (productToUpdate == null) return NotFound();
+                if (product == null) return NotFound();
 
-                productToUpdate.Name = product.Name;
-                productToUpdate.Description = product.Description;
-                productToUpdate.Price = product.Price;
-                productToUpdate.CategoryId = product.CategoryId;
-                productToUpdate.StyleId = product.StyleId;
-                productToUpdate.IsDeleted = product.IsDeleted;
+                product.Name = vm.Name;
+                product.Description = vm.Description;
+                product.Price = vm.Price;
+                product.StyleId = vm.StyleId;
+                product.CategoryId = vm.CategoryId;
+                product.IsDeleted = vm.IsDeleted;
 
-                productToUpdate.Sizes.Clear();
-                foreach (var sizeId in selectedSizes)
+                _context.ProductSizes.RemoveRange(product.Sizes);
+
+                foreach (var size in vm.Sizes.Where(s => s.IsSelected))
                 {
-                    productToUpdate.Sizes.Add(new ProductSize { SizeId = sizeId, Quantity = 0 });
+                    product.Sizes.Add(new ProductSize
+                    {
+                        SizeId = size.SizeId,
+                        Quantity = size.Quantity
+                    });
                 }
 
-                try
-                {
-                    _context.Update(productToUpdate);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!_context.Products.Any(e => e.Id == id)) return NotFound();
-                    throw;
-                }
-
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
 
-            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", product.CategoryId);
-            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", product.StyleId);
-            ViewData["Sizes"] = new MultiSelectList(_context.Sizes, "Id", "Name", selectedSizes);
-            return View(product);
+            var sizes = await _context.Sizes.ToListAsync();
+            foreach (var s in vm.Sizes)
+                s.SizeName = sizes.FirstOrDefault(x => x.Id == s.SizeId)?.Name ?? "";
+
+            ViewData["ProductId"] = id;
+            ViewData["CategoryId"] = new SelectList(_context.Categories, "Id", "Name", vm.CategoryId);
+            ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", vm.StyleId);
+            return View(vm);
         }
 
         public async Task<IActionResult> Delete(int? id)
@@ -141,11 +193,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
-    .Include(p => p.Category)
-    .Include(p => p.Style)
-    .Include(p => p.Sizes)
-        .ThenInclude(ps => ps.Size)
-    .FirstOrDefaultAsync(p => p.Id == id);
+                .IgnoreQueryFilters()
+                .Include(p => p.Category)
+                .Include(p => p.Style)
+                .Include(p => p.Sizes)
+                    .ThenInclude(ps => ps.Size)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
             return View(product);

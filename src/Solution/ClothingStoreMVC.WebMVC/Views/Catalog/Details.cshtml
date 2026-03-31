@@ -1,14 +1,305 @@
 ﻿@model ClothingStoreMVC.WebMVC.ViewModels.ProductDetailsViewModel
-
-<h2>@Model.Name</h2>
-<p>@Model.Description</p>
-<p>Price: @Model.Price</p>
-<p>Category: @Model.CategoryName</p>
-<p>Style: @Model.StyleName</p>
-<p>Size: @Model.Sizes</p>
-
-@if (User.Identity.IsAuthenticated && User.IsInRole("user"))
-{
-    <a asp-action="AddToCart" asp-route-id="@Model.Id">To cart</a>
-    <a asp-action="AddToFavorites" asp-route-id="@Model.Id">To wishlist</a>
+@{
+    ViewData["Title"] = Model.Name;
 }
+
+<style>
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+    .btn-back:hover { color: #8062D6; }
+
+    .details-wrap {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 3rem;
+        align-items: start;
+        max-width: 900px;
+    }
+    @@media (max-width: 640px) {
+        .details-wrap { grid-template-columns: 1fr; }
+    }
+
+    .details-image {
+        background: #e8d5d5;
+        border: 1px solid #000000;
+        border-radius: 8px;
+        aspect-ratio: 3/4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        position: relative;
+    }
+    .details-image-icon {
+        font-size: 5rem;
+        opacity: 0.1;
+        color: #8062D6;
+    }
+    .details-image-label {
+        position: absolute;
+        bottom: 1rem;
+        left: 1rem;
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: rgba(12, 9, 80, 0.75);
+        color: #E8A9A9;
+        padding: 0.2rem 0.65rem;
+        border-radius: 20px;
+    }
+
+    .details-info { padding-top: 0.5rem; }
+    .details-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.5rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    .details-eyebrow a { color: #8062D6; text-decoration: none; }
+    .details-eyebrow a:hover { color: #E8A9A9; }
+
+    .details-name {
+        font-size: 1.9rem;
+        font-weight: 900;
+        color: #0C0950;
+        font-family: Georgia, serif;
+        line-height: 1.1;
+        margin: 0 0 0.6rem 0;
+    }
+    .details-style {
+        display: inline-block;
+        font-size: 0.62rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #8062D6;
+        border: 1px solid #8062D6;
+        border-radius: 20px;
+        padding: 0.2rem 0.75rem;
+        margin-bottom: 1.5rem;
+    }
+    .details-price {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #8062D6;
+        margin-bottom: 1.5rem;
+    }
+
+    .details-divider {
+        height: 1px;
+        background: linear-gradient(90deg, #8062D6, transparent);
+        margin: 1.25rem 0;
+    }
+
+    .details-desc {
+        font-size: 0.88rem;
+        color: #4a4a6a;
+        line-height: 1.85;
+        font-family: Georgia, serif;
+        margin-bottom: 1.5rem;
+    }
+
+    .meta-row {
+        display: flex;
+        align-items: baseline;
+        gap: 0.75rem;
+        margin-bottom: 0.55rem;
+    }
+    .meta-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.22em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        width: 70px;
+        flex-shrink: 0;
+    }
+    .meta-value {
+        font-size: 0.82rem;
+        color: #0C0950;
+        font-weight: 600;
+    }
+
+    .details-actions {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+        margin-top: 2rem;
+    }
+    .btn-cart {
+        flex: 1;
+        padding: 0.75rem 1.5rem;
+        background: linear-gradient(135deg, #8062D6, #E8A9A9);
+        color: white;
+        text-decoration: none;
+        border-radius: 4px;
+        font-size: 0.72rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        text-align: center;
+        border: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .btn-cart:hover { opacity: 0.85; color: white; }
+    .btn-wish {
+        padding: 0.75rem 1rem;
+        border: 1px solid #c4b0c4;
+        border-radius: 4px;
+        background: transparent;
+        color: #F57799;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-wish:hover { border-color: #F57799; }
+</style>
+
+<a asp-controller="Catalog" asp-action="Index" class="btn-back">&larr; Back to Catalogue</a>
+
+<div class="details-wrap">
+
+    <div class="details-image">
+        <span class="details-image-icon">✦</span>
+        <span class="details-image-label">@Model.CategoryName</span>
+    </div>
+
+    <div class="details-info">
+        <p class="details-eyebrow">
+            <a asp-controller="Catalog" asp-action="Index">Catalogue</a>
+            <span>/</span>
+            <span>@Model.Name</span>
+        </p>
+
+        <h1 class="details-name">@Model.Name</h1>
+        <span class="details-style">@Model.StyleName</span>
+
+        <p class="details-price">@Model.Price ₴</p>
+
+        <div class="details-divider"></div>
+
+        <p class="details-desc">@Model.Description</p>
+
+        <div class="meta-row">
+            <span class="meta-label">Sizes</span>
+            <span class="meta-value">@Model.Sizes</span>
+        </div>
+        <div class="meta-row">
+            <span class="meta-label">Category</span>
+            <span class="meta-value">@Model.CategoryName</span>
+        </div>
+        <div class="meta-row">
+            <span class="meta-label">Style</span>
+            <span class="meta-value">@Model.StyleName</span>
+        </div>
+
+       @if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+{
+    <div class="details-actions" style="margin-top:2rem;">
+
+            @if (Model.SizeOptions.Any())
+           {
+        <form asp-controller="Carts" asp-action="AddItem" method="post" style="width:100%;">
+            @Html.AntiForgeryToken()
+
+            <div style="margin-bottom:1rem;">
+                <label style="font-size:0.65rem; letter-spacing:0.2em; text-transform:uppercase;
+                    color:#6b6b8a; display:block; margin-bottom:0.5rem;">Select Size</label>
+                <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                    @foreach (var size in Model.SizeOptions)
+                    {
+                        <label style="cursor:pointer;">
+                            <input type="radio" name="productSizeId" value="@size.ProductSizeId"
+                                   style="display:none;" />
+                            <span class="size-chip"
+                                  style="display:inline-block; padding:0.4rem 0.9rem;
+                                  border:1px solid #8062D6; border-radius:4px;
+                                  font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+                                  color:#8062D6; transition:all 0.2s; user-select:none;"
+                                  onclick="selectSize(this)">
+                                @size.SizeName
+                                <span style="font-size:0.6rem; color:#6b6b8a;">(@size.Quantity)</span>
+                            </span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:1rem;">
+                <label style="font-size:0.65rem; letter-spacing:0.2em;
+                    text-transform:uppercase; color:#6b6b8a;">Qty</label>
+                <input type="number" name="quantity" value="1" min="1" max="99"
+                       style="width:70px; padding:0.5rem; border-radius:4px;
+                       border:1px solid #2d2d40; background:#fff;
+                       color:#0C0950; font-size:0.9rem; text-align:center;" />
+            </div>
+
+            <button type="submit"
+                    style="width:100%; padding:0.75rem; border:none;
+                    background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                    color:white; border-radius:4px; font-size:0.72rem;
+                    letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
+                Add to Cart
+            </button>
+
+        </form>
+
+        <form asp-controller="Wishlists" asp-action="Toggle" method="post"
+              style="width:100%; margin-top:0.5rem;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="returnUrl" value="/Catalog/Details/@Model.Id" />
+            <button type="submit" class="btn-wish"
+                    style="width:100%; padding:0.75rem; border:1px solid #c4b0c4;
+                    border-radius:4px; background:transparent;
+                    color:#F57799; font-size:0.9rem; cursor:pointer; letter-spacing:0.1em;
+                    text-transform:uppercase;">
+                ♡ Add to Wishlist
+            </button>
+        </form>
+    }
+    else
+    {
+        <p style="color:#F57799; font-size:0.8rem; letter-spacing:0.1em;
+            text-transform:uppercase;">Out of stock</p>
+
+        <form asp-controller="Wishlists" asp-action="Toggle" method="post"
+              style="width:100%; margin-top:0.5rem;">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="productId" value="@Model.Id" />
+            <input type="hidden" name="returnUrl" value="/Catalog/Details/@Model.Id" />
+            <button type="submit" class="btn-wish"
+                    style="width:100%; padding:0.75rem; border:1px solid #c4b0c4;
+                    border-radius:4px; background:transparent;
+                    color:#F57799; font-size:1rem; cursor:pointer;">
+                ♡ Save to Wishlist
+            </button>
+        </form>
+}
+    </div>
+}
+  </div>
+
+</div>
+<script>
+function selectSize(el, sizeId) {
+    document.querySelectorAll('.size-chip').forEach(function(chip) {
+        chip.style.background = 'transparent';
+        chip.style.color = '#8062D6';
+    });
+    el.style.background = '#8062D6';
+    el.style.color = 'white';
+}
+</script>

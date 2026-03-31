@@ -48,7 +48,6 @@ else
                     </p>
 
                     <div style="display:flex; gap:0.5rem;">
-                        <!-- Move to Cart -->
                         <form asp-controller="Wishlists" asp-action="MoveToCart" method="post" style="flex:1;">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="productId" value="@item.ProductId" />
@@ -57,11 +56,10 @@ else
                                 background:linear-gradient(135deg,#8062D6,#E8A9A9);
                                 color:white; border-radius:4px; font-size:0.72rem;
                                 letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
-                                → Cart
+                                Cart
                             </button>
                         </form>
 
-                        <!-- Remove -->
                         <form asp-controller="Wishlists" asp-action="Toggle" method="post">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="productId" value="@item.ProductId" />
@@ -70,7 +68,7 @@ else
                                     style="padding:0.5rem 0.6rem; background:transparent;
                                 border:1px solid #2d2d40; color:#F57799; border-radius:4px;
                                 cursor:pointer;">
-                                ✕
+                                -
                             </button>
                         </form>
                     </div>
