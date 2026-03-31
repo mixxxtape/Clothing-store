@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
 using ClothingStoreMVC.Domain.Entities.UserAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.WebMVC.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
@@ -19,146 +17,150 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             _context = context;
         }
 
-        // GET: Wishlists
+        private async Task<User?> GetCurrentUserAsync()
+        {
+            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId);
+        }
+
+        private async Task<Wishlist> GetOrCreateWishlistAsync(int userId)
+        {
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Products)
+                .FirstOrDefaultAsync(w => w.UserId == userId);
+
+            if (wishlist == null)
+            {
+                wishlist = new Wishlist { UserId = userId };
+                _context.Wishlists.Add(wishlist);
+                await _context.SaveChangesAsync();
+            }
+
+            return wishlist;
+        }
+
+        // GET: /Wishlists
         public async Task<IActionResult> Index()
         {
-            var clothingStoreContext = _context.Wishlists.Include(w => w.User);
-            return View(await clothingStoreContext.ToListAsync());
-        }
-
-        // GET: Wishlists/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
 
             var wishlist = await _context.Wishlists
-                .Include(w => w.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
+                .Include(w => w.Products)
+                    .ThenInclude(p => p.Style)
+                .FirstOrDefaultAsync(w => w.UserId == user.Id);
 
-            return View(wishlist);
-        }
+            var vm = new WishlistViewModel();
 
-        // GET: Wishlists/Create
-        public IActionResult Create()
-        {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId");
-            return View();
-        }
-
-        // POST: Wishlists/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,Id")] Wishlist wishlist)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(wishlist);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", wishlist.UserId);
-            return View(wishlist);
-        }
-
-        // GET: Wishlists/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wishlist = await _context.Wishlists.FindAsync(id);
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", wishlist.UserId);
-            return View(wishlist);
-        }
-
-        // POST: Wishlists/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,Id")] Wishlist wishlist)
-        {
-            if (id != wishlist.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(wishlist);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!WishlistExists(wishlist.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", wishlist.UserId);
-            return View(wishlist);
-        }
-
-        // GET: Wishlists/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var wishlist = await _context.Wishlists
-                .Include(w => w.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (wishlist == null)
-            {
-                return NotFound();
-            }
-
-            return View(wishlist);
-        }
-
-        // POST: Wishlists/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var wishlist = await _context.Wishlists.FindAsync(id);
             if (wishlist != null)
             {
-                _context.Wishlists.Remove(wishlist);
+                vm.Items = wishlist.Products.Select(p => new WishlistItemViewModel
+                {
+                    ProductId = p.Id,
+                    ProductName = p.Name,
+                    Price = p.Price,
+                    StyleName = p.Style?.Name ?? "—"
+                }).ToList();
+            }
+
+            return View(vm);
+        }
+
+        // POST: /Wishlists/Toggle
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Toggle(int productId, string? returnUrl)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var wishlist = await GetOrCreateWishlistAsync(user.Id);
+
+            // Reload with products
+            var wishlistWithProducts = await _context.Wishlists
+                .Include(w => w.Products)
+                .FirstAsync(w => w.Id == wishlist.Id);
+
+            var product = wishlistWithProducts.Products.FirstOrDefault(p => p.Id == productId);
+            if (product != null)
+            {
+                wishlistWithProducts.Products.Remove(product);
+                TempData["Info"] = "Removed from wishlist";
+            }
+            else
+            {
+                var prod = await _context.Products.FindAsync(productId);
+                if (prod != null)
+                {
+                    wishlistWithProducts.Products.Add(prod);
+                    TempData["Success"] = "Added to wishlist";
+                }
             }
 
             await _context.SaveChangesAsync();
+
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool WishlistExists(int id)
+        // POST: /Wishlists/MoveToCart
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> MoveToCart(int productId)
         {
-            return _context.Wishlists.Any(e => e.Id == id);
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            // Знайти перший доступний розмір
+            var productSize = await _context.ProductSizes
+                .FirstOrDefaultAsync(ps => ps.ProductId == productId && ps.Quantity > 0);
+
+            if (productSize == null)
+            {
+                TempData["Error"] = "No sizes available";
+                return RedirectToAction(nameof(Index));
+            }
+
+            // Додати в корзину
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null)
+            {
+                cart = new Cart { UserId = user.Id };
+                _context.Carts.Add(cart);
+                await _context.SaveChangesAsync();
+            }
+
+            var existing = cart.Items.FirstOrDefault(i => i.ProductSizeId == productSize.Id);
+            if (existing != null)
+                existing.Quantity++;
+            else
+                _context.CartItems.Add(new CartItem
+                {
+                    CartId = cart.Id,
+                    ProductId = productId,
+                    ProductSizeId = productSize.Id,
+                    Quantity = 1
+                });
+
+            // Видалити з вішліста
+            var wishlist = await _context.Wishlists
+                .Include(w => w.Products)
+                .FirstOrDefaultAsync(w => w.UserId == user.Id);
+
+            if (wishlist != null)
+            {
+                var prod = wishlist.Products.FirstOrDefault(p => p.Id == productId);
+                if (prod != null) wishlist.Products.Remove(prod);
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Success"] = "Moved to cart";
+            return RedirectToAction(nameof(Index));
         }
     }
 }

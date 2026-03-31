@@ -218,10 +218,10 @@
         <div class="nav-icons">
             @if (User.Identity.IsAuthenticated)
             {
-                <a asp-controller="Home" asp-action="Index" class="nav-icon-btn" title="Wishlist">
+                <a asp-controller="Wishlists" asp-action="Index" class="nav-icon-btn" title="Wishlist">
                     <img src="@Url.Content("~/images/wishlist.jpg")" />
                 </a>
-                <a asp-controller="Home" asp-action="Index" class="nav-icon-btn" title="Cart">
+                <a asp-controller="Carts" asp-action="Index" class="nav-icon-btn" title="Cart"> 
                     <img src="@Url.Content("~/images/cart.jpg")" />
                 </a>
                 <form method="post" asp-controller="Account" asp-action="Logout" style="margin:0;">

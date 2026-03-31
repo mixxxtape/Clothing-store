@@ -23,10 +23,23 @@
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a>
 
-                    @if (User.Identity.IsAuthenticated && User.IsInRole("user"))
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <a asp-action="AddToCart" asp-route-id="@item.Id">To cart</a>
-                        <a asp-action="AddToFavorites" asp-route-id="@item.Id">To wishlist</a>
+                        <a asp-controller="Products" asp-action="Details" asp-route-id="@item.Id"
+                               style="font-size:0.75rem; color:#8062D6; text-decoration:none; margin-right:0.5rem;">
+                            + Cart
+                        </a>
+
+                        <form asp-controller="Wishlists" asp-action="Toggle" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@item.Id" />
+                            <input type="hidden" name="returnUrl" value="/Catalog" />
+                            <button type="submit"
+                                    style="background:transparent; border:none; color:#F57799;
+                                font-size:0.85rem; cursor:pointer; padding:0; cursor:pointer;">
+                                ♡
+                            </button>
+                        </form>
                     }
                 </td>
             </tr>

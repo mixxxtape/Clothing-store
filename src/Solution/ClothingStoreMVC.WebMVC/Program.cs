@@ -54,9 +54,9 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-    app.UseStaticFiles();
-app.UseAuthentication();
+app.UseStaticFiles();
 app.UseRouting();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

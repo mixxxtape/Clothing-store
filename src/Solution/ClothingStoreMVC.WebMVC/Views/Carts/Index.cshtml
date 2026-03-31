@@ -1,35 +1,128 @@
-﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.UserAggregates.Cart>
-
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.CartViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Cart";
 }
 
-<h1>Index</h1>
+<h2 style="font-size:1.4rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:2rem; color:#0C0950;">
+    Your Cart
+</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.IdentityUserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (TempData["Error"] != null)
+{
+    <div style="background:#2d0a0a; border:1px solid #F57799; color:#F57799;
+        padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+        @TempData["Error"]
+    </div>
 }
-    </tbody>
-</table>
+
+@if (!Model.Items.Any())
+{
+    <div style="text-align:center; padding:4rem; color:#6b6b8a;">
+        <p style="font-size:1rem; margin-bottom:1rem;">Your cart is empty</p>
+        <a asp-controller="Catalog" asp-action="Index"
+               style="padding:0.6rem 1.5rem; background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            color:white; text-decoration:none; border-radius:4px; font-size:0.8rem;
+            letter-spacing:0.1em; text-transform:uppercase;">
+            Browse Catalogue
+        </a>
+    </div>
+}
+else
+{
+    <div style="display:flex; gap:2rem; align-items:flex-start;">
+
+        <!-- Items -->
+        <div style="flex:1;">
+            @foreach (var item in Model.Items)
+            {
+                <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px;
+                    padding:1rem 1.25rem; margin-bottom:1rem;
+                    display:flex; align-items:center; gap:1rem;">
+
+                    <div style="flex:1;">
+                        <p style="font-weight:700; color:#0C0950; margin:0 0 0.25rem 0;">
+                            @item.ProductName
+                        </p>
+                        <p style="font-size:0.8rem; color:#6b6b8a; margin:0 0 0.25rem 0;">
+                            Size: @item.SizeName
+                        </p>
+                        <p style="font-size:0.9rem; font-weight:700; color:#8062D6; margin:0;">
+                            @item.Price ₴
+                        </p>
+                    </div>
+
+                    <!-- Quantity -->
+                    <form asp-action="UpdateQuantity" method="post"
+                          style="display:flex; align-items:center; gap:0.5rem;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                        <input type="number" name="quantity" value="@item.Quantity"
+                               min="1" max="99"
+                               style="width:60px; padding:0.3rem 0.5rem; border-radius:4px;
+                        border:1px solid #2d2d40; background:#fff;
+                        color:#0C0950; font-size:0.9rem; text-align:center;" />
+                        <button type="submit"
+                                style="padding:0.3rem 0.75rem; border:1px solid #8062D6;
+                            color:#8062D6; background:transparent; border-radius:4px;
+                            font-size:0.75rem; cursor:pointer; letter-spacing:0.05em;">
+                            Update
+                        </button>
+                    </form>
+
+                    <p style="font-weight:700; color:#0C0950; min-width:80px; text-align:right;">
+                        @item.Subtotal ₴
+                    </p>
+
+                    <!-- Remove -->
+                    <form asp-action="RemoveItem" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="cartItemId" value="@item.CartItemId" />
+                        <button type="submit"
+                                style="background:transparent; border:none; color:#F57799;
+                            cursor:pointer; font-size:1rem; padding:0.25rem;">
+                            ✕
+                        </button>
+                    </form>
+                </div>
+            }
+
+            <!-- Clear -->
+            <form asp-action="Clear" method="post" style="margin-top:0.5rem;">
+                @Html.AntiForgeryToken()
+                <button type="submit"
+                        style="background:transparent; border:1px solid #2d2d40;
+                    color:#6b6b8a; border-radius:4px; padding:0.4rem 1rem;
+                    font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+                    cursor:pointer;">
+                    Clear Cart
+                </button>
+            </form>
+        </div>
+
+        <!-- Summary -->
+        <div style="width:280px; flex-shrink:0; position:sticky; top:80px;">
+            <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px;
+                padding:1.5rem;">
+                <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+                color:#6b6b8a; margin:0 0 1rem 0;">Order Summary</p>
+
+                <div style="display:flex; justify-content:space-between;
+                    border-top:1px solid #2d2d40; padding-top:0.75rem; margin-top:0.75rem;">
+                    <span style="font-weight:700; color:#0C0950;">Total</span>
+                    <span style="font-weight:900; font-size:1.1rem; color:#8062D6;">
+                        @Model.Total ₴
+                    </span>
+                </div>
+
+                <a asp-controller="Orders" asp-action="Checkout"
+                       style="display:block; margin-top:1.25rem; text-align:center;
+                    padding:0.75rem; background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                    color:white; text-decoration:none; border-radius:4px;
+                    font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;">
+                    Checkout →
+                </a>
+            </div>
+        </div>
+    </div>
+}

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
 using ClothingStoreMVC.Domain.Entities.UserAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.WebMVC.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
@@ -19,146 +17,245 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             _context = context;
         }
 
-        // GET: Orders
+        private async Task<User?> GetCurrentUserAsync()
+        {
+            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId);
+        }
+
+        // GET: /Orders
         public async Task<IActionResult> Index()
         {
-            var clothingStoreContext = _context.Orders.Include(o => o.User);
-            return View(await clothingStoreContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var orders = await _context.Orders
+                .Where(o => o.UserId == user.Id)
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            var vms = orders.Select(o => new OrderViewModel
+            {
+                OrderId = o.Id,
+                OrderDate = o.OrderDate,
+                DeliveryAddress = o.DeliveryAddress,
+                CurrentStatus = o.StatusHistory
+                    .OrderByDescending(s => s.ChangedAt)
+                    .FirstOrDefault()?.Status ?? "Pending",
+                Items = o.Items.Select(i => new OrderItemViewModel
+                {
+                    ProductName = i.Product.Name,
+                    SizeName = i.ProductSize?.Size?.Name ?? "—",
+                    Quantity = i.Quantity,
+                    Price = i.Product.Price
+                }).ToList()
+            }).ToList();
+
+            return View(vms);
         }
 
-        // GET: Orders/Details/5
-        public async Task<IActionResult> Details(int? id)
+        // GET: /Orders/Details/5
+        public async Task<IActionResult> Details(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
 
             var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
+                .Where(o => o.Id == id && o.UserId == user.Id)
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.ProductSize)
+                        .ThenInclude(ps => ps.Size)
+                .FirstOrDefaultAsync();
+
+            if (order == null) return NotFound();
+
+            var vm = new OrderViewModel
             {
-                return NotFound();
+                OrderId = order.Id,
+                OrderDate = order.OrderDate,
+                DeliveryAddress = order.DeliveryAddress,
+                CurrentStatus = order.StatusHistory
+                    .OrderByDescending(s => s.ChangedAt)
+                    .FirstOrDefault()?.Status ?? "Pending",
+                Items = order.Items.Select(i => new OrderItemViewModel
+                {
+                    ProductName = i.Product.Name,
+                    SizeName = i.ProductSize?.Size?.Name ?? "—",
+                    Quantity = i.Quantity,
+                    Price = i.Product.Price
+                }).ToList()
+            };
+
+            return View(vm);
+        }
+
+        // GET: /Orders/Checkout
+        public async Task<IActionResult> Checkout()
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(c => c.Items)
+                    .ThenInclude(i => i.ProductSize)
+                        .ThenInclude(ps => ps.Size)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null || !cart.Items.Any())
+            {
+                TempData["Error"] = "Your cart is empty";
+                return RedirectToAction("Index", "Carts");
             }
 
-            return View(order);
+            var vm = new CheckoutViewModel
+            {
+                Items = cart.Items.Select(i => new CartItemViewModel
+                {
+                    CartItemId = i.Id,
+                    ProductId = i.ProductId,
+                    ProductName = i.Product.Name,
+                    Price = i.Product.Price,
+                    SizeName = i.ProductSize.Size.Name,
+                    ProductSizeId = i.ProductSizeId,
+                    Quantity = i.Quantity
+                }).ToList(),
+                Total = cart.Items.Sum(i => i.Product.Price * i.Quantity)
+            };
+
+            return View(vm);
         }
 
-        // GET: Orders/Create
-        public IActionResult Create()
-        {
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId");
-            return View();
-        }
-
-        // POST: Orders/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Orders/Checkout
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,OrderDate,DeliveryAddress,Id")] Order order)
+        public async Task<IActionResult> Checkout(CheckoutViewModel vm)
         {
-            if (ModelState.IsValid)
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var cart = await _context.Carts
+                .Include(c => c.Items)
+                    .ThenInclude(i => i.Product)
+                .Include(c => c.Items)
+                    .ThenInclude(i => i.ProductSize)
+                .FirstOrDefaultAsync(c => c.UserId == user.Id);
+
+            if (cart == null || !cart.Items.Any())
             {
-                _context.Add(order);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                TempData["Error"] = "Your cart is empty";
+                return RedirectToAction("Index", "Carts");
             }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
-            return View(order);
+
+            if (!ModelState.IsValid)
+            {
+                vm.Items = cart.Items.Select(i => new CartItemViewModel
+                {
+                    CartItemId = i.Id,
+                    ProductName = i.Product.Name,
+                    Price = i.Product.Price,
+                    SizeName = i.ProductSize.Size.Name,
+                    Quantity = i.Quantity
+                }).ToList();
+                vm.Total = vm.Items.Sum(i => i.Subtotal);
+                return View(vm);
+            }
+
+            // Перевірити наявність товарів
+            foreach (var item in cart.Items)
+            {
+                if (item.ProductSize.Quantity < item.Quantity)
+                {
+                    TempData["Error"] = $"Not enough stock for {item.Product.Name}";
+                    return RedirectToAction("Index", "Carts");
+                }
+            }
+
+            // Створити замовлення
+            var order = new Order
+            {
+                UserId = user.Id,
+                OrderDate = DateTime.UtcNow,
+                DeliveryAddress = vm.DeliveryAddress,
+                Items = cart.Items.Select(i => new OrderItem
+                {
+                    ProductId = i.ProductId,
+                    ProductSizeId = i.ProductSizeId,
+                    Quantity = i.Quantity
+                }).ToList(),
+                StatusHistory = new List<OrderStatus>
+                {
+                    new OrderStatus
+                    {
+                        Status = "Pending",
+                        ChangedAt = DateTime.UtcNow
+                    }
+                }
+            };
+
+            // Списати зі складу
+            foreach (var item in cart.Items)
+            {
+                item.ProductSize.Quantity -= item.Quantity;
+            }
+
+            _context.Orders.Add(order);
+            _context.CartItems.RemoveRange(cart.Items);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Order placed successfully!";
+            return RedirectToAction(nameof(Details), new { id = order.Id });
         }
 
-        // GET: Orders/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var order = await _context.Orders.FindAsync(id);
-            if (order == null)
-            {
-                return NotFound();
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
-            return View(order);
-        }
-
-        // POST: Orders/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Orders/Cancel
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,OrderDate,DeliveryAddress,Id")] Order order)
+        public async Task<IActionResult> Cancel(int id)
         {
-            if (id != order.Id)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(order);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!OrderExists(order.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "IdentityUserId", order.UserId);
-            return View(order);
-        }
-
-        // GET: Orders/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
 
             var order = await _context.Orders
-                .Include(o => o.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (order == null)
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                    .ThenInclude(i => i.ProductSize)
+                .FirstOrDefaultAsync(o => o.Id == id && o.UserId == user.Id);
+
+            if (order == null) return NotFound();
+
+            var currentStatus = order.StatusHistory
+                .OrderByDescending(s => s.ChangedAt)
+                .FirstOrDefault()?.Status;
+
+            if (currentStatus != "Pending")
             {
-                return NotFound();
+                TempData["Error"] = "Cannot cancel this order";
+                return RedirectToAction(nameof(Details), new { id });
             }
 
-            return View(order);
-        }
-
-        // POST: Orders/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var order = await _context.Orders.FindAsync(id);
-            if (order != null)
+            // Повернути товар на склад
+            foreach (var item in order.Items)
             {
-                _context.Orders.Remove(order);
+                item.ProductSize.Quantity += item.Quantity;
             }
+
+            order.StatusHistory.Add(new OrderStatus
+            {
+                Status = "Cancelled",
+                ChangedAt = DateTime.UtcNow,
+                ChangeReason = "Cancelled by user"
+            });
 
             await _context.SaveChangesAsync();
+            TempData["Success"] = "Order cancelled";
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool OrderExists(int id)
-        {
-            return _context.Orders.Any(e => e.Id == id);
         }
     }
 }

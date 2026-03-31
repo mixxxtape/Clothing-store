@@ -1,36 +1,71 @@
-﻿@model ClothingStoreMVC.Domain.Entities.UserAggregates.Order
-
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.OrderViewModel
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Order #" + Model.OrderId;
 }
 
-<h1>Details</h1>
+<a asp-action="Index"
+       style="font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+    color:#6b6b8a; text-decoration:none; display:inline-block; margin-bottom:1.5rem;">
+    ← Back to Orders
+</a>
 
-<div>
-    <h4>Order</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User.IdentityUserId)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.OrderDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.OrderDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DeliveryAddress)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DeliveryAddress)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+<h2 style="font-size:1.4rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:2rem; color:#0C0950;">
+    Order #@Model.OrderId
+</h2>
+
+<div style="display:flex; gap:2rem; align-items:flex-start;">
+    <div style="flex:1;">
+        @foreach (var item in Model.Items)
+        {
+            <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px;
+                padding:1rem 1.25rem; margin-bottom:0.75rem;
+                display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <p style="font-weight:700; color:#0C0950; margin:0 0 0.2rem 0;">
+                        @item.ProductName
+                    </p>
+                    <p style="font-size:0.8rem; color:#6b6b8a; margin:0;">
+                        Size: @item.SizeName · Qty: @item.Quantity
+                    </p>
+                </div>
+                <p style="font-weight:700; color:#8062D6; margin:0;">@item.Subtotal ₴</p>
+            </div>
+        }
+    </div>
+
+    <div style="width:260px; flex-shrink:0; position:sticky; top:80px;">
+        <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px; padding:1.5rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+            color:#6b6b8a; margin:0 0 1rem 0;">Summary</p>
+
+            <p style="font-size:0.8rem; color:#0C0950; margin:0 0 0.5rem 0;">
+                📍 @Model.DeliveryAddress
+            </p>
+            <p style="font-size:0.8rem; color:#6b6b8a; margin:0 0 1rem 0;">
+                @Model.OrderDate.ToString("dd MMM yyyy HH:mm")
+            </p>
+
+            <div style="display:flex; justify-content:space-between;
+                border-top:1px solid #2d2d40; padding-top:0.75rem;">
+                <span style="font-weight:700; color:#0C0950;">Total</span>
+                <span style="font-weight:900; color:#8062D6;">@Model.Total ₴</span>
+            </div>
+
+            @if (Model.CurrentStatus == "Pending")
+            {
+                <form asp-action="Cancel" asp-route-id="@Model.OrderId" method="post"
+                      style="margin-top:1rem;">
+                    @Html.AntiForgeryToken()
+                    <button type="submit"
+                            style="width:100%; padding:0.6rem; background:transparent;
+                        border:1px solid #F57799; color:#F57799; border-radius:4px;
+                        font-size:0.75rem; letter-spacing:0.1em; text-transform:uppercase;
+                        cursor:pointer;">
+                        Cancel Order
+                    </button>
+                </form>
+            }
+        </div>
+    </div>
 </div>

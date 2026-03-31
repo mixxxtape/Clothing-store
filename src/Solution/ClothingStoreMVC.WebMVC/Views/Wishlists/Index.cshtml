@@ -1,35 +1,81 @@
-﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.UserAggregates.Wishlist>
-
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.WishlistViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Wishlist";
 }
 
-<h1>Index</h1>
+<h2 style="font-size:1.4rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:2rem; color:#0C0950;">
+    Wishlist
+</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.IdentityUserId)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (!Model.Items.Any())
+{
+    <div style="text-align:center; padding:4rem; color:#6b6b8a;">
+        <p style="margin-bottom:1rem;">Your wishlist is empty</p>
+        <a asp-controller="Catalog" asp-action="Index"
+               style="padding:0.6rem 1.5rem; background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            color:white; text-decoration:none; border-radius:4px; font-size:0.8rem;
+            letter-spacing:0.1em; text-transform:uppercase;">
+            Browse Catalogue
+        </a>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:1.5rem;">
+        @foreach (var item in Model.Items)
+        {
+            <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px;
+                overflow:hidden; transition:transform 0.2s;"
+                 onmouseover="this.style.transform='translateY(-2px)'"
+                 onmouseout="this.style.transform='none'">
+
+                <div style="height:200px; background:#e8d5d5; display:flex;
+                    align-items:center; justify-content:center; color:#6b6b8a;">
+                    No image
+                </div>
+
+                <div style="padding:1rem;">
+                    <p style="font-weight:700; color:#0C0950; margin:0 0 0.25rem 0;
+                        white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                        @item.ProductName
+                    </p>
+                    <p style="font-size:0.75rem; color:#6b6b8a; margin:0 0 0.5rem 0;">
+                        @item.StyleName
+                    </p>
+                    <p style="font-weight:700; color:#8062D6; margin:0 0 1rem 0;">
+                        @item.Price ₴
+                    </p>
+
+                    <div style="display:flex; gap:0.5rem;">
+                        <!-- Move to Cart -->
+                        <form asp-controller="Wishlists" asp-action="MoveToCart" method="post" style="flex:1;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <button type="submit"
+                                    style="width:100%; padding:0.5rem; border:none;
+                                background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                                color:white; border-radius:4px; font-size:0.72rem;
+                                letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;">
+                                → Cart
+                            </button>
+                        </form>
+
+                        <!-- Remove -->
+                        <form asp-controller="Wishlists" asp-action="Toggle" method="post">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="productId" value="@item.ProductId" />
+                            <input type="hidden" name="returnUrl" value="/Wishlists" />
+                            <button type="submit"
+                                    style="padding:0.5rem 0.6rem; background:transparent;
+                                border:1px solid #2d2d40; color:#F57799; border-radius:4px;
+                                cursor:pointer;">
+                                ✕
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

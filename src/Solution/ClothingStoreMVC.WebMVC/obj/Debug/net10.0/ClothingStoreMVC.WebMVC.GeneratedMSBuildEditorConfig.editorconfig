@@ -42,22 +42,6 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Carts/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydHNcQ3JlYXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Carts/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydHNcRGVsZXRlLmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Carts/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydHNcRGV0YWlscy5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Carts/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydHNcRWRpdC5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
 [E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Carts/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2FydHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
@@ -98,20 +82,12 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXERlbGV0ZS5jc2h0bWw=
+[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Checkout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXENoZWNrb3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Details.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Orders/Index.cshtml]
@@ -252,22 +228,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Styles/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU3R5bGVzXEluZGV4LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Wishlists/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2lzaGxpc3RzXENyZWF0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Wishlists/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2lzaGxpc3RzXERlbGV0ZS5jc2h0bWw=
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Wishlists/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2lzaGxpc3RzXERldGFpbHMuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = 
-
-[E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Wishlists/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcV2lzaGxpc3RzXEVkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [E:/ClothingStore/src/Solution/ClothingStoreMVC.WebMVC/Views/Wishlists/Index.cshtml]

@@ -64,16 +64,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             return View(product);
         }
 
-        [Authorize(Roles = "user")]
-        public IActionResult AddToCart(int id)
-        {
-            return RedirectToAction("Index");
-        }
-
-        [Authorize(Roles = "user")]
-        public IActionResult AddToFavorites(int id)
-        {
-            return RedirectToAction("Index");
-        }
+       
     }
 }

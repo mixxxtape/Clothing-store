@@ -1,47 +1,56 @@
-﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.UserAggregates.Order>
-
+﻿@model IEnumerable<ClothingStoreMVC.WebMVC.ViewModels.OrderViewModel>
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "My Orders";
 }
 
-<h1>Index</h1>
+<h2 style="font-size:1.4rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:2rem; color:#0C0950;">
+    My Orders
+</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.User)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DeliveryAddress)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.IdentityUserId)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OrderDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DeliveryAddress)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (!Model.Any())
+{
+    <div style="text-align:center; padding:4rem; color:#6b6b8a;">
+        <p>No orders yet</p>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    @foreach (var order in Model)
+    {
+        <div style="background:#F9DFDF; border:1px solid #000000; border-radius:8px;
+            padding:1.25rem; margin-bottom:1rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center;
+                margin-bottom:0.75rem;">
+                <div>
+                    <span style="font-size:0.65rem; letter-spacing:0.2em; color:#6b6b8a;
+                    text-transform:uppercase;">Order #@order.OrderId</span>
+                    <p style="font-size:0.8rem; color:#0C0950; margin:0.25rem 0 0 0;">
+                        @order.OrderDate.ToString("dd MMM yyyy")
+                    </p>
+                </div>
+                <span style="padding:0.3rem 0.75rem; border-radius:20px; font-size:0.72rem;
+                    letter-spacing:0.1em; text-transform:uppercase;
+                    background:@(order.CurrentStatus == "Pending" ? "#1a1a24" : order.CurrentStatus == "Cancelled" ? "#2d0a0a" : "#0a2d0a");
+                    color:@(order.CurrentStatus == "Pending" ? "#8062D6" : order.CurrentStatus == "Cancelled" ? "#F57799" : "#6bcf6b");
+                    border:1px solid currentColor;">
+                    @order.CurrentStatus
+                </span>
+            </div>
+            <p style="font-size:0.8rem; color:#6b6b8a; margin:0 0 0.75rem 0;">
+                📍 @order.DeliveryAddress
+            </p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-weight:700; color:#8062D6;">@order.Total ₴</span>
+                <a asp-action="Details" asp-route-id="@order.OrderId"
+                       style="padding:0.4rem 1rem; border:1px solid #8062D6; color:#8062D6;
+                    border-radius:4px; font-size:0.72rem; letter-spacing:0.1em;
+                    text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+                       onmouseover="this.style.background='#8062D6';this.style.color='white'"
+                       onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+                    Details →
+                </a>
+            </div>
+        </div>
+    }
+}
