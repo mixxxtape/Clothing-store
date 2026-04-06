@@ -2,7 +2,6 @@
 using ClothingStoreMVC.Domain.Entities.UserAggregates;
 using ClothingStoreMVC.Infrastructure;
 using ClothingStoreMVC.WebMVC.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,11 +10,14 @@ namespace ClothingStoreMVC.WebMVC.Controllers
     public class OrdersController : Controller
     {
         private readonly ClothingStoreContext _context;
+        private readonly IdentityContext _identityContext;
 
-        public OrdersController(ClothingStoreContext context)
+        public OrdersController(ClothingStoreContext context, IdentityContext identityContext)
         {
             _context = context;
+            _identityContext = identityContext;
         }
+
 
         private async Task<User?> GetCurrentUserAsync()
         {
@@ -33,7 +35,8 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 .Where(o => o.UserId == user.Id)
                 .Include(o => o.StatusHistory)
                 .Include(o => o.Items)
-                    .ThenInclude(i => i.Product)
+                    .ThenInclude(i => i.ProductSize)
+                        .ThenInclude(ps => ps.Size)
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
@@ -47,10 +50,10 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     .FirstOrDefault()?.Status ?? "Pending",
                 Items = o.Items.Select(i => new OrderItemViewModel
                 {
-                    ProductName = i.Product.Name,
+                    ProductName = i.ProductName,
                     SizeName = i.ProductSize?.Size?.Name ?? "—",
                     Quantity = i.Quantity,
-                    Price = i.Product.Price
+                    Price = i.Price
                 }).ToList()
             }).ToList();
 
@@ -66,8 +69,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             var order = await _context.Orders
                 .Where(o => o.Id == id && o.UserId == user.Id)
                 .Include(o => o.StatusHistory)
-                .Include(o => o.Items)
-                    .ThenInclude(i => i.Product)
                 .Include(o => o.Items)
                     .ThenInclude(i => i.ProductSize)
                         .ThenInclude(ps => ps.Size)
@@ -85,10 +86,10 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     .FirstOrDefault()?.Status ?? "Pending",
                 Items = order.Items.Select(i => new OrderItemViewModel
                 {
-                    ProductName = i.Product.Name,
+                    ProductName = i.ProductName,
                     SizeName = i.ProductSize?.Size?.Name ?? "—",
                     Quantity = i.Quantity,
-                    Price = i.Product.Price
+                    Price = i.Price
                 }).ToList()
             };
 
@@ -185,23 +186,19 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 Items = cart.Items.Select(i => new OrderItem
                 {
                     ProductId = i.ProductId,
+                    ProductName = i.Product.Name,
+                    Price = i.Product.Price,   
                     ProductSizeId = i.ProductSizeId,
                     Quantity = i.Quantity
                 }).ToList(),
                 StatusHistory = new List<OrderStatus>
                 {
-                    new OrderStatus
-                    {
-                        Status = "Pending",
-                        ChangedAt = DateTime.UtcNow
-                    }
+                    new OrderStatus { Status = "Pending", ChangedAt = DateTime.UtcNow }
                 }
             };
 
             foreach (var item in cart.Items)
-            {
                 item.ProductSize.Quantity -= item.Quantity;
-            }
 
             _context.Orders.Add(order);
             _context.CartItems.RemoveRange(cart.Items);
@@ -238,9 +235,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             }
 
             foreach (var item in order.Items)
-            {
                 item.ProductSize.Quantity += item.Quantity;
-            }
 
             order.StatusHistory.Add(new OrderStatus
             {
@@ -254,6 +249,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        // GET: /Orders/Manage
         public async Task<IActionResult> Manage()
         {
             if (!User.IsInRole("admin"))
@@ -263,29 +259,38 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 .Include(o => o.User)
                 .Include(o => o.StatusHistory)
                 .Include(o => o.Items)
-                    .ThenInclude(i => i.Product)
-                .Include(o => o.Items)
                     .ThenInclude(i => i.ProductSize)
                         .ThenInclude(ps => ps.Size)
                 .OrderByDescending(o => o.OrderDate)
                 .ToListAsync();
 
-            var vms = orders.Select(o => new AdminOrderViewModel
+            var identityIds = orders.Select(o => o.User.IdentityUserId).Distinct().ToList();
+            var appUsers = await _identityContext.Set<AppUser>()
+                .Where(u => identityIds.Contains(u.Id))
+                .ToListAsync();
+
+            var vms = orders.Select(o =>
             {
-                OrderId = o.Id,
-                OrderDate = o.OrderDate,
-                DeliveryAddress = o.DeliveryAddress,
-                UserName = o.User.IdentityUserId,
-                CurrentStatus = o.StatusHistory
-                    .OrderByDescending(s => s.ChangedAt)
-                    .FirstOrDefault()?.Status ?? "Pending",
-                Items = o.Items.Select(i => new OrderItemViewModel
+                var appUser = appUsers.FirstOrDefault(u => u.Id == o.User.IdentityUserId);
+                return new AdminOrderViewModel
                 {
-                    ProductName = i.Product.Name,
-                    SizeName = i.ProductSize?.Size?.Name ?? "—",
-                    Quantity = i.Quantity,
-                    Price = i.Product.Price
-                }).ToList()
+                    OrderId = o.Id,
+                    OrderDate = o.OrderDate,
+                    DeliveryAddress = o.DeliveryAddress,
+                    UserName = appUser != null
+                        ? $"{appUser.FirstName} {appUser.LastName} ({appUser.Email})"
+                        : "Unknown",
+                    CurrentStatus = o.StatusHistory
+                        .OrderByDescending(s => s.ChangedAt)
+                        .FirstOrDefault()?.Status ?? "Pending",
+                    Items = o.Items.Select(i => new OrderItemViewModel
+                    {
+                        ProductName = i.ProductName,
+                        SizeName = i.ProductSize?.Size?.Name ?? "—",
+                        Quantity = i.Quantity,
+                        Price = i.Price
+                    }).ToList()
+                };
             }).ToList();
 
             return View(vms);
@@ -331,6 +336,29 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             TempData["Success"] = $"Status updated to {status}";
             return RedirectToAction(nameof(Manage));
         }
-    }
 
+        // POST: /Orders/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id)
+        {
+            if (!User.IsInRole("admin"))
+                return RedirectToAction("Index", "Home");
+
+            var order = await _context.Orders
+                .Include(o => o.Items)
+                .Include(o => o.StatusHistory)
+                .FirstOrDefaultAsync(o => o.Id == id);
+
+            if (order == null) return NotFound();
+
+            _context.OrderStatuses.RemoveRange(order.StatusHistory);
+            _context.OrderItems.RemoveRange(order.Items);
+            _context.Orders.Remove(order);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = $"Order #{id} deleted";
+            return RedirectToAction(nameof(Manage));
+        }
+    }
 }

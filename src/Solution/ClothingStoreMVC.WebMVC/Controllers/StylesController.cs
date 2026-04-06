@@ -32,17 +32,21 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var style = await _context.Styles
+                .Include(s => s.Products)
+                    .ThenInclude(p => p.Category)
+                .Include(s => s.Products)
+                    .ThenInclude(p => p.Sizes)
+                        .ThenInclude(ps => ps.Size)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (style == null)
-            {
-                return NotFound();
-            }
+
+            if (style == null) return NotFound();
+
+            style.Products = style.Products
+                .Where(p => !p.IsDeleted)
+                .ToList();
 
             return View(style);
         }

@@ -11,6 +11,10 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
         [Required(ErrorMessage = "Product is required")]
         public int ProductId { get; set; }
         public ProductAggregates.Product Product { get; set; }
+        public string ProductName { get; set; } = null!;
+
+        [Required]
+        public decimal Price { get; set; }
 
         [Required(ErrorMessage = "Quantity is required")]
         [Display(Name = "Quantity")]

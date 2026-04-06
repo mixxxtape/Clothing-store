@@ -23,8 +23,9 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
                    .IsRequired();
 
             builder.HasMany(o => o.Items)
-                   .WithOne()
+                   .WithOne(oi => oi.Order)
                    .HasForeignKey(oi => oi.OrderId)
+                   .OnDelete(DeleteBehavior.Cascade)
                    .IsRequired();
 
             builder.HasMany(o => o.StatusHistory)

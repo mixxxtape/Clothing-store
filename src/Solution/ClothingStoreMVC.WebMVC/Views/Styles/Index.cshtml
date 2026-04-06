@@ -1,40 +1,116 @@
 ﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.ProductAggregates.Style>
-@{
-    ViewData["Title"] = "Styles";
-}
+@{ ViewData["Title"] = "Styles"; }
 
-<h1>Styles</h1>
+<style>
+    .styles-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #8062D6;
+    }
+    .styles-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.3rem 0;
+    }
+    .styles-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0C0950;
+        margin: 0;
+        font-family: Georgia, serif;
+    }
+    .style-card {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        transition: transform 0.2s, box-shadow 0.2s;
+        text-decoration: none;
+    }
+    .style-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(128,98,214,0.12);
+        border-color: #8062D6;
+    }
+    .style-name {
+        font-size: 1rem;
+        font-weight: 900;
+        color: #0C0950;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        margin: 0 0 0.4rem 0;
+    }
+    .style-desc {
+        font-size: 0.82rem;
+        color: #6b6b8a;
+        margin: 0;
+        line-height: 1.6;
+    }
+    .style-arrow {
+        font-size: 1.2rem;
+        color: #8062D6;
+        flex-shrink: 0;
+    }
+</style>
 
-@if (User.IsInRole("admin"))
+<div class="styles-header">
+    <div>
+        <p class="styles-eyebrow">Ravel — Alternative Fashion</p>
+        <h1 class="styles-title">Styles</h1>
+    </div>
+    @if (User.IsInRole("admin"))
+    {
+        <a asp-action="Create"
+           style="padding:0.4rem 1rem; border:1px solid #8062D6; color:#8062D6;
+           border-radius:4px; font-size:0.72rem; letter-spacing:0.1em;
+           text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+           onmouseover="this.style.background='#8062D6';this.style.color='white'"
+           onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+            + Add Style
+        </a>
+    }
+</div>
+
+@if (!Model.Any())
 {
-    <p><a asp-action="Create">Add style</a></p>
+    <p style="color:#6b6b8a; text-align:center; padding:3rem;">No styles yet</p>
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Description</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@item.Name</td>
-                <td>@item.Description</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                    @if (User.IsInRole("admin"))
-                    {
-                        <span> | </span>
-                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
-                        <span> | </span>
-                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+@foreach (var item in Model)
+{
+    <a asp-action="Details" asp-route-id="@item.Id" class="style-card">
+        <div>
+            <p class="style-name">@item.Name</p>
+            <p class="style-desc">@item.Description</p>
+        </div>
+        <span class="style-arrow">→</span>
+    </a>
+
+    @if (User.IsInRole("admin"))
+    {
+        <div style="margin:-0.5rem 0 1rem 0; display:flex; gap:0.75rem; padding:0 0.25rem;">
+            <a asp-action="Edit" asp-route-id="@item.Id"
+               style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+               color:#6b6b8a; text-decoration:none; transition:color 0.2s;"
+               onmouseover="this.style.color='#8062D6'"
+               onmouseout="this.style.color='#6b6b8a'">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.Id"
+               style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+               color:#6b6b8a; text-decoration:none; transition:color 0.2s;"
+               onmouseover="this.style.color='#F57799'"
+               onmouseout="this.style.color='#6b6b8a'">Delete</a>
+        </div>
+    }
+}

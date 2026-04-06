@@ -39,7 +39,7 @@ else
                         User: @order.UserName
                     </p>
                     <p style="font-size:0.75rem; color:#6b6b8a; margin:0.2rem 0 0 0;">
-                        📍 @order.DeliveryAddress
+                         @order.DeliveryAddress
                     </p>
                 </div>
                 <span style="padding:0.3rem 0.75rem; border-radius:20px; font-size:0.72rem;
@@ -104,6 +104,21 @@ else
                             </form>
                         }
                     }
+                </div>
+                <div style="margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid #e0c8c8;">
+                    <form asp-action="Delete" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@order.OrderId" />
+                        <button type="submit"
+                                onclick="return confirm('Delete order #@order.OrderId permanently?')"
+                                style="padding:0.35rem 0.75rem; border-radius:4px; font-size:0.72rem;
+                            letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+                            border:1px solid #F57799; color:#F57799; background:transparent;"
+                                onmouseover="this.style.background='#F57799';this.style.color='white'"
+                                onmouseout="this.style.background='transparent';this.style.color='#F57799'">
+                             Delete
+                        </button>
+                    </form>
                 </div>
             }
         </div>

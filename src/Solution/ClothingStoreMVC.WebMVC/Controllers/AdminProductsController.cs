@@ -163,15 +163,35 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 product.CategoryId = vm.CategoryId;
                 product.IsDeleted = vm.IsDeleted;
 
-                _context.ProductSizes.RemoveRange(product.Sizes);
+                var usedSizeIds = await _context.OrderItems
+     .Select(oi => oi.ProductSizeId)
+     .ToListAsync();
+
+                var selectedSizeIds = vm.Sizes
+                    .Where(s => s.IsSelected)
+                    .Select(s => s.SizeId)
+                    .ToList();
+
+                var sizesToRemove = product.Sizes
+                    .Where(ps => !usedSizeIds.Contains(ps.Id) && !selectedSizeIds.Contains(ps.SizeId))
+                    .ToList();
+                _context.ProductSizes.RemoveRange(sizesToRemove);
 
                 foreach (var size in vm.Sizes.Where(s => s.IsSelected))
                 {
-                    product.Sizes.Add(new ProductSize
+                    var existing = product.Sizes.FirstOrDefault(ps => ps.SizeId == size.SizeId);
+                    if (existing != null)
                     {
-                        SizeId = size.SizeId,
-                        Quantity = size.Quantity
-                    });
+                        existing.Quantity = size.Quantity;
+                    }
+                    else
+                    {
+                        product.Sizes.Add(new ProductSize
+                        {
+                            SizeId = size.SizeId,
+                            Quantity = size.Quantity
+                        });
+                    }
                 }
 
                 await _context.SaveChangesAsync();

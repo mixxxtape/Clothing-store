@@ -311,4 +311,4 @@ E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compress
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\bypaho2k8p-{0}-m9qm4tazc0-m9qm4tazc0.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\w4jawj0kjh-{0}-jjsuc0puko-jjsuc0puko.gz
 E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\u2orb36vvx-{0}-9vr69e8ynj-9vr69e8ynj.gz
-E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\h8wrl1ybaj-{0}-by6270n5xo-by6270n5xo.gz
+E:\ClothingStore\src\Solution\ClothingStoreMVC.WebMVC\obj\Debug\net10.0\compressed\h8wrl1ybaj-{0}-fzh173p35z-fzh173p35z.gz

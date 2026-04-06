@@ -109,54 +109,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> MoveToCart(int productId)
         {
-            //var user = await GetCurrentUserAsync();
-            //if (user == null) return RedirectToAction("Login", "Account");
-
-            //var productSize = await _context.ProductSizes
-            //    .FirstOrDefaultAsync(ps => ps.ProductId == productId && ps.Quantity > 0);
-
-            //if (productSize == null)
-            //{
-            //    TempData["Error"] = "No sizes available";
-            //    return RedirectToAction(nameof(Index));
-            //}
-
-            //var cart = await _context.Carts
-            //    .Include(c => c.Items)
-            //    .FirstOrDefaultAsync(c => c.UserId == user.Id);
-
-            //if (cart == null)
-            //{
-            //    cart = new Cart { UserId = user.Id };
-            //    _context.Carts.Add(cart);
-            //    await _context.SaveChangesAsync();
-            //}
-
-            //var existing = cart.Items.FirstOrDefault(i => i.ProductSizeId == productSize.Id);
-            //if (existing != null)
-            //    existing.Quantity++;
-            //else
-            //    _context.CartItems.Add(new CartItem
-            //    {
-            //        CartId = cart.Id,
-            //        ProductId = productId,
-            //        ProductSizeId = productSize.Id,
-            //        Quantity = 1
-            //    });
-
-            //var wishlist = await _context.Wishlists
-            //    .Include(w => w.Products)
-            //    .FirstOrDefaultAsync(w => w.UserId == user.Id);
-
-            //if (wishlist != null)
-            //{
-            //    var prod = wishlist.Products.FirstOrDefault(p => p.Id == productId);
-            //    if (prod != null) wishlist.Products.Remove(prod);
-            //}
-
-            //await _context.SaveChangesAsync();
-            //TempData["Success"] = "Moved to cart";
-            //return RedirectToAction(nameof(Index));
             return RedirectToAction("Details", "Catalog", new { id = productId });
         }
     }

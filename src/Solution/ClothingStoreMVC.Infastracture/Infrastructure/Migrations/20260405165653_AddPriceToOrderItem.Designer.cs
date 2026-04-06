@@ -3,6 +3,7 @@ using System;
 using ClothingStoreMVC.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
 {
     [DbContext(typeof(ClothingStoreContext))]
-    partial class ClothingStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20260405165653_AddPriceToOrderItem")]
+    partial class AddPriceToOrderItem
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -609,7 +612,7 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Product", "Product")
                         .WithMany("Sizes")
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Size", "Size")
@@ -797,13 +800,13 @@ namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
                     b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.Product", "Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ClothingStoreMVC.Domain.Entities.ProductAggregates.ProductSize", "ProductSize")
                         .WithMany()
                         .HasForeignKey("ProductSizeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Order");

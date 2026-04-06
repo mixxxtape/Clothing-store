@@ -1,14 +1,205 @@
 ﻿@model ClothingStoreMVC.Domain.Entities.ProductAggregates.Style
-@{
-    ViewData["Title"] = "Style Details";
-}
+@{ ViewData["Title"] = Model.Name; }
 
-<h1>@Model.Name</h1>
-<p>@Model.Description</p>
+<style>
+    .btn-back {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        font-size: 0.65rem;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        text-decoration: none;
+        margin-bottom: 2rem;
+        transition: color 0.2s;
+    }
+    .btn-back:hover { color: #8062D6; }
+    .style-hero {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    .style-hero-icon {
+        font-size: 3rem;
+        opacity: 0.15;
+        color: #8062D6;
+        flex-shrink: 0;
+    }
+    .style-hero-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.5rem 0;
+    }
+    .style-hero-name {
+        font-size: 2rem;
+        font-weight: 900;
+        color: #0C0950;
+        font-family: Georgia, serif;
+        margin: 0 0 0.75rem 0;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+    .style-hero-desc {
+        font-size: 0.9rem;
+        color: #4a4a6a;
+        line-height: 1.8;
+        font-family: Georgia, serif;
+        margin: 0;
+        max-width: 600px;
+    }
+    .section-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 1.25rem 0;
+        padding-bottom: 0.75rem;
+        border-bottom: 1px solid #8062D6;
+    }
+    .products-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+    }
+    .product-card {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        display: flex;
+        flex-direction: column;
+    }
+    .product-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 24px rgba(128,98,214,0.15);
+    }
+    .card-image {
+        height: 180px;
+        background: #e8d5d5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-bottom: 1px solid rgba(0,0,0,0.08);
+        position: relative;
+    }
+    .card-image-icon { font-size: 2.5rem; opacity: 0.15; color: #8062D6; }
+    .card-badge {
+        position: absolute;
+        top: 0.6rem;
+        left: 0.6rem;
+        font-size: 0.55rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        background: rgba(12,9,80,0.78);
+        color: #E8A9A9;
+        padding: 0.2rem 0.6rem;
+        border-radius: 20px;
+    }
+    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
+    .card-name {
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: #0C0950;
+        margin: 0 0 0.2rem 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .card-sizes {
+        font-size: 0.62rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: #9a8aaa;
+        margin: 0 0 0.75rem 0;
+    }
+    .card-footer {
+        margin-top: auto;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 0.75rem;
+        border-top: 1px solid rgba(0,0,0,0.08);
+    }
+    .card-price { font-size: 1rem; font-weight: 800; color: #8062D6; }
+    .btn-view {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #0C0950;
+        text-decoration: none;
+        padding: 0.3rem 0.7rem;
+        border: 1px solid #0C0950;
+        border-radius: 4px;
+        transition: all 0.2s;
+    }
+    .btn-view:hover { background: #0C0950; color: #E8A9A9; }
+</style>
 
-<a asp-action="Index">Back to List</a>
+<a asp-action="Index" class="btn-back">&larr; Back to Styles</a>
+
+<div class="style-hero">
+    <span class="style-hero-icon">✦</span>
+    <div>
+        <p class="style-hero-eyebrow">Style</p>
+        <h1 class="style-hero-name">@Model.Name</h1>
+        <p class="style-hero-desc">@Model.Description</p>
+    </div>
+</div>
+
 @if (User.IsInRole("admin"))
 {
-    <span> | </span>
-    <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+    <div style="margin-bottom:2rem; display:flex; gap:0.75rem;">
+        <a asp-action="Edit" asp-route-id="@Model.Id"
+           style="padding:0.4rem 1rem; border:1px solid #8062D6; color:#8062D6;
+           border-radius:4px; font-size:0.72rem; letter-spacing:0.1em;
+           text-transform:uppercase; text-decoration:none;">
+            Edit Style
+        </a>
+    </div>
+}
+
+<p class="section-label">
+    Products in @Model.Name style
+    <span style="margin-left:0.5rem; color:#8062D6;">(@Model.Products.Count)</span>
+</p>
+
+@if (!Model.Products.Any())
+{
+    <p style="color:#6b6b8a; font-size:0.8rem; padding:2rem 0;">
+        No products in this style yet
+    </p>
+}
+else
+{
+    <div class="products-grid">
+        @foreach (var product in Model.Products)
+        {
+            <div class="product-card">
+                <div class="card-image">
+                    <span class="card-badge">@product.Category?.Name</span>
+                    <span class="card-image-icon">✦</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-name">@product.Name</p>
+                    <p class="card-sizes">
+                        @string.Join(", ", product.Sizes.Select(s => s.Size.Name))
+                    </p>
+                    <div class="card-footer">
+                        <span class="card-price">@product.Price ₴</span>
+                        <a asp-controller="Catalog" asp-action="Details"
+                           asp-route-id="@product.Id" class="btn-view">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
 }

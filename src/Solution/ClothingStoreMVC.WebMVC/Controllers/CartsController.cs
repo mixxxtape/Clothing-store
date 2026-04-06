@@ -76,8 +76,17 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         // POST: /Carts/AddItem
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddItem(int productSizeId, int quantity = 1)
+        public async Task<IActionResult> AddItem(int? productSizeId, int quantity = 1)
         {
+            if (productSizeId == null || productSizeId == 0)
+            {
+                TempData["Error"] = "Please select a size before adding to cart";
+                var referer = Request.Headers["Referer"].ToString();
+                if (!string.IsNullOrEmpty(referer))
+                    return Redirect(referer);
+                return RedirectToAction("Index", "Catalog");
+            }
+
             var user = await GetCurrentUserAsync();
             if (user == null) return RedirectToAction("Login", "Account");
 
@@ -87,6 +96,9 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (productSize.Quantity < quantity)
             {
                 TempData["Error"] = "Not enough stock";
+                var referer = Request.Headers["Referer"].ToString();
+                if (!string.IsNullOrEmpty(referer))
+                    return Redirect(referer);
                 return RedirectToAction("Index", "Catalog");
             }
 
@@ -94,19 +106,15 @@ namespace ClothingStoreMVC.WebMVC.Controllers
 
             var existing = cart.Items.FirstOrDefault(i => i.ProductSizeId == productSizeId);
             if (existing != null)
-            {
                 existing.Quantity += quantity;
-            }
             else
-            {
                 _context.CartItems.Add(new CartItem
                 {
                     CartId = cart.Id,
                     ProductId = productSize.ProductId,
-                    ProductSizeId = productSizeId,
+                    ProductSizeId = productSize.Id,
                     Quantity = quantity
                 });
-            }
 
             await _context.SaveChangesAsync();
             TempData["Success"] = "Added to cart";

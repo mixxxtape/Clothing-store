@@ -246,7 +246,21 @@
                        color:#0C0950; font-size:0.9rem; text-align:center;" />
             </div>
 
+            <div id="size-error" style="display:none; color:#F57799; font-size:0.75rem;
+                letter-spacing:0.1em; text-transform:uppercase; margin-top:0.5rem;">
+                ← Please select a size first
+            </div>
+
             <button type="submit"
+                    onclick="
+                        var selected = document.querySelector('input[name=productSizeId]:checked');
+                        if (!selected) {
+                            document.getElementById('size-error').style.display = 'block';
+                            return false;
+                        }
+                        document.getElementById('size-error').style.display = 'none';
+                        return true;
+                    "
                     style="width:100%; padding:0.75rem; border:none;
                     background:linear-gradient(135deg,#8062D6,#E8A9A9);
                     color:white; border-radius:4px; font-size:0.72rem;
@@ -293,6 +307,233 @@
   </div>
 
 </div>
+<!-- Reviews Section -->
+<div style="max-width:900px; margin-top:3rem;">
+
+    <div style="height:1px; background:linear-gradient(90deg,#8062D6,transparent);
+        margin-bottom:1.5rem;"></div>
+
+    <div style="display:flex; align-items:baseline; gap:1rem; margin-bottom:1.5rem;">
+        <h2 style="font-size:1rem; font-weight:900; letter-spacing:0.1em;
+            text-transform:uppercase; color:#0C0950; margin:0;">Reviews</h2>
+        @if (Model.Reviews.Any())
+        {
+            <span style="font-size:0.8rem; color:#8062D6; font-weight:700;">
+                ★ @Model.AverageRating / 5
+            </span>
+            <span style="font-size:0.75rem; color:#6b6b8a;">
+                (@Model.Reviews.Count)
+            </span>
+        }
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div style="background:#2d0a0a; border:1px solid #F57799; color:#F57799;
+            padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+            @TempData["Error"]
+        </div>
+    }
+    @if (TempData["Success"] != null)
+    {
+        <div style="background:#0a2d0a; border:1px solid #6bcf6b; color:#6bcf6b;
+            padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+            @TempData["Success"]
+        </div>
+    }
+
+    <!-- Форма додавання відгуку -->
+    @if (User.Identity.IsAuthenticated && !User.IsInRole("admin") && Model.CanReview && !Model.AlreadyReviewed)
+    {
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+            padding:1.25rem; margin-bottom:1.5rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+                color:#6b6b8a; margin:0 0 1rem 0;">Leave a Review</p>
+
+            <form asp-controller="Reviews" asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="ProductId" value="@Model.Id" />
+
+                <div style="margin-bottom:1rem;">
+                    <label style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase;
+                        color:#0C0950; display:block; margin-bottom:0.5rem;">Rating</label>
+                    <div style="display:flex; gap:0.5rem;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <label style="cursor:pointer;">
+                                <input type="radio" name="Rating" value="@i"
+                                       style="display:none;"
+                                       onchange="updateStars(@i)" />
+                                <span class="star-btn" data-val="@i"
+                                      style="display:inline-block; width:36px; height:36px;
+                                      line-height:36px; text-align:center; border-radius:4px;
+                                      border:1px solid #8062D6; color:#8062D6; font-size:1.1rem;
+                                      cursor:pointer; transition:all 0.2s; user-select:none;"
+                                      onclick="selectStar(@i)">★</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div style="margin-bottom:1rem;">
+                    <label style="font-size:0.7rem; letter-spacing:0.15em; text-transform:uppercase;
+                        color:#0C0950; display:block; margin-bottom:0.5rem;">
+                        Comment <span style="color:#6b6b8a;">(optional)</span>
+                    </label>
+                    <textarea name="Comment" rows="3" maxlength="500"
+                              style="width:100%; padding:0.6rem 0.75rem; border-radius:6px;
+                              border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                              font-size:0.85rem; font-family:Georgia,serif;
+                              resize:vertical; box-sizing:border-box;"></textarea>
+                </div>
+
+                <button type="submit"
+                        style="padding:0.6rem 1.5rem; border:none;
+                        background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                        color:white; border-radius:4px; font-size:0.75rem;
+                        letter-spacing:0.12em; text-transform:uppercase; cursor:pointer;">
+                    Submit Review
+                </button>
+            </form>
+        </div>
+    }
+    else if (User.Identity.IsAuthenticated && !User.IsInRole("admin") && !Model.CanReview)
+    {
+        <p style="font-size:0.75rem; color:#6b6b8a; letter-spacing:0.1em;
+            text-transform:uppercase; margin-bottom:1.5rem;">
+            You can review this product after receiving your order
+        </p>
+    }
+
+    @if (!Model.Reviews.Any())
+    {
+        <p style="color:#6b6b8a; font-size:0.8rem;">No reviews yet</p>
+    }
+    else
+    {
+        @foreach (var review in Model.Reviews)
+        {
+            <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+                padding:1.25rem; margin-bottom:1rem;">
+                <div style="display:flex; justify-content:space-between;
+                    align-items:flex-start; margin-bottom:0.5rem;">
+                    <div>
+                        <span style="font-size:0.82rem; font-weight:700; color:#0C0950;">
+                            @review.AuthorName
+                        </span>
+                        <span style="margin-left:0.75rem; color:#8062D6; font-size:0.9rem;">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span style="color:@(i <= review.Rating ? "#8062D6" : "#ddd")">★</span>
+                            }
+                        </span>
+                    </div>
+
+                    @if (review.IsOwner)
+                    {
+                        <div style="display:flex; gap:0.5rem;">
+                            <button onclick="toggleEdit(@review.Id)"
+                                    style="padding:0.25rem 0.6rem; border:1px solid #8062D6;
+                                    color:#8062D6; background:transparent; border-radius:4px;
+                                    font-size:0.7rem; cursor:pointer; letter-spacing:0.08em;
+                                    text-transform:uppercase;">
+                                Edit
+                            </button>
+                            <form asp-controller="Reviews" asp-action="Delete" method="post"
+                                  style="display:inline;">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@review.Id" />
+                                <input type="hidden" name="productId" value="@Model.Id" />
+                                <button type="submit"
+                                        onclick="return confirm('Delete this review?')"
+                                        style="padding:0.25rem 0.6rem; border:1px solid #F57799;
+                                        color:#F57799; background:transparent; border-radius:4px;
+                                        font-size:0.7rem; cursor:pointer; letter-spacing:0.08em;
+                                        text-transform:uppercase;">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    }
+                </div>
+
+                @if (!string.IsNullOrEmpty(review.Comment))
+                {
+                    <p style="font-size:0.85rem; color:#4a4a6a; margin:0.5rem 0 0 0;
+                        font-family:Georgia,serif; line-height:1.7;">
+                        @review.Comment
+                    </p>
+                }
+
+                <div id="edit-form-@review.Id" style="display:none; margin-top:1rem;">
+                    <form asp-controller="Reviews" asp-action="Edit" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@review.Id" />
+                        <input type="hidden" name="productId" value="@Model.Id" />
+
+                        <div style="display:flex; gap:0.5rem; margin-bottom:0.75rem;">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <label style="cursor:pointer;">
+                                    <input type="radio" name="rating" value="@i"
+                                           style="display:none;"
+                                           @(i == review.Rating ? "checked" : "") />
+                                    <span style="display:inline-block; width:32px; height:32px;
+                                          line-height:32px; text-align:center; border-radius:4px;
+                                          border:1px solid @(i <= review.Rating ? "#8062D6" : "#ddd");
+                                          color:@(i <= review.Rating ? "#8062D6" : "#ddd");
+                                          font-size:1rem; cursor:pointer;">★</span>
+                                </label>
+                            }
+                        </div>
+
+                        <textarea name="comment" rows="2" maxlength="500"
+                                  style="width:100%; padding:0.5rem 0.75rem; border-radius:6px;
+                                  border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                                  font-size:0.85rem; font-family:Georgia,serif;
+                                  resize:vertical; box-sizing:border-box; margin-bottom:0.5rem;">@review.Comment</textarea>
+
+                        <button type="submit"
+                                style="padding:0.4rem 1rem; border:none;
+                                background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                                color:white; border-radius:4px; font-size:0.72rem;
+                                letter-spacing:0.1em; text-transform:uppercase; cursor:pointer;">
+                            Save
+                        </button>
+                        <button type="button" onclick="toggleEdit(@review.Id)"
+                                style="margin-left:0.5rem; padding:0.4rem 1rem; border:1px solid #2d2d40;
+                                color:#6b6b8a; background:transparent; border-radius:4px;
+                                font-size:0.72rem; cursor:pointer;">
+                            Cancel
+                        </button>
+                    </form>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<script>
+function selectStar(val) {
+    document.querySelectorAll('.star-btn').forEach(function(btn) {
+        var btnVal = parseInt(btn.getAttribute('data-val'));
+        if (btnVal <= val) {
+            btn.style.background = '#8062D6';
+            btn.style.color = 'white';
+        } else {
+            btn.style.background = 'transparent';
+            btn.style.color = '#8062D6';
+        }
+    });
+    var radio = document.querySelector('input[name="Rating"][value="' + val + '"]');
+    if (radio) radio.checked = true;
+}
+
+function toggleEdit(id) {
+    var form = document.getElementById('edit-form-' + id);
+    form.style.display = form.style.display === 'none' ? 'block' : 'none';
+}
+</script>
 <script>
 function selectSize(el, sizeId) {
     document.querySelectorAll('.size-chip').forEach(function(chip) {

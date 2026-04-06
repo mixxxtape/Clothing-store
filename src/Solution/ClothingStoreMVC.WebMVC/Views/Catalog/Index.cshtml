@@ -1,4 +1,4 @@
-﻿@model IEnumerable<ClothingStoreMVC.WebMVC.ViewModels.ProductListViewModel>
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.CatalogFilterViewModel
 @{
     ViewData["Title"] = "Catalogue";
 }
@@ -36,13 +36,98 @@
         text-transform: uppercase;
         color: #6b6b8a;
     }
-
-    .cat-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 1.5rem;
+    .cat-layout {
+        display: flex;
+        gap: 2rem;
+        align-items: flex-start;
     }
-
+    .cat-sidebar {
+        width: 240px;
+        flex-shrink: 0;
+        position: sticky;
+        top: 80px;
+    }
+    .sidebar-block {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 1.25rem;
+        margin-bottom: 1rem;
+    }
+    .sidebar-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.75rem 0;
+    }
+    .filter-input {
+        width: 100%;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #2d2d40;
+        background: #fff;
+        color: #0C0950;
+        font-size: 0.85rem;
+        font-family: Georgia, serif;
+        box-sizing: border-box;
+    }
+    .filter-chip {
+        display: block;
+        padding: 0.35rem 0.75rem;
+        border-radius: 4px;
+        border: 1px solid #c4b0c4;
+        color: #6b6b8a;
+        font-size: 0.72rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-bottom: 0.4rem;
+        transition: all 0.2s;
+        background: transparent;
+        text-align: left;
+        width: 100%;
+    }
+    .filter-chip:hover { border-color: #8062D6; color: #8062D6; }
+    .filter-chip.active { background: #8062D6; color: white; border-color: #8062D6; }
+    .btn-apply {
+        width: 100%;
+        padding: 0.6rem;
+        border: none;
+        background: linear-gradient(135deg, #8062D6, #E8A9A9);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 0.5rem;
+    }
+    .btn-reset {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #2d2d40;
+        background: transparent;
+        color: #6b6b8a;
+        border-radius: 4px;
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        margin-top: 0.5rem;
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        transition: all 0.2s;
+    }
+    .btn-reset:hover { border-color: #F57799; color: #F57799; }
+    .cat-grid {
+        flex: 1;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1.5rem;
+        align-content: start;
+    }
     .product-card {
         background: #F9DFDF;
         border: 1px solid #000000;
@@ -56,22 +141,16 @@
         transform: translateY(-3px);
         box-shadow: 0 8px 24px rgba(128, 98, 214, 0.15);
     }
-
     .card-image {
-        height: 200px;
+        height: 180px;
         background: #e8d5d5;
         display: flex;
         align-items: center;
         justify-content: center;
         border-bottom: 1px solid rgba(0,0,0,0.08);
         position: relative;
-        overflow: hidden;
     }
-    .card-image-icon {
-        font-size: 3rem;
-        opacity: 0.15;
-        color: #8062D6;
-    }
+    .card-image-icon { font-size: 3rem; opacity: 0.15; color: #8062D6; }
     .card-badge {
         position: absolute;
         top: 0.6rem;
@@ -84,13 +163,7 @@
         padding: 0.2rem 0.6rem;
         border-radius: 20px;
     }
-
-    .card-body {
-        padding: 1rem;
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-    }
+    .card-body { padding: 1rem; flex: 1; display: flex; flex-direction: column; }
     .card-name {
         font-size: 0.88rem;
         font-weight: 700;
@@ -100,11 +173,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
     }
-    .card-style {
-        font-size: 0.7rem;
-        color: #6b6b8a;
-        margin: 0 0 0.3rem 0;
-    }
+    .card-style { font-size: 0.7rem; color: #6b6b8a; margin: 0 0 0.3rem 0; }
     .card-sizes {
         font-size: 0.62rem;
         letter-spacing: 0.12em;
@@ -120,11 +189,7 @@
         padding-top: 0.75rem;
         border-top: 1px solid rgba(0,0,0,0.08);
     }
-    .card-price {
-        font-size: 1rem;
-        font-weight: 800;
-        color: #8062D6;
-    }
+    .card-price { font-size: 1rem; font-weight: 800; color: #8062D6; }
     .card-actions { display: flex; gap: 0.4rem; align-items: center; }
     .btn-view {
         font-size: 0.65rem;
@@ -149,8 +214,7 @@
         transition: all 0.2s;
         line-height: 1;
     }
-    .btn-wish:hover { border-color: #F57799; background: rgba(245, 119, 153, 0.08); }
-
+    .btn-wish:hover { border-color: #F57799; background: rgba(245,119,153,0.08); }
     .cat-empty {
         grid-column: 1 / -1;
         text-align: center;
@@ -160,58 +224,199 @@
         letter-spacing: 0.2em;
         text-transform: uppercase;
     }
+    .price-range-wrap { display: flex; gap: 0.5rem; align-items: center; }
+    .price-input {
+        width: 100%;
+        padding: 0.4rem 0.5rem;
+        border-radius: 4px;
+        border: 1px solid #2d2d40;
+        background: #fff;
+        color: #0C0950;
+        font-size: 0.82rem;
+        box-sizing: border-box;
+        text-align: center;
+    }
+    .active-filters {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+        margin-bottom: 1rem;
+    }
+    .active-tag {
+        font-size: 0.65rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        padding: 0.25rem 0.6rem;
+        border-radius: 20px;
+        background: #8062D6;
+        color: white;
+    }
 </style>
 
 <div class="cat-header">
     <div>
-        <p class="cat-eyebrow">Ravel &mdash; Alternative Fashion</p>
+        <p class="cat-eyebrow">Ravel — Alternative Fashion</p>
         <h1 class="cat-title">Catalogue</h1>
     </div>
-    <span class="cat-count">@Model.Count() items</span>
+    <span class="cat-count">@Model.Products.Count() items</span>
 </div>
 
-<div class="cat-grid">
-    @if (!Model.Any())
-    {
-        <div class="cat-empty"><p>No items yet</p></div>
-    }
-
-    @foreach (var item in Model)
-    {
-        <div class="product-card">
-            <div class="card-image">
-                <span class="card-badge">@item.CategoryName</span>
-                <span class="card-image-icon">✦</span>
-            </div>
-            <div class="card-body">
-                <p class="card-name">@item.Name</p>
-                <p class="card-style">@item.StyleName</p>
-                <p class="card-sizes">@item.Sizes</p>
-                <div class="card-footer">
-                    <span class="card-price">@item.Price ₴</span>
-                    <div class="card-actions">
-                      <a asp-action="Details" asp-route-id="@item.Id" class="btn-view">View</a>
-                      @if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+@if (!string.IsNullOrEmpty(Model.SearchQuery) || !string.IsNullOrEmpty(Model.SelectedCategory) ||
+     !string.IsNullOrEmpty(Model.SelectedStyle) ||
+     Model.MinPrice > Model.AbsoluteMinPrice || Model.MaxPrice < Model.AbsoluteMaxPrice)
 {
-                        <a asp-controller="Catalog" asp-action="Details" asp-route-id="@item.Id"
-                           style="font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase;
-                           color:#8062D6; text-decoration:none; padding:0.28rem 0.6rem;
-                           border:1px solid #8062D6; border-radius:4px; transition:all 0.2s;"
-                           onmouseover="this.style.background='#8062D6';this.style.color='white'"
-                           onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
-                            + Cart
-                        </a>
-                        <form asp-controller="Wishlists" asp-action="Toggle" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="productId" value="@item.Id" />
-                            <input type="hidden" name="returnUrl" value="/Catalog" />
-                            <button type="submit" class="btn-wish">♡</button>
-                        </form>
-
+    <div class="active-filters">
+        @if (!string.IsNullOrEmpty(Model.SearchQuery))
+        {
+            <span class="active-tag">🔍 @Model.SearchQuery</span>
+        }
+        @if (!string.IsNullOrEmpty(Model.SelectedCategory))
+        {
+            <span class="active-tag">📁 @Model.SelectedCategory</span>
+        }
+        @if (!string.IsNullOrEmpty(Model.SelectedStyle))
+        {
+            <span class="active-tag">✦ @Model.SelectedStyle</span>
+        }
+        @if (Model.MinPrice > Model.AbsoluteMinPrice || Model.MaxPrice < Model.AbsoluteMaxPrice)
+        {
+            <span class="active-tag">₴ @Model.MinPrice — @Model.MaxPrice</span>
+        }
+    </div>
 }
+
+<div class="cat-layout">
+
+    <aside class="cat-sidebar">
+        <form method="get" asp-action="Index" id="filter-form">
+
+            <div class="sidebar-block">
+                <p class="sidebar-label">Search</p>
+                <input type="text" name="search" class="filter-input"
+                       placeholder="e.g. jacket, ring..."
+                       value="@Model.SearchQuery" />
+            </div>
+
+            <div class="sidebar-block">
+                <p class="sidebar-label">Category</p>
+                <button type="button"
+                        class="filter-chip @(string.IsNullOrEmpty(Model.SelectedCategory) ? "active" : "")"
+                        onclick="setFilter('category', '')">All</button>
+                @foreach (var cat in Model.Categories)
+                {
+                    <button type="button"
+                            class="filter-chip @(Model.SelectedCategory == cat ? "active" : "")"
+                            onclick="setFilter('category', '@cat')">
+                        @cat
+                    </button>
+                }
+                <input type="hidden" name="category" id="category-input" value="@Model.SelectedCategory" />
+            </div>
+
+            <div class="sidebar-block">
+                <p class="sidebar-label">Style</p>
+                <button type="button"
+                        class="filter-chip @(string.IsNullOrEmpty(Model.SelectedStyle) ? "active" : "")"
+                        onclick="setFilter('style', '')">All</button>
+                @foreach (var s in Model.Styles)
+                {
+                    <button type="button"
+                            class="filter-chip @(Model.SelectedStyle == s ? "active" : "")"
+                            onclick="setFilter('style', '@s')">
+                        @s
+                    </button>
+                }
+                <input type="hidden" name="style" id="style-input" value="@Model.SelectedStyle" />
+            </div>
+
+            <div class="sidebar-block">
+                <p class="sidebar-label">Price Range ₴</p>
+                <div class="price-range-wrap">
+                    <input type="number" name="minPrice" class="price-input"
+                           placeholder="From"
+                           value="@Model.MinPrice"
+                           min="@Model.AbsoluteMinPrice"
+                           max="@Model.AbsoluteMaxPrice" />
+                    <span style="color:#6b6b8a; font-size:0.8rem;">—</span>
+                    <input type="number" name="maxPrice" class="price-input"
+                           placeholder="To"
+                           value="@Model.MaxPrice"
+                           min="@Model.AbsoluteMinPrice"
+                           max="@Model.AbsoluteMaxPrice" />
+                </div>
+            </div>
+
+            <button type="submit" class="btn-apply">Apply Filters</button>
+            <a asp-action="Index" class="btn-reset">Reset All</a>
+
+        </form>
+    </aside>
+
+    <div class="cat-grid">
+        @if (!Model.Products.Any())
+        {
+            <div class="cat-empty">
+                <p>No items found</p>
+                @if (!string.IsNullOrEmpty(Model.SearchQuery))
+                {
+                    <p style="margin-top:0.5rem; font-size:0.7rem;">
+                        Try different keywords or check spelling
+                    </p>
+                }
+            </div>
+        }
+
+        @foreach (var item in Model.Products)
+        {
+            <div class="product-card">
+                <div class="card-image">
+                    <span class="card-badge">@item.CategoryName</span>
+                    <span class="card-image-icon">✦</span>
+                </div>
+                <div class="card-body">
+                    <p class="card-name">@item.Name</p>
+                    <p class="card-style">@item.StyleName</p>
+                    <p class="card-sizes">@item.Sizes</p>
+                    <div class="card-footer">
+                        <span class="card-price">@item.Price ₴</span>
+                        <div class="card-actions">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-view">View</a>
+                            @if (User.Identity.IsAuthenticated && !User.IsInRole("admin"))
+                            {
+                                <a asp-controller="Catalog" asp-action="Details" asp-route-id="@item.Id"
+                                   style="font-size:0.65rem; letter-spacing:0.08em; text-transform:uppercase;
+                                   color:#8062D6; text-decoration:none; padding:0.28rem 0.6rem;
+                                   border:1px solid #8062D6; border-radius:4px; transition:all 0.2s;"
+                                   onmouseover="this.style.background='#8062D6';this.style.color='white'"
+                                   onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+                                    + Cart
+                                </a>
+                                <form asp-controller="Wishlists" asp-action="Toggle"
+                                      method="post" style="display:inline;">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" name="productId" value="@item.Id" />
+                                    <input type="hidden" name="returnUrl" value="/Catalog" />
+                                    <button type="submit" class="btn-wish">♡</button>
+                                </form>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-    }
+        }
+    </div>
 </div>
+
+<script>
+function setFilter(type, value) {
+    document.getElementById(type + '-input').value = value;
+
+    var chips = document.querySelectorAll('[onclick^="setFilter(\'' + type + '\'"]');
+    chips.forEach(function(chip) {
+        chip.classList.remove('active');
+    });
+    event.target.classList.add('active');
+
+    document.getElementById('filter-form').submit();
+}
+</script>

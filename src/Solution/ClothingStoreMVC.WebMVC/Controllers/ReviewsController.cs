@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
+﻿using System.Security.Claims;
 using ClothingStoreMVC.Domain.Entities.ProductAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.WebMVC.ViewModels;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.WebMVC.Controllers
 {
@@ -19,152 +16,104 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             _context = context;
         }
 
-        // GET: Reviews
-        public async Task<IActionResult> Index()
+        private async Task<ClothingStoreMVC.Domain.Entities.UserAggregates.User?> GetCurrentUserAsync()
         {
-            var clothingStoreContext = _context.Reviews.Include(r => r.Product).Include(r => r.User);
-            return View(await clothingStoreContext.ToListAsync());
+            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId);
         }
 
-        // GET: Reviews/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var review = await _context.Reviews
-                .Include(r => r.Product)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-
-            return View(review);
-        }
-
-        // GET: Reviews/Create
-        public IActionResult Create()
-        {
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Description");
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email");
-            return View();
-        }
-
-        // POST: Reviews/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // POST: /Reviews/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UserId,ProductId,Rating,Comment,Id")] Review review)
+        public async Task<IActionResult> Create(CreateReviewViewModel vm)
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(review);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Description", review.ProductId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", review.UserId);
-            return View(review);
-        }
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
 
-        // GET: Reviews/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            if (!ModelState.IsValid)
             {
-                return NotFound();
+                TempData["Error"] = "Invalid review data";
+                return RedirectToAction("Details", "Catalog", new { id = vm.ProductId });
             }
 
-            var review = await _context.Reviews.FindAsync(id);
-            if (review == null)
-            {
-                return NotFound();
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Description", review.ProductId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", review.UserId);
-            return View(review);
-        }
+            // Перевірити чи є доставлене замовлення
+            var hasDeliveredOrder = await _context.Orders
+                .Where(o => o.UserId == user.Id)
+                .Include(o => o.StatusHistory)
+                .Include(o => o.Items)
+                .AnyAsync(o =>
+                    o.Items.Any(i => i.ProductId == vm.ProductId) &&
+                    o.StatusHistory.OrderByDescending(s => s.ChangedAt)
+                        .First().Status == "Delivered");
 
-        // POST: Reviews/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UserId,ProductId,Rating,Comment,Id")] Review review)
-        {
-            if (id != review.Id)
+            if (!hasDeliveredOrder)
             {
-                return NotFound();
+                TempData["Error"] = "You can only review products you have received";
+                return RedirectToAction("Details", "Catalog", new { id = vm.ProductId });
             }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(review);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!ReviewExists(review.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ProductId"] = new SelectList(_context.Products, "Id", "Description", review.ProductId);
-            ViewData["UserId"] = new SelectList(_context.Users, "Id", "Email", review.UserId);
-            return View(review);
-        }
+            // Перевірити чи вже залишив відгук
+            var alreadyReviewed = await _context.Reviews
+                .AnyAsync(r => r.UserId == user.Id && r.ProductId == vm.ProductId);
 
-        // GET: Reviews/Delete/5
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
+            if (alreadyReviewed)
             {
-                return NotFound();
+                TempData["Error"] = "You have already reviewed this product";
+                return RedirectToAction("Details", "Catalog", new { id = vm.ProductId });
             }
 
-            var review = await _context.Reviews
-                .Include(r => r.Product)
-                .Include(r => r.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (review == null)
+            _context.Reviews.Add(new Review
             {
-                return NotFound();
-            }
-
-            return View(review);
-        }
-
-        // POST: Reviews/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var review = await _context.Reviews.FindAsync(id);
-            if (review != null)
-            {
-                _context.Reviews.Remove(review);
-            }
+                UserId = user.Id,
+                ProductId = vm.ProductId,
+                Rating = vm.Rating,
+                Comment = vm.Comment
+            });
 
             await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            TempData["Success"] = "Review added";
+            return RedirectToAction("Details", "Catalog", new { id = vm.ProductId });
         }
 
-        private bool ReviewExists(int id)
+        // POST: /Reviews/Edit
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, int rating, string? comment, int productId)
         {
-            return _context.Reviews.Any(e => e.Id == id);
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var review = await _context.Reviews
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
+
+            if (review == null) return NotFound();
+
+            review.Rating = rating;
+            review.Comment = comment;
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Review updated";
+            return RedirectToAction("Details", "Catalog", new { id = productId });
+        }
+
+        // POST: /Reviews/Delete
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, int productId)
+        {
+            var user = await GetCurrentUserAsync();
+            if (user == null) return RedirectToAction("Login", "Account");
+
+            var review = await _context.Reviews
+                .FirstOrDefaultAsync(r => r.Id == id && r.UserId == user.Id);
+
+            if (review == null) return NotFound();
+
+            _context.Reviews.Remove(review);
+            await _context.SaveChangesAsync();
+
+            TempData["Success"] = "Review deleted";
+            return RedirectToAction("Details", "Catalog", new { id = productId });
         }
     }
 }
