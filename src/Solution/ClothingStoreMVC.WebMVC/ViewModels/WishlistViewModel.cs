@@ -11,5 +11,6 @@
         public string ProductName { get; set; } = null!;
         public decimal Price { get; set; }
         public string StyleName { get; set; } = null!;
+        public string? ImagePath { get; set; }
     }
 }

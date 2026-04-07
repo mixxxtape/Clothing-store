@@ -181,6 +181,7 @@
             transition: all 0.2s;
         }
         .dropdown-item:hover { background: #1a1a24; color: #e2e2f0; }
+
     </style>
 </head>
 <body>
@@ -215,6 +216,7 @@
                         <a asp-controller="Styles" asp-action="Index" class="dropdown-item">Styles</a>
                         <a asp-controller="Quiz" asp-action="Manage" class="dropdown-item">Quiz</a>
                         <a asp-controller="Orders" asp-action="Manage" class="dropdown-item">Orders</a>
+                        <a asp-controller="Analytics" asp-action="Index" class="dropdown-item">Analytics</a>
                     </div>
         </div>
     }
@@ -258,30 +260,24 @@
     <p style="text-transform:uppercase;">Ravel</p>
     <p style="margin-top:0.4rem; opacity:0.5;">Lets go put on a mask</p>
 </footer>
-
-<script src="~/lib/jquery/dist/jquery.min.js"></script>
-<script src="~/js/site.js" asp-append-version="true"></script>
-@await RenderSectionAsync("Scripts", required: false)
-
+@RenderSection("Scripts", required: false)
 <script>
-    (function () {
-        var toggle = document.getElementById('adminToggle');
-        var menu = document.getElementById('adminMenu');
-        var wrap = document.getElementById('adminWrap');
-        if (!toggle || !menu || !wrap) return;
+    document.addEventListener("DOMContentLoaded", function () {
+        const toggle = document.getElementById("adminToggle");
+        const menu = document.getElementById("adminMenu");
 
-        toggle.addEventListener('click', function (e) {
-            e.stopPropagation();
-            menu.classList.toggle('is-open');
-        });
+        if (toggle && menu) {
+            toggle.addEventListener("click", function () {
+                menu.classList.toggle("is-open");
+            });
 
-        document.addEventListener('click', function (e) {
-            if (!wrap.contains(e.target)) {
-                menu.classList.remove('is-open');
-            }
-        });
-    })();
+            document.addEventListener("click", function (e) {
+                if (!document.getElementById("adminWrap").contains(e.target)) {
+                    menu.classList.remove("is-open");
+                }
+            });
+        }
+    });
 </script>
-
 </body>
 </html>

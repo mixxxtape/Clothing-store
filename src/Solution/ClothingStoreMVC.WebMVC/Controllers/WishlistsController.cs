@@ -59,7 +59,8 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     ProductId = p.Id,
                     ProductName = p.Name,
                     Price = p.Price,
-                    StyleName = p.Style?.Name ?? "—"
+                    StyleName = p.Style?.Name ?? "—",
+                    ImagePath = p.ImagePath
                 }).ToList();
             }
 

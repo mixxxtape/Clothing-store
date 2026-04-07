@@ -90,12 +90,39 @@
 
 @foreach (var item in Model)
 {
-    <a asp-action="Details" asp-route-id="@item.Id" class="style-card">
-        <div>
-            <p class="style-name">@item.Name</p>
-            <p class="style-desc">@item.Description</p>
+    <a asp-action="Details" asp-route-id="@item.Id"
+       style="display:flex; align-items:stretch; background:#F9DFDF;
+       border:1px solid #000; border-radius:8px; margin-bottom:1rem;
+       overflow:hidden; text-decoration:none; transition:all 0.2s; min-height:100px;"
+       onmouseover="this.style.borderColor='#8062D6';this.style.transform='translateY(-2px)'"
+       onmouseout="this.style.borderColor='#000';this.style.transform='none'">
+
+        <div style="flex:1; padding:1.5rem; display:flex;
+            flex-direction:column; justify-content:center;">
+            <p style="font-size:0.6rem; letter-spacing:0.25em; text-transform:uppercase;
+                color:#6b6b8a; margin:0 0 0.4rem 0;">Style</p>
+            <p style="font-size:1.1rem; font-weight:900; color:#0C0950;
+                letter-spacing:0.08em; text-transform:uppercase;
+                font-family:Georgia,serif; margin:0;">@item.Name</p>
         </div>
-        <span class="style-arrow">→</span>
+
+        <div style="width:50%; flex-shrink:0; background:#e8d5d5;
+            overflow:hidden; position:relative;">
+            @if (!string.IsNullOrEmpty(item.ListImagePath))
+            {
+                <img src="@item.ListImagePath"
+                     style="width:100%; height:100%; object-fit:cover;" />
+            }
+            else
+            {
+                <div style="width:100%; height:100%; display:flex;
+                    align-items:center; justify-content:center;">
+                    <span style="font-size:2rem; opacity:0.15; color:#8062D6;">✦</span>
+                </div>
+            }
+            <div style="position:absolute; right:1rem; top:50%;
+                transform:translateY(-50%); font-size:1.2rem; color:#8062D6;">→</div>
+        </div>
     </a>
 
     @if (User.IsInRole("admin"))
@@ -103,12 +130,12 @@
         <div style="margin:-0.5rem 0 1rem 0; display:flex; gap:0.75rem; padding:0 0.25rem;">
             <a asp-action="Edit" asp-route-id="@item.Id"
                style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
-               color:#6b6b8a; text-decoration:none; transition:color 0.2s;"
+               color:#6b6b8a; text-decoration:none;"
                onmouseover="this.style.color='#8062D6'"
                onmouseout="this.style.color='#6b6b8a'">Edit</a>
             <a asp-action="Delete" asp-route-id="@item.Id"
                style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
-               color:#6b6b8a; text-decoration:none; transition:color 0.2s;"
+               color:#6b6b8a; text-decoration:none;"
                onmouseover="this.style.color='#F57799'"
                onmouseout="this.style.color='#6b6b8a'">Delete</a>
         </div>

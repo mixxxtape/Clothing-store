@@ -11,6 +11,8 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Name).IsRequired().HasMaxLength(50);
             builder.Property(s => s.Description).HasMaxLength(10000);
+            builder.Property(s => s.ListImagePath).HasMaxLength(500);
+            builder.Property(s => s.DetailImagePath).HasMaxLength(500);
         }
     }
 }

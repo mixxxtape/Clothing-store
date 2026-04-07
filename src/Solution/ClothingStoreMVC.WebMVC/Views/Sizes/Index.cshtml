@@ -3,27 +3,37 @@
     ViewData["Title"] = "Sizes";
 }
 
-<h1>Sizes</h1>
-<p><a asp-action="Create">Add size</a></p>
+<div style="display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:2px solid #8062D6;">
+    <h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+        text-transform:uppercase; color:#0C0950; margin:0;">
+        Sizes
+    </h2>
+    <a asp-action="Create"
+           style="padding:0.4rem 1rem; border:none;
+        background:linear-gradient(135deg,#8062D6,#E8A9A9);
+        color:white; border-radius:4px; font-size:0.72rem;
+        letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">
+        + Add Size
+    </a>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>@Html.DisplayNameFor(m => m.Name)</th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>@Html.DisplayFor(mi => item.Name)</td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
+    @foreach (var item in Model)
+    {
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+            padding:0.75rem 1.25rem; display:flex; align-items:center; gap:1rem;">
+            <span style="font-size:0.9rem; font-weight:700; color:#0C0950;">@item.Name</span>
+            <a asp-action="Edit" asp-route-id="@item.Id"
+               style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+            color:#8062D6; text-decoration:none;"
+               onmouseover="this.style.textDecoration='underline'"
+               onmouseout="this.style.textDecoration='none'">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.Id"
+               style="font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase;
+            color:#F57799; text-decoration:none;"
+               onmouseover="this.style.textDecoration='underline'"
+               onmouseout="this.style.textDecoration='none'">Delete</a>
+        </div>
+    }
+</div>

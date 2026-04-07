@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "ContainingType": "ClothingStoreMVC.WebMVC.Controllers.ChartsController",
+    "Method": "GetAvgPriceByCategoryAsync",
+    "RelativePath": "api/Charts/avgPriceByCategory",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClothingStoreMVC.WebMVC.Controllers.ChartsController",
+    "Method": "GetProductsByCategoryAsync",
+    "RelativePath": "api/Charts/productsByCategory",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClothingStoreMVC.WebMVC.Controllers.ChartsController",
+    "Method": "GetProductsByStyleAsync",
+    "RelativePath": "api/Charts/productsByStyle",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "ClothingStoreMVC.WebMVC.Controllers.ChartsController",
+    "Method": "GetStylesByQuizAsync",
+    "RelativePath": "api/Charts/stylesByQuiz",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  }
+]

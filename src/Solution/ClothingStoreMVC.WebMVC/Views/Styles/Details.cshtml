@@ -146,12 +146,28 @@
 
 <a asp-action="Index" class="btn-back">&larr; Back to Styles</a>
 
-<div class="style-hero">
-    <span class="style-hero-icon">✦</span>
-    <div>
+<div class="style-hero" style="display:grid; grid-template-columns:1fr 1fr;
+    gap:0; overflow:hidden; padding:0;">
+
+    <div style="padding:2rem;">
         <p class="style-hero-eyebrow">Style</p>
         <h1 class="style-hero-name">@Model.Name</h1>
         <p class="style-hero-desc">@Model.Description</p>
+    </div>
+
+    <div style="background:#e8d5d5; min-height:280px; overflow:hidden;">
+        @if (!string.IsNullOrEmpty(Model.DetailImagePath))
+        {
+            <img src="@Model.DetailImagePath"
+                 style="width:100%; height:100%; object-fit:cover;" />
+        }
+        else
+        {
+            <div style="width:100%; height:100%; display:flex;
+                align-items:center; justify-content:center; min-height:280px;">
+                <span style="font-size:4rem; opacity:0.1; color:#8062D6;">✦</span>
+            </div>
+        }
     </div>
 </div>
 
@@ -181,25 +197,39 @@
 else
 {
     <div class="products-grid">
-        @foreach (var product in Model.Products)
-        {
-            <div class="product-card">
-                <div class="card-image">
-                    <span class="card-badge">@product.Category?.Name</span>
-                    <span class="card-image-icon">✦</span>
-                </div>
-                <div class="card-body">
-                    <p class="card-name">@product.Name</p>
-                    <p class="card-sizes">
-                        @string.Join(", ", product.Sizes.Select(s => s.Size.Name))
-                    </p>
-                    <div class="card-footer">
-                        <span class="card-price">@product.Price ₴</span>
-                        <a asp-controller="Catalog" asp-action="Details"
-                           asp-route-id="@product.Id" class="btn-view">View</a>
+    @foreach (var product in Model.Products)
+    {
+        <div class="product-card">
+            <div class="card-image" style="position:relative; height:200px; overflow:hidden;">
+                @if (!string.IsNullOrEmpty(product.ImagePath))
+                {
+                    <img src="@product.ImagePath"
+                         style="width:100%; height:100%; object-fit:cover;" />
+                }
+                else
+                {
+                    <div style="width:100%; height:100%; display:flex;
+                        align-items:center; justify-content:center;
+                        background:#e8d5d5; color:#6b6b8a; font-size:0.8rem;">
+                        No image
                     </div>
+                }
+
+                <span class="card-badge">@product.Category?.Name</span>
+                <span class="card-image-icon">✦</span>
+            </div>
+            <div class="card-body">
+                <p class="card-name">@product.Name</p>
+                <p class="card-sizes">
+                    @string.Join(", ", product.Sizes.Select(s => s.Size.Name))
+                </p>
+                <div class="card-footer">
+                    <span class="card-price">@product.Price ₴</span>
+                    <a asp-controller="Catalog" asp-action="Details"
+                       asp-route-id="@product.Id" class="btn-view">View</a>
                 </div>
             </div>
-        }
-    </div>
+        </div>
+    }
+</div>
 }

@@ -1,0 +1,245 @@
+﻿
+@{
+    ViewData["Title"] = "Analytics";
+}
+
+<style>
+    .analytics-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid #8062D6;
+    }
+    .analytics-eyebrow {
+        font-size: 0.6rem;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 0.3rem 0;
+    }
+    .analytics-title {
+        font-size: 1.6rem;
+        font-weight: 900;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #0C0950;
+        margin: 0;
+        font-family: Georgia, serif;
+    }
+    .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+    .chart-card {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .chart-card-header {
+        padding: 0.9rem 1.25rem;
+        border-bottom: 2px solid #8062D6;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+    }
+    .chart-card-icon { font-size: 1rem; }
+    .chart-card-title {
+        font-size: 0.72rem;
+        font-weight: 700;
+        letter-spacing: 0.18em;
+        text-transform: uppercase;
+        color: #0C0950;
+        margin: 0;
+    }
+    .chart-card-body {
+        padding: 1rem;
+        display: flex;
+        justify-content: center;
+        min-height: 280px;
+        align-items: center;
+    }
+    .chart-loading {
+        font-size: 0.72rem;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+    }
+</style>
+
+<div class="analytics-header">
+    <div>
+        <p class="analytics-eyebrow">Admin Panel</p>
+        <h1 class="analytics-title">Analytics</h1>
+    </div>
+</div>
+
+<div class="charts-grid">
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-card-icon">✦</span>
+            <h2 class="chart-card-title">Products by Style</h2>
+        </div>
+        <div class="chart-card-body">
+            <div id="chartByStyle"><span class="chart-loading">Loading...</span></div>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-card-icon">✦</span>
+            <h2 class="chart-card-title">Products by Category</h2>
+        </div>
+        <div class="chart-card-body">
+            <div id="chartByCategory"><span class="chart-loading">Loading...</span></div>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-card-icon">✦</span>
+            <h2 class="chart-card-title">Style Popularity (Quiz Results)</h2>
+        </div>
+        <div class="chart-card-body">
+            <div id="chartStyleQuiz"><span class="chart-loading">Loading...</span></div>
+        </div>
+    </div>
+
+    <div class="chart-card">
+        <div class="chart-card-header">
+            <span class="chart-card-icon">✦</span>
+            <h2 class="chart-card-title">Avg Price by Category</h2>
+        </div>
+        <div class="chart-card-body">
+            <div id="chartAvgPrice"><span class="chart-loading">Loading...</span></div>
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script type="text/javascript">
+    google.charts.load('current', { 'packages': ['corechart'] });
+    google.charts.setOnLoadCallback(drawAllCharts);
+
+    const PURPLE = '#8062D6';
+    const PINK   = '#E8A9A9';
+    const DEEP   = '#0C0950';
+    const MUTED  = '#6b6b8a';
+
+    const palette = [
+        '#8062D6', '#E8A9A9', '#0C0950', '#c4b0e8',
+        '#F9DFDF', '#6b6b8a', '#b07edc', '#f0c4d4'
+    ];
+
+    const baseOptions = {
+        backgroundColor: 'transparent',
+        fontName: 'Georgia',
+        titleTextStyle: { color: DEEP, fontSize: 13, bold: true },
+        legendTextStyle: { color: MUTED, fontSize: 11 },
+        hAxis: { textStyle: { color: MUTED, fontSize: 11 }, gridlines: { color: '#e0c8c8' } },
+        vAxis: { textStyle: { color: MUTED, fontSize: 11 }, gridlines: { color: '#e0c8c8' } },
+        chartArea: { width: '80%', height: '72%' },
+        width: 420,
+        height: 260,
+    };
+
+    function drawAllCharts() {
+        drawProductsByStyle();
+        drawProductsByCategory();
+        drawStylesByQuiz();
+        drawAvgPriceByCategory();
+    }
+
+    // 1. Products by Style — Column chart
+    function drawProductsByStyle() {
+        fetch('/api/charts/productsByStyle')
+            .then(r => r.json())
+            .then(data => {
+                const table = new google.visualization.DataTable();
+                table.addColumn('string', 'Style');
+                table.addColumn('number', 'Products');
+                data.forEach(item => table.addRow([item.style, item.count]));
+
+                const options = Object.assign({}, baseOptions, {
+                    legend: { position: 'none' },
+                    colors: [PURPLE],
+                    bar: { groupWidth: '55%' },
+                });
+                const chart = new google.visualization.ColumnChart(
+                    document.getElementById('chartByStyle'));
+                chart.draw(table, options);
+            });
+    }
+
+    // 2. Products by Category — Pie chart
+    function drawProductsByCategory() {
+        fetch('/api/charts/productsByCategory')
+            .then(r => r.json())
+            .then(data => {
+                const table = new google.visualization.DataTable();
+                table.addColumn('string', 'Category');
+                table.addColumn('number', 'Products');
+                data.forEach(item => table.addRow([item.category, item.count]));
+
+                const options = Object.assign({}, baseOptions, {
+                    colors: palette,
+                    pieHole: 0.38,
+                    legend: { position: 'right', textStyle: { color: MUTED, fontSize: 11 } },
+                });
+                const chart = new google.visualization.PieChart(
+                    document.getElementById('chartByCategory'));
+                chart.draw(table, options);
+            });
+    }
+
+    // 3. Style popularity from quiz results — Bar chart
+    function drawStylesByQuiz() {
+        fetch('/api/charts/stylesByQuiz')
+            .then(r => r.json())
+            .then(data => {
+                const table = new google.visualization.DataTable();
+                table.addColumn('string', 'Style');
+                table.addColumn('number', 'Results');
+                data.forEach(item => table.addRow([item.style, item.count]));
+
+                const options = Object.assign({}, baseOptions, {
+                    legend: { position: 'none' },
+                    colors: [PINK],
+                    bar: { groupWidth: '55%' },
+                });
+                const chart = new google.visualization.BarChart(
+                    document.getElementById('chartStyleQuiz'));
+                chart.draw(table, options);
+            });
+    }
+
+    // 4. Avg price by category — Column chart
+    function drawAvgPriceByCategory() {
+        fetch('/api/charts/avgPriceByCategory')
+            .then(r => r.json())
+            .then(data => {
+                const table = new google.visualization.DataTable();
+                table.addColumn('string', 'Category');
+                table.addColumn('number', 'Avg Price (₴)');
+                data.forEach(item => table.addRow([item.category, item.avgPrice]));
+
+                const options = Object.assign({}, baseOptions, {
+                    legend: { position: 'none' },
+                    colors: [DEEP],
+                    bar: { groupWidth: '55%' },
+                });
+                const chart = new google.visualization.ColumnChart(
+                    document.getElementById('chartAvgPrice'));
+                chart.draw(table, options);
+            });
+    }
+</script>
+}

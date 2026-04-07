@@ -1,5 +1,6 @@
 ﻿using ClothingStoreMVC.Domain.Entities.ProductAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.WebMVC.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -53,79 +54,92 @@ namespace ClothingStoreMVC.WebMVC.Controllers
 
         // GET: Styles/Create
         [Authorize(Roles = "admin")]
-        public IActionResult Create()
-        {
-            return View();
-        }
+        public IActionResult Create() => View(new StyleCreateViewModel());
 
         // POST: Styles/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
         [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create([Bind("Name,Description,Id")] Style style)
+        [HttpPost, Authorize(Roles = "admin"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(StyleCreateViewModel vm)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid) return View(vm);
+
+            var style = new Style
             {
-                _context.Add(style);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(style);
+                Name = vm.Name,
+                Description = vm.Description
+            };
+
+            style.ListImagePath = await SaveStyleImage(vm.ListImageFile, vm.ListImageUrl);
+            style.DetailImagePath = await SaveStyleImage(vm.DetailImageFile, vm.DetailImageUrl);
+
+            _context.Styles.Add(style);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Styles/Edit/5
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
+            if (id == null) return NotFound();
             var style = await _context.Styles.FindAsync(id);
-            if (style == null)
+            if (style == null) return NotFound();
+
+            return View(new StyleCreateViewModel
             {
-                return NotFound();
-            }
-            return View(style);
+                Name = style.Name,
+                Description = style.Description,
+                ListImagePath = style.ListImagePath,
+                DetailImagePath = style.DetailImagePath
+            });
         }
 
-        // POST: Styles/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Id")] Style style)
+        [HttpPost, Authorize(Roles = "admin"), ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, StyleCreateViewModel vm)
         {
-            if (id != style.Id)
-            {
-                return NotFound();
-            }
+            if (!ModelState.IsValid) return View(vm);
 
-            if (ModelState.IsValid)
+            var style = await _context.Styles.FindAsync(id);
+            if (style == null) return NotFound();
+
+            style.Name = vm.Name;
+            style.Description = vm.Description;
+
+            var newList = await SaveStyleImage(vm.ListImageFile, vm.ListImageUrl);
+            if (newList != null) style.ListImagePath = newList;
+
+            var newDetail = await SaveStyleImage(vm.DetailImageFile, vm.DetailImageUrl);
+            if (newDetail != null) style.DetailImagePath = newDetail;
+
+            _context.Update(style);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private async Task<string?> SaveStyleImage(IFormFile? file, string? url)
+        {
+            if (file != null && file.Length > 0)
             {
-                try
+                var ext = Path.GetExtension(file.FileName).ToLower();
+                var allowed = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                if (allowed.Contains(ext))
                 {
-                    _context.Update(style);
-                    await _context.SaveChangesAsync();
+                    var fileName = $"{Guid.NewGuid()}{ext}";
+                    var folder = Path.Combine(Directory.GetCurrentDirectory(),
+                        "wwwroot", "images", "styles");
+                    Directory.CreateDirectory(folder);
+                    var path = Path.Combine(folder, fileName);
+                    using var stream = new FileStream(path, FileMode.Create);
+                    await file.CopyToAsync(stream);
+                    return $"/images/styles/{fileName}";
                 }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!StyleExists(style.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
             }
-            return View(style);
+            if (!string.IsNullOrWhiteSpace(url))
+                return url.Trim();
+            return null;
         }
 
         // GET: Styles/Delete/5

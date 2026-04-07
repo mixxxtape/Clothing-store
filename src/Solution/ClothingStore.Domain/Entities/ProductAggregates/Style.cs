@@ -15,5 +15,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         [StringLength(10000, ErrorMessage = "Description cannot be longer than 10000 characters")]
         public string Description { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
+        public string? ListImagePath { get; set; } 
+        public string? DetailImagePath { get; set; }
     }
 }

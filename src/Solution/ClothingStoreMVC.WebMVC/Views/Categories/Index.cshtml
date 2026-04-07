@@ -1,35 +1,42 @@
 ﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.ProductAggregates.Category>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Categories";
 }
 
-<h1>Категорії</h1>
+<div style="display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:2px solid #8062D6;">
+    <h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+        text-transform:uppercase; color:#0C0950; margin:0;">
+        Categories
+    </h2>
+    <a asp-action="Create"
+           style="padding:0.4rem 1rem; border:none;
+        background:linear-gradient(135deg,#8062D6,#E8A9A9);
+        color:white; border-radius:4px; font-size:0.72rem;
+        letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">
+        + Add Category
+    </a>
+</div>
 
-<p>
-    <a asp-action="Create">Додати</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@foreach (var item in Model)
+{
+    <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+        padding:1rem 1.25rem; margin-bottom:0.75rem;
+        display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:0.9rem; font-weight:700; color:#0C0950;">@item.Name</span>
+        <div style="display:flex; gap:0.5rem;">
+            <a asp-action="Edit" asp-route-id="@item.Id"
+               style="padding:0.3rem 0.7rem; border:1px solid #8062D6; color:#8062D6;
+            border-radius:4px; font-size:0.7rem; letter-spacing:0.08em;
+            text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+               onmouseover="this.style.background='#8062D6';this.style.color='white'"
+               onmouseout="this.style.background='transparent';this.style.color='#8062D6'">Edit</a>
+            <a asp-action="Delete" asp-route-id="@item.Id"
+               style="padding:0.3rem 0.7rem; border:1px solid #F57799; color:#F57799;
+            border-radius:4px; font-size:0.7rem; letter-spacing:0.08em;
+            text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+               onmouseover="this.style.background='#F57799';this.style.color='white'"
+               onmouseout="this.style.background='transparent';this.style.color='#F57799'">Delete</a>
+        </div>
+    </div>
 }
-    </tbody>
-</table>

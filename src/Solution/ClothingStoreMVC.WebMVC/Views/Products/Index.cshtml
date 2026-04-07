@@ -1,68 +1,83 @@
 ﻿@model IEnumerable<ClothingStoreMVC.Domain.Entities.ProductAggregates.Product>
-
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Products";
 }
 
+<div style="display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:2px solid #8062D6;">
+    <h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+        text-transform:uppercase; color:#0C0950; margin:0;">
+        Products
+    </h2>
+    <a asp-action="Create"
+           style="padding:0.4rem 1rem; border:none;
+        background:linear-gradient(135deg,#8062D6,#E8A9A9);
+        color:white; border-radius:4px; font-size:0.72rem;
+        letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">
+        + Add Product
+    </a>
+</div>
 
-<h1>Products list</h1>
+@foreach (var item in Model)
+{
+    <div style="background:@(item.IsDeleted ? "#fdf0f0" : "#F9DFDF");
+        border:1px solid @(item.IsDeleted ? "#F57799" : "#000");
+        border-radius:8px; padding:1rem 1.25rem; margin-bottom:0.75rem;
+        display:flex; align-items:center; gap:1rem;">
 
-<p>
-    <a asp-action="Create">Add new product</a>
-</p>
-<table class="table table-striped table-hover table-bordered">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Style)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Category)
-            </th>
-            <th>Sizes</th>
-            <th>
-                @Html.DisplayNameFor(model => model.IsDeleted)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr style="@(item.IsDeleted ? "background-color:#f8d7da;" : "")">
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Style.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Category.Name)
-                </td>
-                <td>@string.Join(", ", item.Sizes.Select(s => s.Size.Name))</td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsDeleted)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+        <div style="width:56px; height:56px; flex-shrink:0; border-radius:6px;
+            overflow:hidden; background:#e8d5d5; border:1px solid rgba(0,0,0,0.08);">
+            @if (!string.IsNullOrEmpty(item.ImagePath))
+            {
+                <img src="@item.ImagePath" style="width:100%; height:100%; object-fit:cover;" />
+            }
+            else
+            {
+                <div style="width:100%; height:100%; display:flex; align-items:center;
+                    justify-content:center; font-size:1.2rem; opacity:0.2; color:#8062D6;">
+                    ✦
+                </div>
+            }
+        </div>
+
+        <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.2rem;">
+                <span style="font-size:0.88rem; font-weight:700; color:#0C0950;">@item.Name</span>
+                @if (item.IsDeleted)
+                {
+                    <span style="font-size:0.6rem; letter-spacing:0.15em; text-transform:uppercase;
+                        background:#F57799; color:white; padding:0.15rem 0.5rem; border-radius:20px;">
+                        Deleted
+                    </span>
+                }
+            </div>
+            <span style="font-size:0.72rem; color:#6b6b8a;">
+                @item.Category?.Name · @item.Style?.Name ·
+                @string.Join(", ", item.Sizes.Select(s => s.Size.Name))
+            </span>
+        </div>
+
+        <span style="font-weight:800; color:#8062D6; font-size:0.95rem; flex-shrink:0;">
+            @item.Price ₴
+        </span>
+
+        <div style="display:flex; gap:0.5rem; flex-shrink:0;">
+            <a asp-action="Edit" asp-route-id="@item.Id"
+                   style="padding:0.3rem 0.7rem; border:1px solid #8062D6; color:#8062D6;
+                border-radius:4px; font-size:0.7rem; letter-spacing:0.08em;
+                text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+                   onmouseover="this.style.background='#8062D6';this.style.color='white'"
+                   onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+                Edit
+            </a>
+            <a asp-action="Details" asp-route-id="@item.Id"
+                   style="padding:0.3rem 0.7rem; border:1px solid #2d2d40; color:#6b6b8a;
+                border-radius:4px; font-size:0.7rem; letter-spacing:0.08em;
+                text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+                   onmouseover="this.style.borderColor='#8062D6';this.style.color='#8062D6'"
+                   onmouseout="this.style.borderColor='#2d2d40';this.style.color='#6b6b8a'">
+                View
+            </a>
+        </div>
+    </div>
+}
