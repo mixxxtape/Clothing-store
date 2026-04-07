@@ -10,7 +10,7 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(s => s.Id);
             builder.Property(s => s.Name).IsRequired().HasMaxLength(50);
-            builder.Property(s => s.Description).HasMaxLength(200);
+            builder.Property(s => s.Description).HasMaxLength(10000);
         }
     }
 }

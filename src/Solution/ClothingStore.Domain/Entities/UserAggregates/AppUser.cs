@@ -23,5 +23,12 @@ namespace ClothingStoreMVC.Domain.Entities.UserAggregates
             ErrorMessage = "Phone must contain 10-15 digits, optionally starting with +")]
         [Display(Name = "Phone Number")]
         public override string? PhoneNumber { get; set; }
+        [StringLength(300)]
+        [Display(Name = "Default Address")]
+        public string? DefaultAddress { get; set; }
+
+        [StringLength(500)]
+        [Display(Name = "About Me")]
+        public string? Bio { get; set; }
     }
 }

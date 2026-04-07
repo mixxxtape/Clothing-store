@@ -116,8 +116,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 return RedirectToAction("Index", "Carts");
             }
 
+            var identityUser = await _identityContext.Set<AppUser>()
+                .FirstOrDefaultAsync(u => u.Id == user.IdentityUserId);
+
             var vm = new CheckoutViewModel
             {
+                DeliveryAddress = identityUser?.DefaultAddress ?? "",
                 Items = cart.Items.Select(i => new CartItemViewModel
                 {
                     CartItemId = i.Id,

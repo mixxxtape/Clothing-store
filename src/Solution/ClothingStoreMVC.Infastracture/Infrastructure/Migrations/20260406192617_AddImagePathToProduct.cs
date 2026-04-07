@@ -1,0 +1,30 @@
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+
+#nullable disable
+
+namespace ClothingStoreMVC.Infrastructure.Infrastructure.Migrations
+{
+    /// <inheritdoc />
+    public partial class AddImagePathToProduct : Migration
+    {
+        /// <inheritdoc />
+        protected override void Up(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.AddColumn<string>(
+                name: "ImagePath",
+                schema: "Store",
+                table: "Products",
+                type: "text",
+                nullable: true);
+        }
+
+        /// <inheritdoc />
+        protected override void Down(MigrationBuilder migrationBuilder)
+        {
+            migrationBuilder.DropColumn(
+                name: "ImagePath",
+                schema: "Store",
+                table: "Products");
+        }
+    }
+}

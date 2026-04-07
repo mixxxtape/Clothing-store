@@ -11,7 +11,7 @@ namespace ClothingStoreMVC.Domain.Entities.QuizAggregates
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Description is required")]
-        [StringLength(500, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 500 characters")]
+        [StringLength(1000, MinimumLength = 10, ErrorMessage = "Description must be between 10 and 1000 characters")]
         [Display(Name = "Description")]
         public string Description { get; set; } = null!;
 

@@ -1,0 +1,130 @@
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.ProfileViewModel
+@{ ViewData["Title"] = "My Profile"; }
+
+<style>
+    .profile-wrap { max-width: 560px; }
+    .profile-card {
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
+    }
+    .profile-label {
+        font-size: 0.65rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin: 0 0 1rem 0;
+    }
+    .field-label {
+        font-size: 0.72rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #0C0950;
+        display: block;
+        margin-bottom: 0.4rem;
+    }
+    .field-input {
+        width: 100%;
+        padding: 0.6rem 0.75rem;
+        border-radius: 6px;
+        border: 1px solid #2d2d40;
+        background: #fff;
+        color: #0C0950;
+        font-size: 0.9rem;
+        font-family: Georgia, serif;
+        box-sizing: border-box;
+        margin-bottom: 1rem;
+    }
+    .field-input:focus { outline: none; border-color: #8062D6; }
+</style>
+
+<div class="profile-wrap">
+    <h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+        text-transform:uppercase; margin-bottom:1.5rem; color:#0C0950;">
+        My Profile
+    </h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div style="background:#0a2d0a; border:1px solid #6bcf6b; color:#6bcf6b;
+            padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+            @TempData["Success"]
+        </div>
+    }
+
+    <form asp-action="Profile" method="post">
+        @Html.AntiForgeryToken()
+
+        <div class="profile-card">
+            <p class="profile-label">Personal Info</p>
+
+            <p style="font-size:0.75rem; color:#6b6b8a; margin:0 0 1rem 0;">
+                @Model.Email
+            </p>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                <div>
+                    <label asp-for="FirstName" class="field-label"></label>
+                    <input asp-for="FirstName" class="field-input" />
+                    <span asp-validation-for="FirstName" style="color:#F57799; font-size:0.75rem;"></span>
+                </div>
+                <div>
+                    <label asp-for="LastName" class="field-label"></label>
+                    <input asp-for="LastName" class="field-input" />
+                    <span asp-validation-for="LastName" style="color:#F57799; font-size:0.75rem;"></span>
+                </div>
+            </div>
+
+            <label asp-for="PhoneNumber" class="field-label"></label>
+            <input asp-for="PhoneNumber" class="field-input" />
+
+            <label asp-for="Bio" class="field-label"></label>
+            <textarea asp-for="Bio" rows="3"
+                      style="width:100%; padding:0.6rem 0.75rem; border-radius:6px;
+                      border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                      font-size:0.9rem; font-family:Georgia,serif;
+                      resize:vertical; box-sizing:border-box; margin-bottom:1rem;"></textarea>
+        </div>
+
+        <div class="profile-card">
+            <p class="profile-label">Default Delivery Address</p>
+            <p style="font-size:0.75rem; color:#6b6b8a; margin:0 0 0.75rem 0;">
+                This address will be pre-filled when you place an order
+            </p>
+            <label asp-for="DefaultAddress" class="field-label"></label>
+            <textarea asp-for="DefaultAddress" rows="3"
+                      placeholder="City, Street, Building..."
+                      style="width:100%; padding:0.6rem 0.75rem; border-radius:6px;
+                      border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                      font-size:0.9rem; font-family:Georgia,serif;
+                      resize:vertical; box-sizing:border-box;"></textarea>
+        </div>
+
+        <div style="display:flex; gap:1rem; align-items:center; margin-top:0.5rem;">
+            <button type="submit"
+                    style="padding:0.75rem 2rem; border:none;
+                    background:linear-gradient(135deg,#8062D6,#E8A9A9);
+                    color:white; border-radius:4px; font-size:0.8rem;
+                    letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
+                Save Changes
+            </button>
+    </form>
+            <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0; display:inline;">
+        @Html.AntiForgeryToken()
+                <button type="submit"
+                        onclick="return confirm('Are you sure you want to logout?')"
+                        style="padding:0.75rem 1.5rem; border:1px solid #F57799;
+                        background:transparent; color:#F57799; border-radius:4px;
+                        font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;
+                        cursor:pointer; margin-left:1rem;">
+                    Logout
+                </button>
+             </form>
+        </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

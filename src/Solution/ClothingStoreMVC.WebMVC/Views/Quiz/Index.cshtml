@@ -1,42 +1,233 @@
 ﻿@model ClothingStoreMVC.Domain.Entities.QuizAggregates.Quiz
+@{ ViewData["Title"] = "Style Quiz"; }
 
-<div id="quizIntro">
-    <h2>@Model.Name</h2>
-    <p>@Model.Description</p>
-    <button onclick="startQuiz()" class="btn btn-primary">Take the test</button>
-</div>
+<style>
+    .quiz-wrap {
+        max-width: 680px;
+        margin: 0 auto;
+        padding: 2rem 0;
+    }
+    .quiz-intro, .quiz-step, .quiz-done {
+        display: none;
+    }
+    .quiz-intro.active, .quiz-step.active, .quiz-done.active {
+        display: block;
+    }
+    .quiz-progress-bar {
+        height: 3px;
+        background: #e0d0e0;
+        border-radius: 2px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+    .quiz-progress-fill {
+        height: 100%;
+        background: linear-gradient(135deg, #8062D6, #E8A9A9);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+    }
+    .quiz-step-label {
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #6b6b8a;
+        margin-bottom: 0.75rem;
+    }
+    .quiz-question {
+        font-size: 1.4rem;
+        font-weight: 900;
+        color: #0C0950;
+        font-family: Georgia, serif;
+        line-height: 1.3;
+        margin-bottom: 2rem;
+    }
+    .answer-option {
+        display: block;
+        width: 100%;
+        padding: 1rem 1.25rem;
+        margin-bottom: 0.75rem;
+        background: #F9DFDF;
+        border: 1px solid #000;
+        border-radius: 8px;
+        font-size: 0.88rem;
+        color: #0C0950;
+        font-family: Georgia, serif;
+        cursor: pointer;
+        transition: all 0.2s;
+        text-align: left;
+    }
+    .answer-option:hover {
+        border-color: #8062D6;
+        background: white;
+    }
+    .answer-option.selected {
+        border-color: #8062D6;
+        background: #8062D6;
+        color: white;
+    }
+    .quiz-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 1.5rem;
+    }
+    .btn-next {
+        padding: 0.75rem 2rem;
+        border: none;
+        background: linear-gradient(135deg, #8062D6, #E8A9A9);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .btn-next:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-next:not(:disabled):hover { opacity: 0.85; }
+    .btn-prev {
+        padding: 0.75rem 1.5rem;
+        border: 1px solid #2d2d40;
+        background: transparent;
+        color: #6b6b8a;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    .btn-prev:hover { border-color: #8062D6; color: #8062D6; }
+    .btn-start {
+        padding: 0.85rem 2.5rem;
+        border: none;
+        background: linear-gradient(135deg, #8062D6, #E8A9A9);
+        color: white;
+        border-radius: 4px;
+        font-size: 0.85rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: opacity 0.2s;
+    }
+    .btn-start:hover { opacity: 0.85; }
+</style>
 
-<div id="quizForm" style="display:none;">
-    <form asp-action="Submit" method="post" id="quizFormEl">
+<div class="quiz-wrap">
+
+    <div class="quiz-intro active" id="quiz-intro">
+        <div style="height:2px; background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            margin-bottom:2rem;"></div>
+        <p style="font-size:0.6rem; letter-spacing:0.35em; text-transform:uppercase;
+            color:#6b6b8a; margin-bottom:0.75rem;">Style Quiz</p>
+        <h1 style="font-size:2.2rem; font-weight:900; color:#0C0950;
+            font-family:Georgia,serif; margin-bottom:1rem;">@Model.Name</h1>
+        <p style="color:#6b6b8a; font-size:0.95rem; line-height:1.8;
+            font-family:Georgia,serif; margin-bottom:2rem; max-width:500px;">
+            @Model.Description
+        </p>
+        <p style="font-size:0.75rem; color:#9a8aaa; margin-bottom:2rem;">
+            @Model.Questions.Count questions
+        </p>
+        <button class="btn-start" onclick="startQuiz()">Take the Quiz →</button>
+    </div>
+
+    <form asp-action="Submit" method="post" id="quiz-form">
         @Html.AntiForgeryToken()
         <input type="hidden" name="quizId" value="@Model.Id" />
 
-        @foreach (var question in Model.Questions)
+        @{ var questions = Model.Questions.ToList(); }
+
+        @for (int qi = 0; qi < questions.Count; qi++)
         {
-            <div style="margin-bottom:2rem;">
-                <h4>@question.Text</h4>
-                @foreach (var answer in question.Answers)
-                {
-                    <div>
-                        <label>
-                            <input type="radio"
-                                   name="answers[@question.Id]"
-                                   value="@answer.Id"
-                                   required />
+            var question = questions[qi];
+            <div class="quiz-step" id="step-@qi">
+
+                <div class="quiz-progress-bar">
+                    <div class="quiz-progress-fill"
+                         style="width:@(((qi + 1) * 100) / questions.Count)%"></div>
+                </div>
+
+                <p class="quiz-step-label">
+                    Question @(qi + 1) of @questions.Count
+                </p>
+                <p class="quiz-question">@question.Text</p>
+
+                <div>
+                    @foreach (var answer in question.Answers)
+                    {
+                        <button type="button"
+                                class="answer-option"
+                                data-question="@question.Id"
+                                data-answer="@answer.Id"
+                                onclick="selectAnswer(this, @question.Id, @answer.Id, @qi)">
                             @answer.Text
-                        </label>
-                    </div>
-                }
+                        </button>
+                    }
+                </div>
+
+                <input type="hidden"
+                       name="answers[@question.Id]"
+                       id="answer-@question.Id"
+                       value="" />
+
+                <div class="quiz-nav">
+                    @if (qi > 0)
+                    {
+                        <button type="button" class="btn-prev"
+                                onclick="goToStep(@(qi - 1))">← Back</button>
+                    }
+                    else
+                    {
+                        <span></span>
+                    }
+
+                    @if (qi < questions.Count - 1)
+                    {
+                        <button type="button" class="btn-next"
+                                id="next-@qi" disabled
+                                onclick="goToStep(@(qi + 1))">
+                            Next →
+                        </button>
+                    }
+                    else
+                    {
+                        <button type="submit" class="btn-next"
+                                id="next-@qi" disabled>
+                            Get My Style →
+                        </button>
+                    }
+                </div>
             </div>
         }
-
-        <button type="submit" class="btn btn-primary">Submit</button>
     </form>
 </div>
 
 <script>
-    function startQuiz() {
-        document.getElementById('quizIntro').style.display = 'none';
-        document.getElementById('quizForm').style.display = 'block';
+var currentStep = -1;
+
+function startQuiz() {
+    document.getElementById('quiz-intro').classList.remove('active');
+    goToStep(0);
+}
+
+function goToStep(index) {
+    if (currentStep >= 0) {
+        document.getElementById('step-' + currentStep).classList.remove('active');
     }
+    currentStep = index;
+    document.getElementById('step-' + index).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectAnswer(btn, questionId, answerId, stepIndex) {
+    var siblings = btn.closest('div').querySelectorAll('.answer-option');
+    siblings.forEach(function(b) { b.classList.remove('selected'); });
+
+    btn.classList.add('selected');
+
+    document.getElementById('answer-' + questionId).value = answerId;
+
+    document.getElementById('next-' + stepIndex).disabled = false;
+}
 </script>

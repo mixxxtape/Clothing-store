@@ -10,7 +10,7 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
         {
             builder.HasKey(q => q.Id);
             builder.Property(q => q.Name).IsRequired().HasMaxLength(100);
-            builder.Property(q => q.Description).HasMaxLength(500);
+            builder.Property(q => q.Description).HasMaxLength(1000);
 
             builder.HasMany(q => q.Questions)
                    .WithOne(q => q.Quiz) 

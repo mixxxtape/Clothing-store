@@ -60,7 +60,20 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     FuzzyMatch(p.Category.Name.ToLower(), q) ||
                     FuzzyMatch(p.Style.Name.ToLower(), q));
             }
+            var identityId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var currentUser = identityId != null
+                ? await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId)
+                : null;
 
+            List<int> wishlistIds = new();
+            if (currentUser != null)
+            {
+                var wishlist = await _context.Wishlists
+                    .Include(w => w.Products)
+                    .FirstOrDefaultAsync(w => w.UserId == currentUser.Id);
+                if (wishlist != null)
+                    wishlistIds = wishlist.Products.Select(p => p.Id).ToList();
+            }
             var vm = new CatalogFilterViewModel
             {
                 Products = filtered.Select(p => new ProductListViewModel
@@ -70,10 +83,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     Price = p.Price,
                     CategoryName = p.Category.Name,
                     StyleName = p.Style.Name,
+                    ImagePath = p.ImagePath,
                     Sizes = string.Join(", ", p.Sizes.Select(s => s.Size.Name))
                 }).ToList(),
                 Categories = allProducts.Select(p => p.Category.Name).Distinct().OrderBy(x => x).ToList(),
                 Styles = allProducts.Select(p => p.Style.Name).Distinct().OrderBy(x => x).ToList(),
+                WishlistProductIds = wishlistIds,
                 SearchQuery = search,
                 SelectedCategory = category,
                 SelectedStyle = style,
@@ -81,6 +96,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 MaxPrice = maxPrice ?? absoluteMax,
                 AbsoluteMinPrice = absoluteMin,
                 AbsoluteMaxPrice = absoluteMax
+
             };
 
             return View(vm);
@@ -143,7 +159,14 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             var currentUser = identityId != null
                 ? await _context.Users.FirstOrDefaultAsync(u => u.IdentityUserId == identityId)
                 : null;
-
+            bool isInWishlist = false;
+            if (currentUser != null)
+            {
+                var wishlist = await _context.Wishlists
+                    .Include(w => w.Products)
+                    .FirstOrDefaultAsync(w => w.UserId == currentUser.Id);
+                isInWishlist = wishlist?.Products.Any(p => p.Id == id) ?? false;
+            }
             bool canReview = false;
             bool alreadyReviewed = false;
 
@@ -175,6 +198,8 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 Price = product.Price,
                 CategoryName = product.Category.Name,
                 StyleName = product.Style.Name,
+                ImagePath = product.ImagePath,
+                IsInWishlist = isInWishlist,
                 Sizes = string.Join(", ", product.Sizes.Select(s => s.Size.Name)),
                 SizeOptions = product.Sizes
                     .Where(ps => ps.Quantity > 0)

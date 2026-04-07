@@ -17,11 +17,11 @@ namespace ClothingStoreMVC.WebMVC.ViewModels
         public string Name { get; set; } = null!;
 
         [Required]
-        [StringLength(500)]
+        [StringLength(1000)]
         public string Description { get; set; } = null!;
 
         [Required]
-        [Range(0.01, 100000)]
+        [Range(0.01, 1000000)]
         public decimal Price { get; set; }
 
         [Required]
@@ -31,7 +31,9 @@ namespace ClothingStoreMVC.WebMVC.ViewModels
         public int CategoryId { get; set; }
 
         public bool IsDeleted { get; set; }
-
         public List<ProductSizeInputViewModel> Sizes { get; set; } = new();
+        public IFormFile? ImageFile { get; set; }
+        public string? ImagePath { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

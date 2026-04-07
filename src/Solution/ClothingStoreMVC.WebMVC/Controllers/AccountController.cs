@@ -100,6 +100,46 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             return View(model);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> Profile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login");
+
+            var vm = new ProfileViewModel
+            {
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                PhoneNumber = user.PhoneNumber,
+                Bio = user.Bio,
+                DefaultAddress = user.DefaultAddress,
+                Email = user.Email
+            };
+            return View(vm);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Profile(ProfileViewModel vm)
+        {
+            if (!ModelState.IsValid) return View(vm);
+
+            var user = await _userManager.GetUserAsync(User);
+            if (user == null) return RedirectToAction("Login");
+
+            user.FirstName = vm.FirstName;
+            user.LastName = vm.LastName;
+            user.PhoneNumber = vm.PhoneNumber;
+            user.Bio = vm.Bio;
+            user.DefaultAddress = vm.DefaultAddress;
+
+            await _userManager.UpdateAsync(user);
+            TempData["Success"] = "Profile updated";
+            return RedirectToAction(nameof(Profile));
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Logout()

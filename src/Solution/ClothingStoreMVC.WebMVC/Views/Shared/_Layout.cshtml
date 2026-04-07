@@ -235,14 +235,10 @@
                         <img src="@Url.Content("~/images/orders.png")" />
                     </a>
                 }
-                <form method="post" asp-controller="Account" asp-action="Logout" style="margin:0;">
-                    @Html.AntiForgeryToken()
-                    <button type="submit" class="nav-icon-btn" title="Logout"
-                            onclick="return confirm('Are you sure you want to logout?')"
-                            style="font-size:1rem; color:#9999bb;">
-                         <img src="@Url.Content("~/images/account.jpg")" />
-                    </button>
-                </form>
+                <a asp-controller="Account" asp-action="Profile"
+                   class="nav-icon-btn" title="My Profile">
+                    <img src="@Url.Content("~/images/account.jpg")" />
+                </a>
             }
             else
             {

@@ -10,5 +10,6 @@
         public string StyleName { get; set; } = null!;
 
         public string Sizes { get; set; } = null!;
+        public string? ImagePath { get; set; }
     }
 }

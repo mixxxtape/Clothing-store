@@ -66,7 +66,11 @@ wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\images\account.jpg
 wwwroot\images\cart.jpg
+wwwroot\images\heart-empty.png
+wwwroot\images\heart-filled.png
 wwwroot\images\orders.png
+wwwroot\images\products\20b3f980-239d-4fae-9470-60b6349190cf.jpeg
+wwwroot\images\products\66839e71-6d77-4780-bc1a-72412e6ac7b5.jpg
 wwwroot\images\wishlist.jpg
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\LICENSE

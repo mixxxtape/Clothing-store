@@ -5,6 +5,7 @@
         public IEnumerable<ProductListViewModel> Products { get; set; } = new List<ProductListViewModel>();
         public List<string> Categories { get; set; } = new();
         public List<string> Styles { get; set; } = new();
+        public List<int> WishlistProductIds { get; set; } = new();
         public string? SearchQuery { get; set; }
         public string? SelectedCategory { get; set; }
         public string? SelectedStyle { get; set; }

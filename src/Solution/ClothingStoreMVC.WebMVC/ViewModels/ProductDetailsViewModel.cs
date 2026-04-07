@@ -14,6 +14,8 @@
         public bool CanReview { get; set; }
         public bool AlreadyReviewed { get; set; }
         public double AverageRating { get; set; }
+        public string? ImagePath { get; set; }
+        public bool IsInWishlist { get; set; }
     }
 
     public class SizeOptionViewModel

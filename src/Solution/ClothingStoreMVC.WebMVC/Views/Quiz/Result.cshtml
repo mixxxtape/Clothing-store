@@ -1,9 +1,97 @@
 ﻿@model ClothingStoreMVC.Domain.Entities.ProductAggregates.Style
+@{ ViewData["Title"] = "Your Style"; }
 
-<div style="text-align:center; padding:3rem 1rem;">
-    <h2>Your style — @Model.Name</h2>
-    <p style="font-size:1.1rem; margin:1.5rem 0;">@Model.Description</p>
-    <a asp-controller="Catalog" asp-action="Index" class="btn btn-primary">
-        View catalog
-    </a>
+<style>
+    .result-wrap {
+        max-width: 600px;
+        margin: 0 auto;
+        text-align: center;
+        padding: 3rem 0;
+    }
+    .result-badge {
+        display: inline-block;
+        font-size: 0.6rem;
+        letter-spacing: 0.3em;
+        text-transform: uppercase;
+        color: #8062D6;
+        border: 1px solid #8062D6;
+        border-radius: 20px;
+        padding: 0.3rem 1rem;
+        margin-bottom: 1.5rem;
+    }
+    .result-title {
+        font-size: 3rem;
+        font-weight: 900;
+        font-family: Georgia, serif;
+        background: linear-gradient(135deg, #8062D6, #F57799);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        margin-bottom: 1rem;
+    }
+    .result-desc {
+        font-size: 1rem;
+        color: #4a4a6a;
+        line-height: 1.9;
+        font-family: Georgia, serif;
+        margin-bottom: 2.5rem;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .result-divider {
+        height: 1px;
+        background: linear-gradient(90deg, transparent, #8062D6, transparent);
+        margin: 2rem 0;
+    }
+</style>
+
+<div class="result-wrap">
+    <div style="font-size:3rem; margin-bottom:1rem;">✦</div>
+
+    <span class="result-badge">Your Style Result</span>
+
+    <h1 class="result-title">@Model.Name</h1>
+
+    <p class="result-desc">@Model.Description</p>
+
+    <div class="result-divider"></div>
+
+    <p style="font-size:0.75rem; letter-spacing:0.2em; text-transform:uppercase;
+        color:#6b6b8a; margin-bottom:1.5rem;">
+        Explore items that match your style
+    </p>
+
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+        <a asp-controller="Catalog" asp-action="Index"
+           asp-route-style="@Model.Name"
+           style="padding:0.85rem 2.5rem;
+           background:linear-gradient(135deg,#8062D6,#E8A9A9);
+           color:white; text-decoration:none; border-radius:4px;
+           font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;
+           transition:opacity 0.2s;"
+           onmouseover="this.style.opacity='0.85'"
+           onmouseout="this.style.opacity='1'">
+            Shop @Model.Name →
+        </a>
+
+        <a asp-controller="Styles" asp-action="Details" asp-route-id="@Model.Id"
+           style="padding:0.85rem 2rem; border:1px solid #8062D6;
+           color:#8062D6; text-decoration:none; border-radius:4px;
+           font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;
+           transition:all 0.2s;"
+           onmouseover="this.style.background='#8062D6';this.style.color='white'"
+           onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+            About @Model.Name Style
+        </a>
+
+        <a asp-controller="Quiz" asp-action="Index"
+           style="padding:0.85rem 2rem; border:1px solid #2d2d40;
+           color:#6b6b8a; text-decoration:none; border-radius:4px;
+           font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase;
+           transition:all 0.2s;"
+           onmouseover="this.style.borderColor='#8062D6';this.style.color='#8062D6'"
+           onmouseout="this.style.borderColor='#2d2d40';this.style.color='#6b6b8a'">
+            Retake Quiz
+        </a>
+    </div>
 </div>

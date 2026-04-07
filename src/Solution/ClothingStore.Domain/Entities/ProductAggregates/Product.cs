@@ -12,7 +12,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Product description is required")]
-        [StringLength(500, ErrorMessage = "Product description cannot be longer than 500 characters")]
+        [StringLength(1000, ErrorMessage = "Product description cannot be longer than 1000 characters")]
         public string Description { get; set; } = null!;
 
         [Required(ErrorMessage = "Price is required")]
@@ -30,6 +30,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public bool IsDeleted { get; set; } = false;
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public ICollection<ProductSize> Sizes { get; set; } = new List<ProductSize>();
+        public string? ImagePath { get; set; }
     }
 
 }

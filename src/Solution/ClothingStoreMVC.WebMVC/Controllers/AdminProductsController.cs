@@ -81,6 +81,27 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     IsDeleted = vm.IsDeleted
                 };
 
+                if (vm.ImageFile != null && vm.ImageFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                    var ext = Path.GetExtension(vm.ImageFile.FileName).ToLower();
+                    if (allowedExtensions.Contains(ext))
+                    {
+                        var fileName = $"{Guid.NewGuid()}{ext}";
+                        var uploadsFolder = Path.Combine(
+                            Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
+                        Directory.CreateDirectory(uploadsFolder);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                            await vm.ImageFile.CopyToAsync(stream);
+                        product.ImagePath = $"/images/products/{fileName}";
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(vm.ImageUrl))
+                {
+                    product.ImagePath = vm.ImageUrl.Trim();
+                }
+
                 foreach (var size in vm.Sizes.Where(s => s.IsSelected))
                 {
                     product.Sizes.Add(new ProductSize
@@ -124,6 +145,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 StyleId = product.StyleId,
                 CategoryId = product.CategoryId,
                 IsDeleted = product.IsDeleted,
+                ImagePath = product.ImagePath,
                 Sizes = allSizes.Select(s =>
                 {
                     var existing = product.Sizes.FirstOrDefault(ps => ps.SizeId == s.Id);
@@ -163,9 +185,39 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 product.CategoryId = vm.CategoryId;
                 product.IsDeleted = vm.IsDeleted;
 
+                if (vm.ImageFile != null && vm.ImageFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".webp" };
+                    var ext = Path.GetExtension(vm.ImageFile.FileName).ToLower();
+                    if (allowedExtensions.Contains(ext))
+                    {
+                        if (!string.IsNullOrEmpty(product.ImagePath) &&
+                            product.ImagePath.StartsWith("/images/products/"))
+                        {
+                            var oldPath = Path.Combine(
+                                Directory.GetCurrentDirectory(), "wwwroot",
+                                product.ImagePath.TrimStart('/'));
+                            if (System.IO.File.Exists(oldPath))
+                                System.IO.File.Delete(oldPath);
+                        }
+                        var fileName = $"{Guid.NewGuid()}{ext}";
+                        var uploadsFolder = Path.Combine(
+                            Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
+                        Directory.CreateDirectory(uploadsFolder);
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                            await vm.ImageFile.CopyToAsync(stream);
+                        product.ImagePath = $"/images/products/{fileName}";
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(vm.ImageUrl))
+                {
+                    product.ImagePath = vm.ImageUrl.Trim();
+                }
+
                 var usedSizeIds = await _context.OrderItems
-     .Select(oi => oi.ProductSizeId)
-     .ToListAsync();
+                    .Select(oi => oi.ProductSizeId)
+                    .ToListAsync();
 
                 var selectedSizeIds = vm.Sizes
                     .Where(s => s.IsSelected)
@@ -181,17 +233,13 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 {
                     var existing = product.Sizes.FirstOrDefault(ps => ps.SizeId == size.SizeId);
                     if (existing != null)
-                    {
                         existing.Quantity = size.Quantity;
-                    }
                     else
-                    {
                         product.Sizes.Add(new ProductSize
                         {
                             SizeId = size.SizeId,
                             Quantity = size.Quantity
                         });
-                    }
                 }
 
                 await _context.SaveChangesAsync();
@@ -207,7 +255,6 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             ViewData["StyleId"] = new SelectList(_context.Styles, "Id", "Name", vm.StyleId);
             return View(vm);
         }
-
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) return NotFound();

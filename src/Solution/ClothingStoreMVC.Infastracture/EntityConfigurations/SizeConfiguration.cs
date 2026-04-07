@@ -12,7 +12,7 @@ namespace ClothingStoreMVC.Infrastructure.EntityConfigurations
 
             builder.Property(s => s.Name)
                    .IsRequired()
-                   .HasMaxLength(10);
+                   .HasMaxLength(20);
         }
     }
 }

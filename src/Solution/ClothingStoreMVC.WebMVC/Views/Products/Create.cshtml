@@ -9,7 +9,7 @@
 </h2>
 
 <div style="max-width:600px;">
-    <form asp-action="Create" method="post">
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
         @Html.AntiForgeryToken()
         <div asp-validation-summary="ModelOnly" style="color:#F57799; font-size:0.8rem; margin-bottom:1rem;"></div>
 
@@ -44,7 +44,51 @@
                 font-size:0.9rem; width:100%; box-sizing:border-box;" />
                 <span asp-validation-for="Price" style="color:#F57799; font-size:0.75rem;"></span>
             </div>
+            <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+                padding:1.5rem; margin-bottom:1rem;">
+                <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+                color:#6b6b8a; margin:0 0 1rem 0;">Product Image</p>
 
+                @if (!string.IsNullOrEmpty(Model?.ImagePath))
+                {
+                    <div style="margin-bottom:1rem;">
+                        <img src="@Model.ImagePath"
+                             style="width:100px; height:100px; object-fit:cover;
+                        border-radius:6px; border:1px solid #2d2d40;" />
+                        <p style="font-size:0.7rem; color:#6b6b8a; margin:0.4rem 0 0 0;">
+                            Current image — upload new or paste URL to replace
+                        </p>
+                    </div>
+                }
+
+                <div style="margin-bottom:0.75rem;">
+                    <label style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+                        color:#0C0950; display:block; margin-bottom:0.4rem;">
+                        Upload from file
+                    </label>
+                    <input asp-for="ImageFile" type="file" accept=".jpg,.jpeg,.png,.webp"
+                           style="font-size:0.82rem; color:#0C0950;" />
+                </div>
+
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.75rem;">
+                    <div style="flex:1; height:1px; background:#e0c8c8;"></div>
+                    <span style="font-size:0.65rem; color:#6b6b8a; letter-spacing:0.1em;
+                    text-transform:uppercase;">or</span>
+                    <div style="flex:1; height:1px; background:#e0c8c8;"></div>
+                </div>
+
+                <div>
+                    <label style="font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase;
+                        color:#0C0950; display:block; margin-bottom:0.4rem;">
+                        Paste image URL (http...)
+                    </label>
+                    <input asp-for="ImageUrl"
+                           placeholder="https://example.com/image.jpg"
+                           style="width:100%; padding:0.6rem 0.75rem; border-radius:6px;
+                    border:1px solid #2d2d40; background:#fff; color:#0C0950;
+                    font-size:0.85rem; box-sizing:border-box;" />
+                </div>
+            </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
                 <div>
                     <label asp-for="StyleId" style="font-size:0.75rem; letter-spacing:0.1em;

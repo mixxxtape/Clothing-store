@@ -12,7 +12,7 @@ namespace ClothingStoreMVC.Domain.Entities.ProductAggregates
         public string Name { get; set; } = null!;
 
         [Required(ErrorMessage = "Style description is required")]
-        [StringLength(200, ErrorMessage = "Description cannot be longer than 200 characters")]
+        [StringLength(10000, ErrorMessage = "Description cannot be longer than 10000 characters")]
         public string Description { get; set; } = null!;
         public ICollection<Product> Products { get; set; } = new List<Product>();
     }
