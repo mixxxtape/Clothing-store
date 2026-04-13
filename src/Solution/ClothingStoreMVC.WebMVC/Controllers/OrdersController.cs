@@ -128,7 +128,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     ProductId = i.ProductId,
                     ProductName = i.Product.Name,
                     Price = i.Product.Price,
-                    SizeName = i.ProductSize.Size.Name,
+                    SizeName = i.ProductSize?.Size?.Name ?? "—",
                     ProductSizeId = i.ProductSizeId,
                     Quantity = i.Quantity
                 }).ToList(),
@@ -166,7 +166,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     CartItemId = i.Id,
                     ProductName = i.Product.Name,
                     Price = i.Product.Price,
-                    SizeName = i.ProductSize.Size.Name,
+                    SizeName = i.ProductSize?.Size?.Name ?? "—",
                     Quantity = i.Quantity
                 }).ToList();
                 vm.Total = vm.Items.Sum(i => i.Subtotal);

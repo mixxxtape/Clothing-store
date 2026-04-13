@@ -268,15 +268,15 @@
     <div class="active-filters">
         @if (!string.IsNullOrEmpty(Model.SearchQuery))
         {
-            <span class="active-tag">🔍 @Model.SearchQuery</span>
+            <span class="active-tag"> @Model.SearchQuery</span>
         }
         @if (!string.IsNullOrEmpty(Model.SelectedCategory))
         {
-            <span class="active-tag">📁@Model.SelectedCategory</span>
+            <span class="active-tag">@Model.SelectedCategory</span>
         }
         @if (!string.IsNullOrEmpty(Model.SelectedStyle))
         {
-            <span class="active-tag">✦ @Model.SelectedStyle</span>
+            <span class="active-tag"> @Model.SelectedStyle</span>
         }
         @if (Model.MinPrice > Model.AbsoluteMinPrice || Model.MaxPrice < Model.AbsoluteMaxPrice)
         {

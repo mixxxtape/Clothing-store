@@ -16,6 +16,14 @@
         letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">
         + Add Product
     </a>
+    <a asp-action="Import" class="btn-add" style="padding:0.4rem 1rem; border:none;
+    background:linear-gradient(135deg,#8062D6,#E8A9A9);
+    color:white; border-radius:4px; font-size:0.72rem;
+    letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">↑ Import Excel</a>
+    <a asp-action="Export" class="btn-add" style="padding:0.4rem 1rem; border:none;
+    background:linear-gradient(135deg,#8062D6,#E8A9A9);
+    color:white; border-radius:4px; font-size:0.72rem;
+    letter-spacing:0.1em; text-transform:uppercase; text-decoration:none;">↓ Export Excel</a>
 </div>
 
 @foreach (var item in Model)

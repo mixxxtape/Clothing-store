@@ -1,6 +1,8 @@
 ﻿using ClothingStoreMVC.Domain.Entities.ProductAggregates;
 using ClothingStoreMVC.Infrastructure;
+using ClothingStoreMVC.Infrastructure.Services;
 using ClothingStoreMVC.WebMVC.ViewModels;
+using DocumentFormat.OpenXml.Packaging;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -13,9 +15,76 @@ namespace ClothingStoreMVC.WebMVC.Controllers
     {
         private readonly ClothingStoreContext _context;
 
-        public ProductsController(ClothingStoreContext context)
+        private readonly ProductDataPortServiceFactory _dataPort;
+
+        [HttpGet]
+        public IActionResult Import() => View();
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Import(IFormFile fileExcel,
+                                                CancellationToken cancellationToken = default)
+        {
+            if (fileExcel == null || fileExcel.Length == 0)
+            {
+                ModelState.AddModelError("", "Please select an Excel file.");
+                return View();
+            }
+
+            const string excelType =
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            if (fileExcel.ContentType != excelType &&
+                !fileExcel.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            {
+                ModelState.AddModelError("", "Only .xlsx files are supported.");
+                return View();
+            }
+
+            try
+            {
+                var importService = _dataPort.GetImportService(excelType);
+                using var stream = fileExcel.OpenReadStream();
+                await importService.ImportFromStreamAsync(stream, cancellationToken);
+                TempData["Success"] = "Products imported successfully.";
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", $"Import failed: {ex.Message}");
+                return View();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
+        // ── EXPORT ───────────────────────────────────────────────────────────────────
+
+        [HttpGet]
+        public async Task<IActionResult> Export(CancellationToken cancellationToken = default)
+        {
+            const string excelType =
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+
+            var exportService = _dataPort.GetExportService(excelType);
+            var memoryStream = new MemoryStream();
+
+            await exportService.WriteToAsync(memoryStream, cancellationToken);
+            await memoryStream.FlushAsync(cancellationToken);
+            memoryStream.Position = 0;
+
+            var fileName = $"products_{DateTime.UtcNow:yyyy-MM-dd}.xlsx";
+            return new FileStreamResult(memoryStream, excelType)
+            {
+                FileDownloadName = fileName
+            };
+        }
+
+
+        public ProductsController(ClothingStoreContext context,
+                               ProductDataPortServiceFactory dataPort)
         {
             _context = context;
+            _dataPort = dataPort;
         }
 
         public async Task<IActionResult> Index()
