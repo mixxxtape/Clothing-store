@@ -5,15 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ClothingStoreMVC.Infrastructure.Services
 {
-    /// <summary>
-    /// Exports all active products to an Excel file.
-    /// One sheet per category; columns: Name, Description, Price, Style, Sizes.
-    /// </summary>
     public class ProductExportService : IExportService<Product>
     {
         private static readonly IReadOnlyList<string> Headers = new[]
         {
-            "Name", "Description", "Price (₴)", "Style", "Sizes"
+            "Name", "Description", "Price (₴)", "Category", "Style", "Sizes"
         };
 
         private readonly ClothingStoreContext _context;
@@ -28,80 +24,64 @@ namespace ClothingStoreMVC.Infrastructure.Services
             if (!stream.CanWrite)
                 throw new ArgumentException("Stream is not writable.", nameof(stream));
 
-            var categories = await _context.Categories
-                .Include(c => c.Products.Where(p => !p.IsDeleted))
-                    .ThenInclude(p => p.Style)
-                .Include(c => c.Products)
-                    .ThenInclude(p => p.Sizes)
-                        .ThenInclude(ps => ps.Size)
+            var products = await _context.Products
+                .Where(p => !p.IsDeleted)
+                .Include(p => p.Category)
+                .Include(p => p.Style)
+                .Include(p => p.Sizes)
+                    .ThenInclude(ps => ps.Size)
+                .OrderBy(p => p.Category.Name)
+                .ThenBy(p => p.Name)
                 .ToListAsync(cancellationToken);
 
             using var workbook = new XLWorkbook();
+            var worksheet = workbook.Worksheets.Add("Products");
 
-            foreach (var category in categories)
-            {
-                var products = category.Products.Where(p => !p.IsDeleted).ToList();
-                if (!products.Any()) continue;
+            WriteHeader(worksheet);
+            WriteProducts(worksheet, products);
+            worksheet.Columns().AdjustToContents();
 
-                // worksheet name max 31 chars
-                var sheetName = category.Name.Length > 31
-                    ? category.Name[..31]
-                    : category.Name;
-
-                var worksheet = workbook.Worksheets.Add(sheetName);
-                WriteHeader(worksheet);
-                WriteProducts(worksheet, products);
-                worksheet.Columns().AdjustToContents();
-            }
-
-            // if no categories had products, add a placeholder sheet
-            if (!workbook.Worksheets.Any())
-                workbook.Worksheets.Add("No Data");
+            worksheet.SheetView.FreezeRows(1);
 
             workbook.SaveAs(stream);
         }
 
-        // ── Writers ───────────────────────────────────────────────────────
-
-        private static void WriteHeader(IXLWorksheet worksheet)
+        private static void WriteHeader(IXLWorksheet ws)
         {
             for (int i = 0; i < Headers.Count; i++)
-                worksheet.Cell(1, i + 1).Value = Headers[i];
+                ws.Cell(1, i + 1).Value = Headers[i];
 
-            var headerRow = worksheet.Row(1);
-            headerRow.Style.Font.Bold = true;
-            headerRow.Style.Fill.BackgroundColor = XLColor.FromHtml("#8062D6");
-            headerRow.Style.Font.FontColor = XLColor.White;
-            headerRow.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            var row = ws.Row(1);
+            row.Style.Font.Bold = true;
+            row.Style.Fill.BackgroundColor = XLColor.FromHtml("#8062D6");
+            row.Style.Font.FontColor = XLColor.White;
+            row.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+            row.Style.Border.BottomBorder = XLBorderStyleValues.Medium;
+            row.Style.Border.BottomBorderColor = XLColor.FromHtml("#0C0950");
         }
 
-        private static void WriteProducts(IXLWorksheet worksheet, List<Product> products)
+        private static void WriteProducts(IXLWorksheet ws, List<Product> products)
         {
-            int rowIndex = 2;
-            foreach (var product in products)
+            for (int i = 0; i < products.Count; i++)
             {
-                WriteProduct(worksheet, product, rowIndex);
+                int rowIndex = i + 2;
+                var p = products[i];
 
-                // zebra striping
+                var sizes = string.Join(", ",
+                    p.Sizes.Select(ps => $"{ps.Size?.Name} ({ps.Quantity})"));
+
+                ws.Cell(rowIndex, 1).Value = p.Name;
+                ws.Cell(rowIndex, 2).Value = p.Description;
+                ws.Cell(rowIndex, 3).Value = (double)p.Price;
+                ws.Cell(rowIndex, 3).Style.NumberFormat.Format = "#,##0.00";
+                ws.Cell(rowIndex, 4).Value = p.Category?.Name ?? "—";
+                ws.Cell(rowIndex, 5).Value = p.Style?.Name ?? "—";
+                ws.Cell(rowIndex, 6).Value = sizes;
+
                 if (rowIndex % 2 == 0)
-                    worksheet.Row(rowIndex).Style.Fill.BackgroundColor =
+                    ws.Row(rowIndex).Style.Fill.BackgroundColor =
                         XLColor.FromHtml("#F9DFDF");
-
-                rowIndex++;
             }
-        }
-
-        private static void WriteProduct(IXLWorksheet worksheet, Product product, int rowIndex)
-        {
-            var sizes = string.Join(", ",
-                product.Sizes.Select(ps => $"{ps.Size?.Name} ({ps.Quantity})"));
-
-            worksheet.Cell(rowIndex, 1).Value = product.Name;
-            worksheet.Cell(rowIndex, 2).Value = product.Description;
-            worksheet.Cell(rowIndex, 3).Value = (double)product.Price;
-            worksheet.Cell(rowIndex, 3).Style.NumberFormat.Format = "#,##0.00";
-            worksheet.Cell(rowIndex, 4).Value = product.Style?.Name ?? "—";
-            worksheet.Cell(rowIndex, 5).Value = sizes;
         }
     }
 }

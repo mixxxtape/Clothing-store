@@ -110,6 +110,13 @@
                     letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
                 Save Changes
             </button>
+
+            <a asp-controller="Account" asp-action="ChangePassword"
+               style="padding:0.75rem 1.5rem; border:1px solid #8062D6; color:#8062D6;
+               border-radius:4px; font-size:0.8rem; letter-spacing:0.15em;
+               text-transform:uppercase; text-decoration:none; display:inline-block;">
+                Change Password
+            </a>
     </form>
             <form asp-controller="Account" asp-action="Logout" method="post" style="margin:0; display:inline;">
         @Html.AntiForgeryToken()

@@ -1,0 +1,51 @@
+﻿@model ClothingStoreMVC.WebMVC.ViewModels.EditUserRoleViewModel
+@{
+    ViewData["Title"] = "Edit Roles";
+}
+
+<a asp-action="Index"
+       style="font-size:0.65rem; letter-spacing:0.18em; text-transform:uppercase;
+    color:#6b6b8a; text-decoration:none; display:inline-block; margin-bottom:1.5rem;">
+    ← Back to Users
+</a>
+
+<h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+    text-transform:uppercase; margin-bottom:0.5rem; color:#0C0950;">
+    Edit Roles
+</h2>
+<p style="font-size:0.8rem; color:#6b6b8a; margin-bottom:1.5rem;">
+    @Model.FullName · @Model.Email
+</p>
+
+<div style="max-width:400px;">
+    <form asp-action="EditRole" method="post">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="userId" value="@Model.UserId" />
+
+        <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+            padding:1.5rem; margin-bottom:1rem;">
+            <p style="font-size:0.65rem; letter-spacing:0.3em; text-transform:uppercase;
+            color:#6b6b8a; margin:0 0 1rem 0;">Assign Roles</p>
+
+            @foreach (var role in Model.AllRoles)
+            {
+                <label style="display:flex; align-items:center; gap:0.75rem;
+                    padding:0.6rem 0; border-bottom:1px solid #e0c8c8; cursor:pointer;">
+                    <input type="checkbox" name="selectedRoles" value="@role"
+                    @(Model.UserRoles.Contains(role) ? "checked" : "")
+                           style="width:16px; height:16px; accent-color:#8062D6;" />
+                    <span style="font-size:0.85rem; font-weight:600; color:#0C0950;
+                    text-transform:uppercase; letter-spacing:0.08em;">@role</span>
+                </label>
+            }
+        </div>
+
+        <button type="submit"
+                style="padding:0.75rem 2rem; border:none;
+            background:linear-gradient(135deg,#8062D6,#E8A9A9);
+            color:white; border-radius:4px; font-size:0.8rem;
+            letter-spacing:0.15em; text-transform:uppercase; cursor:pointer;">
+            Save Roles
+        </button>
+    </form>
+</div>

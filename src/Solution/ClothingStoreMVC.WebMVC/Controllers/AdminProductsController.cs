@@ -16,6 +16,8 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         private readonly ClothingStoreContext _context;
 
         private readonly ProductDataPortServiceFactory _dataPort;
+        private const string ExcelContentType =
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
 
         [HttpGet]
         public IActionResult Import() => View();
@@ -23,49 +25,50 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Import(IFormFile fileExcel,
-                                                CancellationToken cancellationToken = default)
+                            CancellationToken cancellationToken = default)
         {
             if (fileExcel == null || fileExcel.Length == 0)
             {
-                ModelState.AddModelError("", "Please select an Excel file.");
+                ModelState.AddModelError("file", "Please select an Excel file.");
                 return View();
             }
 
-            const string excelType =
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-            if (fileExcel.ContentType != excelType &&
-                !fileExcel.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+            if (fileExcel.ContentType != ExcelContentType &&
+              !fileExcel.FileName.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
             {
-                ModelState.AddModelError("", "Only .xlsx files are supported.");
+                ModelState.AddModelError("file", "Only .xlsx files are supported.");
                 return View();
             }
 
             try
             {
-                var importService = _dataPort.GetImportService(excelType);
+                var importService = _dataPort.GetImportService(ExcelContentType);
                 using var stream = fileExcel.OpenReadStream();
                 await importService.ImportFromStreamAsync(stream, cancellationToken);
                 TempData["Success"] = "Products imported successfully.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ImportException ex)
+            {
+                foreach (var line in ex.Message
+                         .Split(new[] { "\r\n", "\n" }, StringSplitOptions.RemoveEmptyEntries))
+                {
+                    ModelState.AddModelError("", line);
+                }
+                return View();
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError("", $"Import failed: {ex.Message}");
+                ModelState.AddModelError("", $"Unexpected error: {ex.Message}");
                 return View();
             }
-
-            return RedirectToAction(nameof(Index));
         }
 
-        // ── EXPORT ───────────────────────────────────────────────────────────────────
 
         [HttpGet]
         public async Task<IActionResult> Export(CancellationToken cancellationToken = default)
         {
-            const string excelType =
-                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-
-            var exportService = _dataPort.GetExportService(excelType);
+            var exportService = _dataPort.GetExportService(ExcelContentType);
             var memoryStream = new MemoryStream();
 
             await exportService.WriteToAsync(memoryStream, cancellationToken);
@@ -73,15 +76,14 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             memoryStream.Position = 0;
 
             var fileName = $"products_{DateTime.UtcNow:yyyy-MM-dd}.xlsx";
-            return new FileStreamResult(memoryStream, excelType)
+            return new FileStreamResult(memoryStream, ExcelContentType)
             {
                 FileDownloadName = fileName
             };
         }
 
-
         public ProductsController(ClothingStoreContext context,
-                               ProductDataPortServiceFactory dataPort)
+                   ProductDataPortServiceFactory dataPort)
         {
             _context = context;
             _dataPort = dataPort;
@@ -90,12 +92,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
         public async Task<IActionResult> Index()
         {
             var products = await _context.Products
-                .IgnoreQueryFilters()
-                .Include(p => p.Category)
-                .Include(p => p.Style)
-                .Include(p => p.Sizes)
-                .ThenInclude(ps => ps.Size)
-                .ToListAsync();
+              .IgnoreQueryFilters()
+              .Include(p => p.Category)
+              .Include(p => p.Style)
+              .Include(p => p.Sizes)
+              .ThenInclude(ps => ps.Size)
+              .ToListAsync();
             return View(products);
         }
 
@@ -104,12 +106,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
-                .IgnoreQueryFilters()
-                .Include(p => p.Category)
-                .Include(p => p.Style)
-                .Include(p => p.Sizes)
-                    .ThenInclude(ps => ps.Size)
-                .FirstOrDefaultAsync(p => p.Id == id);
+              .IgnoreQueryFilters()
+              .Include(p => p.Category)
+              .Include(p => p.Style)
+              .Include(p => p.Sizes)
+                .ThenInclude(ps => ps.Size)
+              .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
             return View(product);
@@ -158,7 +160,7 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     {
                         var fileName = $"{Guid.NewGuid()}{ext}";
                         var uploadsFolder = Path.Combine(
-                            Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
+                          Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
                         Directory.CreateDirectory(uploadsFolder);
                         var filePath = Path.Combine(uploadsFolder, fileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -199,9 +201,9 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
-                .IgnoreQueryFilters()
-                .Include(p => p.Sizes)
-                .FirstOrDefaultAsync(p => p.Id == id);
+              .IgnoreQueryFilters()
+              .Include(p => p.Sizes)
+              .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
 
@@ -241,9 +243,9 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (ModelState.IsValid)
             {
                 var product = await _context.Products
-                    .IgnoreQueryFilters()
-                    .Include(p => p.Sizes)
-                    .FirstOrDefaultAsync(p => p.Id == id);
+                  .IgnoreQueryFilters()
+                  .Include(p => p.Sizes)
+                  .FirstOrDefaultAsync(p => p.Id == id);
 
                 if (product == null) return NotFound();
 
@@ -261,17 +263,17 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                     if (allowedExtensions.Contains(ext))
                     {
                         if (!string.IsNullOrEmpty(product.ImagePath) &&
-                            product.ImagePath.StartsWith("/images/products/"))
+                          product.ImagePath.StartsWith("/images/products/"))
                         {
                             var oldPath = Path.Combine(
-                                Directory.GetCurrentDirectory(), "wwwroot",
-                                product.ImagePath.TrimStart('/'));
+                              Directory.GetCurrentDirectory(), "wwwroot",
+                              product.ImagePath.TrimStart('/'));
                             if (System.IO.File.Exists(oldPath))
                                 System.IO.File.Delete(oldPath);
                         }
                         var fileName = $"{Guid.NewGuid()}{ext}";
                         var uploadsFolder = Path.Combine(
-                            Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
+                          Directory.GetCurrentDirectory(), "wwwroot", "images", "products");
                         Directory.CreateDirectory(uploadsFolder);
                         var filePath = Path.Combine(uploadsFolder, fileName);
                         using (var stream = new FileStream(filePath, FileMode.Create))
@@ -285,17 +287,17 @@ namespace ClothingStoreMVC.WebMVC.Controllers
                 }
 
                 var usedSizeIds = await _context.OrderItems
-                    .Select(oi => oi.ProductSizeId)
-                    .ToListAsync();
+                  .Select(oi => oi.ProductSizeId)
+                  .ToListAsync();
 
                 var selectedSizeIds = vm.Sizes
-                    .Where(s => s.IsSelected)
-                    .Select(s => s.SizeId)
-                    .ToList();
+                  .Where(s => s.IsSelected)
+                  .Select(s => s.SizeId)
+                  .ToList();
 
                 var sizesToRemove = product.Sizes
-                    .Where(ps => !usedSizeIds.Contains(ps.Id) && !selectedSizeIds.Contains(ps.SizeId))
-                    .ToList();
+                  .Where(ps => !usedSizeIds.Contains(ps.Id) && !selectedSizeIds.Contains(ps.SizeId))
+                  .ToList();
                 _context.ProductSizes.RemoveRange(sizesToRemove);
 
                 foreach (var size in vm.Sizes.Where(s => s.IsSelected))
@@ -329,12 +331,12 @@ namespace ClothingStoreMVC.WebMVC.Controllers
             if (id == null) return NotFound();
 
             var product = await _context.Products
-                .IgnoreQueryFilters()
-                .Include(p => p.Category)
-                .Include(p => p.Style)
-                .Include(p => p.Sizes)
-                    .ThenInclude(ps => ps.Size)
-                .FirstOrDefaultAsync(p => p.Id == id);
+              .IgnoreQueryFilters()
+              .Include(p => p.Category)
+              .Include(p => p.Style)
+              .Include(p => p.Sizes)
+                .ThenInclude(ps => ps.Size)
+              .FirstOrDefaultAsync(p => p.Id == id);
 
             if (product == null) return NotFound();
             return View(product);

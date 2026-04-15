@@ -1,0 +1,111 @@
+﻿@model IEnumerable<ClothingStoreMVC.WebMVC.ViewModels.UserListViewModel>
+@{
+    ViewData["Title"] = "User Management";
+}
+
+<div style="display:flex; justify-content:space-between; align-items:center;
+    margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:2px solid #8062D6;">
+    <h2 style="font-size:1.2rem; font-weight:900; letter-spacing:0.1em;
+        text-transform:uppercase; color:#0C0950; margin:0;">
+        Users
+    </h2>
+    <span style="font-size:0.72rem; color:#6b6b8a; letter-spacing:0.1em;
+    text-transform:uppercase;">@Model.Count() total</span>
+</div>
+
+@if (TempData["Success"] != null)
+{
+    <div style="background:#0a2d0a; border:1px solid #6bcf6b; color:#6bcf6b;
+        padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+        @TempData["Success"]
+    </div>
+}
+@if (TempData["Error"] != null)
+{
+    <div style="background:#2d0a0a; border:1px solid #F57799; color:#F57799;
+        padding:0.75rem 1rem; border-radius:6px; margin-bottom:1rem; font-size:0.8rem;">
+        @TempData["Error"]
+    </div>
+}
+
+@foreach (var user in Model)
+{
+    <div style="background:#F9DFDF; border:1px solid #000; border-radius:8px;
+        padding:1rem 1.25rem; margin-bottom:0.75rem;
+        display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
+
+        <div style="flex:1; min-width:200px;">
+            <p style="font-size:0.88rem; font-weight:700; color:#0C0950; margin:0 0 0.2rem 0;">
+                @user.FullName
+            </p>
+            <p style="font-size:0.75rem; color:#6b6b8a; margin:0 0 0.25rem 0;">
+                @user.Email
+            </p>
+            @if (!string.IsNullOrEmpty(user.PhoneNumber))
+            {
+                <p style="font-size:0.72rem; color:#9a8aaa; margin:0;">@user.PhoneNumber</p>
+            }
+        </div>
+
+        <div style="display:flex; gap:0.4rem; flex-wrap:wrap;">
+            @foreach (var role in user.Roles)
+            {
+                <span style="font-size:0.62rem; letter-spacing:0.12em; text-transform:uppercase;
+                padding:0.2rem 0.6rem; border-radius:20px;
+                background:@(role == "admin" ? "#0C0950" : "#8062D6");
+                color:white;">@role</span>
+            }
+        </div>
+
+        <div style="display:flex; align-items:center; gap:0.4rem;">
+            @if (user.EmailConfirmed)
+            {
+                <span style="font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase;
+                color:#6bcf6b; border:1px solid #6bcf6b;
+                padding:0.2rem 0.5rem; border-radius:20px;">✓ Confirmed</span>
+            }
+            else
+            {
+                <span style="font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase;
+                color:#F57799; border:1px solid #F57799;
+                padding:0.2rem 0.5rem; border-radius:20px;">Unconfirmed</span>
+
+                <form asp-action="ConfirmEmailManually" method="post" style="display:inline;">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="id" value="@user.Id" />
+                    <button type="submit"
+                            style="font-size:0.62rem; letter-spacing:0.08em; text-transform:uppercase;
+                        padding:0.2rem 0.5rem; border:1px solid #8062D6; color:#8062D6;
+                        background:transparent; border-radius:20px; cursor:pointer;">
+                        Confirm
+                    </button>
+                </form>
+            }
+        </div>
+
+        <div style="display:flex; gap:0.5rem; flex-shrink:0;">
+            <a asp-action="EditRole" asp-route-id="@user.Id"
+                   style="padding:0.3rem 0.7rem; border:1px solid #8062D6; color:#8062D6;
+                border-radius:4px; font-size:0.7rem; letter-spacing:0.08em;
+                text-transform:uppercase; text-decoration:none; transition:all 0.2s;"
+                   onmouseover="this.style.background='#8062D6';this.style.color='white'"
+                   onmouseout="this.style.background='transparent';this.style.color='#8062D6'">
+                Roles
+            </a>
+            <form asp-action="Delete" method="post" style="display:inline;">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="id" value="@user.Id" />
+                <button type="submit"
+                        onclick="return confirm('Delete user @user.Email?')"
+                        style="padding:0.3rem 0.7rem; border:1px solid #F57799; color:#F57799;
+                    background:transparent; border-radius:4px; font-size:0.7rem;
+                    letter-spacing:0.08em; text-transform:uppercase; cursor:pointer;
+                    transition:all 0.2s;"
+                        onmouseover="this.style.background='#F57799';this.style.color='white'"
+                        onmouseout="this.style.background='transparent';this.style.color='#F57799'">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+}
