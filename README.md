@@ -4,6 +4,8 @@ A full-featured e-commerce web application for alternative fashion built with AS
 
 
 ---
+## UML and Database diagrams
+[View PDF](/img/ClothingStore_UML_ER.pdf")
 
 ## Screenshots
 
